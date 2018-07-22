@@ -1,0 +1,47 @@
+<div class="modal-header">
+  <h4 ng-if="$ctrl.user._id" class="modal-title">Edit user</h4>
+  <h4 ng-if="!$ctrl.user._id" class="modal-title">Create user</h4>
+</div>
+<div class="modal-body">
+  <form class="form-horizontal" role="form" novalidate name="editCodForm">
+    <div class="form-group">
+      <label class="control-label col-sm-3">Username</label>
+      <div class="col-sm-9">
+        <input class="form-control" ng-model="$ctrl.user.username" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-3">Password</label>
+      <div class="col-sm-9">
+        <input class="form-control" ng-model="$ctrl.user.password" />
+      </div>
+    </div>
+    <hr/>
+    <div class="form-group">
+      <label class="control-label col-sm-3">Name</label>
+      <div class="col-sm-9">
+        <input class="form-control" ng-model="$ctrl.user.name" />
+      </div>
+    </div>    
+    <div class="form-group">
+      <label class="control-label col-sm-3">Role</label>
+      <div class="col-sm-9">
+        <div class="checkbox">
+          <label><input type="checkbox" ng-model="$ctrl.user.isManager">Manager</label>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-3">Access</label>
+      <div class="col-sm-9">
+        <div class="checkbox">
+          <label><input type="checkbox" ng-model="$ctrl.user.isLocked">Locked</label>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" ng-click="$ctrl.cancel()" class="btn btn-default" data-dismiss="modal">Cancel</button>
+  <button type="button" ng-click="$ctrl.save()" class="btn btn-primary" data-dismiss="modal">Save</button>
+</div>

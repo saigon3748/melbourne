@@ -1,0 +1,125 @@
+<ol class="breadcrumb">
+  <li><a href="#">Dashboard</a></li>
+  <li class="active">Create Order</li>
+  <li class="pull-right">
+    <a href="javascript:;" ng-click="$ctrl.print()" class="btn btn-success btn-xs" role="button">
+      <span class="glyphicon glyphicon-print" aria-hidden="true"></span> Print
+    </a>    
+  </li>
+</ol>
+<div class="row">
+  <div class="col-md-4">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Checkout</h3>
+      </div>
+      <div class="panel-body">
+        <table class="table"> 
+          <tbody> 
+            <tr> 
+              <td>Subtotal</td> 
+              <td>{{3 | currency}}</td> 
+            </tr>
+            <tr> 
+              <td>Discount</td> 
+              <td>{{5 | currency}}</td> 
+            </tr>
+            <tr> 
+              <td>Tax</td> 
+              <td>{{2 | currency}}</td> 
+            </tr>
+            <tr> 
+              <td>Total</td> 
+              <td>{{12 | currency}}</td> 
+            </tr>
+          </tbody> 
+        </table>  
+        <div class="pull-right">
+          <a href="javascript:;" ng-click="$ctrl.create()" class="btn btn-primary btm-sm" role="button">
+            <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Save
+          </a>    
+        </div>
+        <div class="pull-right">
+          <a href="javascript:;" ng-click="$ctrl.create()" class="btn btn-default btm-sm" role="button">
+            Discard
+          </a> 
+          &nbsp;&nbsp;   
+        </div>        
+      </div>
+    </div>    
+  </div>  
+  <div class="col-md-8">
+    <table class="table"> 
+      <thead> 
+        <tr> 
+          <th>Name</th> 
+          <th>Quantity</th> 
+          <th>Unit Price</th> 
+          <th>Subtotal</th> 
+          <th>Discount</th> 
+          <th>Total</th>
+        </tr> 
+      </thead> 
+      <tbody> 
+        <tr ng-repeat="menu in $ctrl.menus"> 
+          <td>{{menu.name}}</td> 
+          <td>{{menu.quanity}}</td> 
+          <td>{{menu.unitPrice | currency}}</td>
+          <td>{{menu.subtotal | currency}}</td>
+          <td>{{menu.discount | currency}}</td>
+          <td>{{menu.total | currency}}</td>
+        </tr>
+      </tbody> 
+    </table>     
+  </div>
+</div>
+<hr/>
+<div class="row">
+  <div class="col-md-4">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Filter by tags</h3>
+      </div>
+      <div class="panel-body">
+        <h4>
+          <span class="label label-default">Default</span>
+          <span class="label label-primary">Primary</span>
+          <span class="label label-success">Success</span>
+          <span class="label label-info">Info</span>
+          <span class="label label-warning">Warning</span>
+          <span class="label label-danger">Danger</span>
+        </h4>       
+      </div>
+    </div>    
+  </div>  
+  <div class="col-md-8">
+    <div class="bs-glyphicons"> 
+      <ul class="bs-glyphicons-list"> 
+        <li>banhmi acnnc adnad</li> 
+        <li>opla</li> 
+        <li>opla</li> 
+        <li>opla</li> 
+        <li>opla</li> 
+        <li>opla</li> 
+        <li>opla</li> 
+        <li>opla</li> 
+        <li>opla</li> 
+        <li>opla</li> 
+        <li>opla</li> 
+        <li>opla</li> 
+        <li>opla</li> 
+        <li>opla</li> 
+        <li>opla</li> 
+        <li>opla</li> 
+        <li>opla</li> 
+        <li>opla</li> 
+        <li>opla</li> 
+        <li>opla</li> 
+        <li>opla</li> 
+        <li>opla</li> 
+        <li>opla</li> 
+        <li>opla</li> 
+      </ul> 
+    </div>   
+  </div>
+</div>

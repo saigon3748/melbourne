@@ -1,0 +1,122 @@
+<div class="page-bar">
+  <ul class="page-breadcrumb">
+    <li>
+      <i class="icon-home"></i>
+      <a ui-sref="Home">Home</a>
+      <i class="fa fa-angle-right"></i>
+    </li>
+    <li>
+      <span>My Profile</span>
+    </li>
+  </ul>
+  <div class="page-toolbar">
+    <div class="btn-group pull-right">
+      <button type="button" class="btn btn-fit-height blue dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000"
+        data-close-others="true"> Actions
+          <i class="fa fa-angle-down"></i>
+      </button>
+      <ul class="dropdown-menu pull-right" role="menu">
+        <li>
+          <a href="javascript:;" ng-click="$ctrl.edit()"><i class="icon-pencil"></i> Edit Profile </a>
+        </li>
+        <li>
+          <a href="javascript:;" ng-click="$ctrl.changePassword()"><i class="icon-key"></i> Change Password </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="page-content-inner">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="portlet light portlet-fit portlet-custom">
+        <div class="portlet-title">
+          <div class="caption">
+            <i class="icon-user"></i>
+            <span class="caption-subject sbold uppercase"> My Profile </span>
+          </div>
+        </div>
+        <div class="portlet-body order-management">
+          <pm-alert value="$ctrl.alert"></pm-alert>
+          <form class="form-horizontal form" role="form">
+            <div class="form-body">
+              <div class="row static-info">
+                <div class="col-xs-12 col-sm-12 col-md-6">
+                  <div class="form-group">
+                    <label class="name col-sm-5">Login ID</label>
+                    <div class="col-sm-7">
+                      <p class="value">{{$ctrl.data.email || '-'}}</p>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="name col-sm-5">First Name</label>
+                    <div class="col-sm-7">
+                      <p class="value">{{$ctrl.data.firstName || '-'}}</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-6">
+                  <div class="form-group">
+                    <label class="name col-sm-5"></label>
+                    <div class="col-sm-7">
+                      <p class="value"></p>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="name col-sm-5">Last Name</label>
+                    <div class="col-sm-7">
+                      <p class="value">{{$ctrl.data.lastName || '-'}}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <h3 class="form-section">Contact Info</h3>
+              <div class="row static-info">
+                <div class="col-xs-12 col-sm-12 col-md-6">
+                  <div class="form-group">
+                    <label class="name col-sm-5">Address</label>
+                    <div class="col-sm-7">
+                      <p class="value">{{$ctrl.data.profile.street || '-'}}</p>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="name col-sm-5">Unit No.</label>
+                    <div class="col-sm-7">
+                      <p class="value">{{$ctrl.data.profile.unit || '-'}}</p>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="name col-sm-5">Postal Code</label>
+                    <div class="col-sm-7">
+                      <p class="value">{{$ctrl.data.profile.zip || '-'}}</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-6">
+                  <div class="form-group">
+                    <label class="name col-sm-5">Phone Number</label>
+                    <div class="col-sm-7">
+                      <p class="value">{{$ctrl.data.profile.phone || '-'}}</p>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="name col-sm-5">State</label>
+                    <div class="col-sm-7">
+                      <p class="value">{{$ctrl.data.profile.state || '-'}}</p>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="name col-sm-5">Country</label>
+                    <div class="col-sm-7">
+                      <p class="value">{{$ctrl.displayCountry || '-'}}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

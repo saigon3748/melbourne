@@ -1,0 +1,39 @@
+<div class="modal-header">
+  <h4 class="modal-title">Order - {{$ctrl.order.code}}</h4>
+</div>
+<div class="modal-body">
+  <table class="table"> 
+    <thead> 
+      <tr> 
+        <th>Item</th> 
+        <th>Quantity</th> 
+        <th>Sub Total</th>
+      </tr> 
+    </thead> 
+    <tbody> 
+      <tr ng-repeat="item in $ctrl.order.items"> 
+        <td>{{item.name}}</td> 
+        <td>{{item.quantity}}</td> 
+        <td>{{item.subtotal | currency}}</td>
+      </tr>
+      <tr> 
+        <td></td>
+        <td>Discount</td> 
+        <td>{{$ctrl.order.discount | currency}}</td>
+      </tr>
+      <tr> 
+        <td></td> 
+        <td>Tax</td> 
+        <td>{{$ctrl.order.tax | currency}}</td>
+      </tr>
+      <tr> 
+        <td></td> 
+        <td>Total</td> 
+        <td><h3>{{$ctrl.order.total | currency}}</h3></td>
+      </tr>
+    </tbody> 
+  </table>
+</div>
+<div class="modal-footer">
+  <button type="button" ng-click="$ctrl.close()" class="btn btn-default" data-dismiss="modal">Close</button>
+</div>

@@ -1,0 +1,34 @@
+<ol class="breadcrumb">
+  <li><a href="#">Dashboard</a></li>
+  <li class="active">Category</li>
+</ol>
+<br/>
+<table class="table"> 
+  <thead> 
+    <tr> 
+      <th>Category Name</th> 
+      <th>Display Index</th> 
+      <th>Parent Category</th> 
+      <th>
+        <a href="javascript:;" ng-click="$ctrl.create()" class="btn btn-primary btn-xs" role="button">
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Create
+        </a>
+      </th>
+    </tr> 
+  </thead> 
+  <tbody> 
+    <tr ng-repeat="category in $ctrl.categories"> 
+      <td>{{category.name}}</td> 
+      <td>{{category.displayIndex}}</td>
+      <td>{{$ctrl.getParent(category)}}</td>
+      <td>
+        <a href="javascript:;" ng-click="$ctrl.edit(category)" class="btn btn-default btn-xs" role="button">
+          <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit
+        </a>
+        <a href="javascript:;" ng-click="$ctrl.delete(category)" class="btn btn-danger btn-xs" role="button">
+          <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete
+        </a>
+      </td>
+    </tr>
+  </tbody> 
+</table>

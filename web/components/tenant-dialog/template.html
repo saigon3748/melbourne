@@ -1,0 +1,80 @@
+<div class="modal-header">
+  <h4 ng-if="!$ctrl.tenant._id" class="modal-title">Create shop</h4>
+  <h4 ng-if="$ctrl.tenant._id" class="modal-title">Edit shop</h4>
+</div>
+<div class="modal-body">
+  <form class="form-horizontal" role="form" novalidate name="editCodForm">
+    <div class="form-group">
+      <label class="control-label col-sm-3">Shop Name</label>
+      <div class="col-sm-9">
+        <input class="form-control" ng-model="$ctrl.tenant.name" autofocus/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-3">Shop Code</label>
+      <div class="col-sm-9">
+        <input class="form-control uppercase" ng-model="$ctrl.tenant.code" />
+      </div>
+    </div>
+    <div ng-if="$ctrl.tenant._id" class="form-group">
+      <label class="control-label col-sm-3">Status</label>
+      <div class="col-sm-9">
+        <div class="checkbox">
+          <label><input type="checkbox" ng-model="$ctrl.tenant.isLocked"/>Locked</label>
+        </div>        
+      </div>
+    </div>    
+    <hr/>
+    <div ng-if="!$ctrl.tenant._id" class="form-group">
+      <label class="control-label col-sm-3">Admin Name</label>
+      <div class="col-sm-9">
+        <input class="form-control" ng-model="$ctrl.user.name" />
+      </div>
+    </div>
+    <div ng-if="!$ctrl.tenant._id" class="form-group">
+      <label class="control-label col-sm-3">Login ID</label>
+      <div class="col-sm-9">
+        <input class="form-control lowercase" ng-model="$ctrl.user.username" />
+      </div>
+    </div>
+    <div ng-if="!$ctrl.tenant._id" class="form-group">
+      <label class="control-label col-sm-3">Password</label>
+      <div class="col-sm-9">
+        <input class="form-control" ng-model="$ctrl.user.password" />
+      </div>
+    </div>
+    <div ng-if="$ctrl.tenant._id" class="form-group">
+      <div class="col-sm-12">
+        <table class="table"> 
+          <thead> 
+            <tr> 
+              <th>User Name</th> 
+              <th>Login ID</th> 
+              <th>Role</th> 
+              <th></th>
+            </tr> 
+          </thead> 
+          <tbody> 
+            <tr ng-repeat="user in $ctrl.users"> 
+              <td>{{user.name}}</td> 
+              <td>{{user.username}}</td> 
+              <td>{{$ctrl.getUserRole(user)}}</td> 
+              <td>
+                <a ng-if="!user.isLocked" href="javascript:;" ng-click="$ctrl.lockUser(user)" class="btn btn-danger btn-xs" role="button">
+                  <span aria-hidden="true"></span> Lock
+                </a>
+                <a ng-if="user.isLocked" href="javascript:;" ng-click="$ctrl.unlockUser(user)" class="btn btn-success btn-xs" role="button">
+                  <span aria-hidden="true"></span> Unlock
+                </a>
+              </td>
+            </tr>
+          </tbody> 
+        </table>        
+      </div>
+    </div>    
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" ng-click="$ctrl.cancel()" class="btn btn-default" data-dismiss="modal">Cancel</button>
+  <button type="button" ng-click="$ctrl.save()" class="btn btn-primary" data-dismiss="modal">Save</button>
+</div>

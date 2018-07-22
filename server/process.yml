@@ -1,0 +1,6 @@
+apps:
+  - name: web
+    script: apps/web
+
+  - name: worker
+    script: apps/worker

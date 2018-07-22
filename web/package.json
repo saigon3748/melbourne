@@ -1,0 +1,27 @@
+{
+  "name": "posgram",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "parcel index.html"
+  },  
+  "dependencies": {
+    "angular": "1.7.1",
+    "angular-jwt": "0.1.10",
+    "angular-ui-router": "1.0.18",
+    "bootstrap": "4.1.1",
+    "chart.js": "2.7.2",
+    "feather-icons": "4.7.3",
+    "holderjs": "2.9.4",
+    "jquery": "3.3.1",
+    "lodash": "4.17.10",
+    "moment": "2.22.2",
+    "popper.js": "1.14.3",
+    "yarn": "1.7.0"
+  },
+  "devDependencies": {
+    "babel-core": "6.26.3",
+    "babel-preset-env": "1.7.0"
+  }
+}

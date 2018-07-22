@@ -1,0 +1,60 @@
+<ol class="breadcrumb">
+  <li><a href="#">Dashboard</a></li>
+  <li class="active">Orders</li>
+</ol>
+<div class="row">
+  <div class="col-sm-8">
+    <input ng-model="$ctrl.searchText" type="text" class="form-control" placeholder="Search for...">
+  </div>
+  <div class="col-sm-2=4">
+    <button ng-click="$ctrl.search()" class="btn btn-default" type="button">
+      <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search
+    </button>
+    &nbsp;&nbsp;
+    <button ng-click="$ctrl.export()" class="btn btn-primary" type="button">
+      Export Data
+    </button>
+  </div>
+</div>
+<br/>
+<table class="table"> 
+  <thead> 
+    <tr> 
+      <th>Order ID</th> 
+      <th>Order Ref.</th> 
+      <th>Discount</th> 
+      <th>Total</th> 
+      <th>Created By</th> 
+      <th>Created Date</th> 
+      <th></th>
+    </tr> 
+  </thead> 
+  <tbody> 
+    <tr ng-repeat="order in $ctrl.orders"> 
+      <td>{{order.code}}</td> 
+      <td>#{{order.ref}}</td> 
+      <td>{{order.discount | currency}}</td>
+      <td>{{order.total | currency}}</td>
+      <td>{{order.createdBy.name}}</td> 
+      <td>{{order.createdAt | date:'short'}}</td>
+      <td>
+        <a href="javascript:;" ng-click="$ctrl.view(order)" class="btn btn-default btn-xs" role="button">
+          View
+        </a>
+        <a href="javascript:;" ng-click="$ctrl.delete(order)" class="btn btn-danger btn-xs" role="button">
+          <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete
+        </a>        
+      </td>
+    </tr>
+  </tbody> 
+</table>
+<div class="clearfix">
+  <div class="pull-left pagination-info">
+    <p>{{$ctrl.pagination.total}} records</p>
+  </div>
+  <div class="pull-right">
+    <uib-pagination total-items="$ctrl.pagination.total" ng-model="$ctrl.pagination.page" ng-change="$ctrl.search()"
+      class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" force-ellipses="true" rotate="true"
+      max-size="$ctrl.pagination.limit" items-per-page="$ctrl.pagination.limit"></uib-pagination>
+  </div>
+</div>

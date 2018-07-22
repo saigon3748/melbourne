@@ -1,0 +1,9 @@
+import "./node_modules/jquery/dist/jquery.js";
+import "./node_modules/jquery/dist/jquery.slim.js";
+import "./node_modules/popper.js/dist/popper.js";
+import "./node_modules/bootstrap/dist/js/bootstrap.js";
+import "./node_modules/holderjs/holder.js";
+import "./node_modules/chart.js/dist/chart.js";
+import "./node_modules/angular/angular.js";
+import "./node_modules/angular-ui-router/release/angular-ui-router.js";
+import "./node_modules/angular-jwt/dist/angular-jwt.js";
