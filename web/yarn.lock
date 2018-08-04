@@ -2,23 +2,27 @@
 # yarn lockfile v1
 
 
-"@uirouter/core@5.0.19":
-  version "5.0.19"
-  resolved "https://registry.yarnpkg.com/@uirouter/core/-/core-5.0.19.tgz#fe2888190393a8c92584c354e65ab8322c1b0db4"
+angular-bootstrap@0.12.2:
+  version "0.12.2"
+  resolved "https://registry.yarnpkg.com/angular-bootstrap/-/angular-bootstrap-0.12.2.tgz#de9900a7db087a7e9da47304a9c2f77f9c069827"
 
-angular-jwt@0.1.10:
-  version "0.1.10"
-  resolved "https://registry.yarnpkg.com/angular-jwt/-/angular-jwt-0.1.10.tgz#de080ad958aaebeb071470d9ee1254b4ffae78cd"
+angular-jwt@0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/angular-jwt/-/angular-jwt-0.0.9.tgz#912587b520189d28d089446c7faaf30ef7534313"
 
-angular-ui-router@1.0.18:
-  version "1.0.18"
-  resolved "https://registry.yarnpkg.com/angular-ui-router/-/angular-ui-router-1.0.18.tgz#afc5c2d97d4fc54315db9cb638849cbffcc0a62c"
+angular-ui-router@0.2.18:
+  version "0.2.18"
+  resolved "https://registry.yarnpkg.com/angular-ui-router/-/angular-ui-router-0.2.18.tgz#1dad70415c73d7046fd2e130df03d62fb7464360"
   dependencies:
-    "@uirouter/core" "5.0.19"
+    angular "^1.0.8"
 
-angular@1.7.1:
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/angular/-/angular-1.7.1.tgz#274bd432e3c8b321f41c25c79e20d4f3b0fbaf79"
+angular@1.5.3:
+  version "1.5.3"
+  resolved "https://registry.yarnpkg.com/angular/-/angular-1.5.3.tgz#37c2f198ae76c2d6f3717a4ecef1cddcb048af79"
+
+angular@^1.0.8:
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/angular/-/angular-1.7.2.tgz#687b955dbe5c533f8d73460461707af00360251f"
 
 ansi-regex@^2.0.0:
   version "2.1.1"
@@ -542,10 +546,6 @@ chartjs-color@^2.1.0:
     chartjs-color-string "^0.5.0"
     color-convert "^0.5.3"
 
-classnames@^2.2.5:
-  version "2.2.6"
-  resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
-
 color-convert@^0.5.3:
   version "0.5.3"
   resolved "https://registry.yarnpkg.com/color-convert/-/color-convert-0.5.3.tgz#bdb6c69ce660fadffe0b0007cc447e1b9f7282bd"
@@ -562,7 +562,7 @@ convert-source-map@^1.5.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/convert-source-map/-/convert-source-map-1.5.1.tgz#b8278097b9bc229365de5c62cf5fcaed8b5599e5"
 
-core-js@^2.4.0, core-js@^2.5.0, core-js@^2.5.3:
+core-js@^2.4.0, core-js@^2.5.0:
   version "2.5.7"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.5.7.tgz#f972608ff0cead68b841a16a932d0b183791814e"
 
@@ -593,13 +593,6 @@ escape-string-regexp@^1.0.2:
 esutils@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/esutils/-/esutils-2.0.2.tgz#0abf4f1caa5bcb1f7a9d8acc6dea4faaa04bac9b"
-
-feather-icons@4.7.3:
-  version "4.7.3"
-  resolved "https://registry.yarnpkg.com/feather-icons/-/feather-icons-4.7.3.tgz#c33d95f2df4582f26a0bb4c11f281fe7faec12aa"
-  dependencies:
-    classnames "^2.2.5"
-    core-js "^2.5.3"
 
 globals@^9.18.0:
   version "9.18.0"

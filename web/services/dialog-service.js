@@ -1,10 +1,10 @@
 import ConfirmDialog from '../components/confirm-dialog';
 
 export default [
-  '$uibModal', '$rootScope',
+  '$modal', '$rootScope',
   class Service {
-    constructor($uibModal, $rootScope) {
-      this.$uibModal = $uibModal;
+    constructor($modal, $rootScope) {
+      this.$uibModal = $modal;
       this.$rootScope = $rootScope;
     }
 
@@ -19,13 +19,12 @@ export default [
 
       if (inputs) {
         let resolve = {};
-        _.forOwn(inputs, (value, key) => {
-          _.set(resolve, key, () => { return value; });
-        });
+        
+        Object.keys(inputs).forEach(key => {
+          resolve[key] = () => { return inputs[key]; }
+        })
 
-        if (_.size(resolve) > 0) {
-          _.extend(options, { resolve: resolve });
-        }
+        Object.assign(options, { resolve: resolve });
       }
 
       return this.$uibModal.open(options).result;

@@ -1,9 +1,9 @@
 export default [
-  '$scope', '$uibModalInstance', 'type', 'message',
+  '$scope', '$modalInstance', 'type', 'message',
   class Controller {
-    constructor($scope, $uibModalInstance, type, message) {
+    constructor($scope, $modalInstance, type, message) {
       this.$scope = $scope;
-      this.$uibModalInstance = $uibModalInstance;
+      this.$uibModalInstance = $modalInstance;
       this.type = type;
       this.message = message;
     }

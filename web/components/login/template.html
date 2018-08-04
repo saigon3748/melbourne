@@ -1,7 +1,39 @@
-<div class="text-center">
-  <form class="form-signin">
-    <input ng-model="$ctrl.username" id="username" class="form-control" placeholder="Login ID" required autofocus>
-    <input ng-model="$ctrl.password" type="password" id="password" class="form-control" placeholder="Password" required>
-    <button class="btn btn-lg btn-primary btn-block" ng-click="$ctrl.login()">Sign in</button>
-  </form>
+<div class="container">
+  <div class="py-5 text-center">
+  </div>
+
+  <div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+      <h4 class="mb-3">Sign in</h4>
+      <form class="needs-validation" novalidate>
+        <div class="mb-3">
+          <label for="username">Username</label>
+          <input type="text" class="form-control" id="username" required>
+          <div class="invalid-feedback">
+            Please enter username.
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="password">Password</label>
+          <input type="password" class="form-control" id="password" required>
+          <div class="invalid-feedback">
+            Please enter password.
+          </div>
+        </div>
+        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-click="$ctrl.login()">Sign in</button>
+      </form>
+    </div>
+    <div class="col-md-4"></div>
+  </div>
+
+  <footer class="my-5 pt-5 text-muted text-center text-small">
+    <p class="mb-1">&copy; 2018 retailr</p>
+    <ul class="list-inline">
+      <li class="list-inline-item"><a href="#">Privacy</a></li>
+      <li class="list-inline-item"><a href="#">Terms</a></li>
+      <li class="list-inline-item"><a href="#">Support</a></li>
+    </ul>
+  </footer>
 </div>
+

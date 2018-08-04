@@ -5,14 +5,14 @@
   "license": "MIT",
   "scripts": {
     "start": "parcel index.html"
-  },  
+  },
   "dependencies": {
-    "angular": "1.7.1",
-    "angular-jwt": "0.1.10",
-    "angular-ui-router": "1.0.18",
+    "angular": "1.5.3",
+    "angular-bootstrap": "0.12.2",
+    "angular-jwt": "0.0.9",
+    "angular-ui-router": "0.2.18",
     "bootstrap": "4.1.1",
     "chart.js": "2.7.2",
-    "feather-icons": "4.7.3",
     "holderjs": "2.9.4",
     "jquery": "3.3.1",
     "lodash": "4.17.10",

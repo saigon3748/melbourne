@@ -4,7 +4,7 @@ export default [
     $stateProvider
       .state(posgram.config.states.HOME, {
         url: '^',
-        template: '<pos-dashboard/>'
+        template: '<pos-login/>'
       })
       .state(posgram.config.states.LOGIN, {
         url: '/login',

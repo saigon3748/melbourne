@@ -11,6 +11,7 @@ import orderDetail from './components/order-detail';
 import menuList from './components/menu-list';
 import categoryList from './components/category-list';
 import userList from './components/user-list';
+import authService from './services/auth-service';
 import dialogService from './services/dialog-service';
 import websocketService from './services/websocket-service';
 import authApi from './api/auth-api';
@@ -21,9 +22,7 @@ import categoryApi from './api/category-api';
 import orderApi from './api/order-api';
 
 angular
-  .module('posgram', [
-    'ui.router', 'angular-jwt'
-  ])
+  .module('posgram', [ 'ui.router', 'ui.bootstrap' ])
   .component('posApp', app)  
   .component('posLogin', login)  
   .component('posDashboard', dashboard)
@@ -35,6 +34,9 @@ angular
   .component('posMenuList', menuList)
   .component('posCategoryList', categoryList)
   .component('posUserList', userList)
+  .service('AuthService', authService)
+  .service('DialogService', dialogService)
+  .service('WebsocketService', websocketService)
   .service('AuthApi', authApi)
   .service('TenantApi', tenantApi)
   .service('UserApi', userApi)
@@ -56,19 +58,16 @@ angular
   //     $httpProvider.interceptors.push('jwtInterceptor');
   //   }
   // ])
-  .run(['$rootScope', '$window', '$state', '$timeout', 'posgram',
-    function ($rootScope, $window, $state, $timeout, posgram) {
+  .run(['$rootScope', '$window', '$state', '$timeout', 'posgram', 'AuthService',
+    function ($rootScope, $window, $state, $timeout, posgram, AuthService) {
       $rootScope.global = {};      
 
       $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
         $window.scrollTo(0, 0);
-        $timeout(feather.replace, 0);
-        console.log('stateChangeSuccess')
       });
 
       $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-        console.log('stateChangeStart')
-        if (!$rootScope.isLoggedIn && toState.name != "Login") {
+        if (!AuthService.isAuthenticated && toState.name != "Login") {
           event.preventDefault();
           $state.go(posgram.config.states.LOGIN);
         }
