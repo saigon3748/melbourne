@@ -6,7 +6,7 @@ export default [
     }
 
     get isAuthenticated() {
-      return true;
+      return this.$rootScope.isAuthenticated;
     }
   }
 ]

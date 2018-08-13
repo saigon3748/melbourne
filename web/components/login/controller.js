@@ -11,9 +11,8 @@ export default [
     }
 
     login() {
-      this.DialogService.confirm('login ?')
-      // alert('login')
-      // this.$state.go(this.posgram.config.states.DASHBOARD);
+      this.$rootScope.isAuthenticated = true;
+      this.$state.go(this.posgram.config.states.DASHBOARD);
       // this.AuthApi.login(this.username, this.password)
       //   .then(result => {
       //     if (!result.token) return toastr.error(result.error);
@@ -26,7 +25,7 @@ export default [
 
       //     this.$rootScope.global.user = payload;
       //     this.$rootScope.isLoggedIn = true;
-      //     this.$state.go(this.posgram.config.states.HOME);
+      //     this.$state.go(this.posgram.config.states.DASHBOARD);
       //   })
     }
   }

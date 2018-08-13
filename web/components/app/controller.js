@@ -1,14 +1,15 @@
 export default [
-  '$rootScope', '$state', '$timeout', 'posgram',
+  '$rootScope', '$state', '$timeout', 'posgram', 'AuthService',
   class Controller {
-    constructor($rootScope, $state, $timeout, posgram) {
+    constructor($rootScope, $state, $timeout, posgram, AuthService) {
       this.$rootScope = $rootScope;
       this.$state = $state;
       this.posgram = posgram;
+      this.AuthService = AuthService;
     }
 
-    get isLoggedIn() {
-      return this.$rootScope.isLoggedIn;
+    get isAuthenticated() {
+      return this.AuthService.isAuthenticated;
     }
 
     get isSudo() {

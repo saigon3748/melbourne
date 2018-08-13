@@ -1,5 +1,5 @@
 export default {
-  api: 'http://localhost:8080/api',
+  api: 'http://localhost:8000/api',
   states: {
     HOME: 'Home',
     LOGIN: 'Login',

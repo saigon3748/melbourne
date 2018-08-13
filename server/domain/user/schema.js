@@ -14,11 +14,12 @@ let schema = mongoose.Schema({
   },
   username: { type: String, required: true, unique: true, lowercase: true },
   password: { type: String, required: true },
-  name: { type: String, required: true },
+  firstName: { type: String },
+  lastName: { type: String },
   isAdmin: { type: Boolean, default: false },
   isManager: { type: Boolean, default: false },
   isLocked: { type: Boolean, default: false },
-  lastLogin: { type: Date, default: Date.now }
+  lastSignedIn: { type: Date, default: Date.now }
 })
 
 schema.index({"username": "text", "name": "text"})

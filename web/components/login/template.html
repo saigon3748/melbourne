@@ -1,27 +1,44 @@
 <div class="container">
-  <div class="py-5 text-center">
+  <div class="py-5 text-center" style="margin-top: 50px;">
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-215 -106 572 199" style="width: 180px; height: 60px; max-height: 100%;">
+      <g transform="translate(-9 40) scale(1.8)" fill="#2177b4">
+        <g id="line1">
+          <path d="M13.824-37.800L4.896-37.800L4.896 0L13.824 0L13.824-17.784C13.824-17.784 15.264-29.808 28.008-29.808L28.008-38.232C18.216-38.880 14.472-31.536 13.824-29.808Z"/>
+          <path d="M65.261-16.848C65.261-16.848 65.765-19.080 65.765-22.032C65.765-31.536 60.005-38.592 48.629-38.592C37.469-38.592 30.197-31.464 30.197-18.792C30.197-5.472 38.045 0.792 47.693 0.792C55.829 0.792 62.813-3.240 66.053-5.040L62.453-10.728C58.349-8.496 53.093-5.904 48.485-5.904C43.157-5.904 39.917-9.936 39.341-16.848ZM48.629-32.112C54.029-32.112 57.125-28.872 57.053-21.888L39.413-21.888C40.061-28.296 43.229-32.112 48.629-32.112Z"/>
+          <path d="M68.530-31.176L73.714-31.176L73.714-10.872C73.714-2.520 77.458 0.792 83.866 0.792C88.546 0.792 93.298-1.152 95.458-2.088L92.290-8.712C91.138-8.280 87.826-6.984 85.882-6.984C84.154-6.984 82.570-7.488 82.570-10.656L82.570-31.176L92.866-31.176L92.866-37.800L82.570-37.800L82.570-48.744L73.714-47.304L73.714-37.800L68.530-37.800Z"/>
+          <path d="M122.702 0L131.630 0L131.630-24.984C131.630-34.848 126.878-38.592 117.086-38.592C111.830-38.592 105.854-37.368 98.798-34.992L101.678-28.800C107.366-30.528 111.686-31.752 115.574-31.752C121.046-31.752 122.702-29.736 122.702-25.200L122.702-21.816C119.966-22.320 114.206-23.688 109.814-23.688C102.326-23.688 96.278-19.656 96.278-11.448C96.278-3.384 102.254 0.792 109.166 0.792C115.286 0.792 119.822-2.016 122.702-4.608ZM111.830-6.192C108.014-6.192 105.278-7.992 105.278-12.168C105.278-15.840 107.510-18.576 112.982-18.576C116.150-18.576 120.398-17.640 122.702-17.208L122.702-10.800C119.462-7.920 115.934-6.192 111.830-6.192Z"/>
+          <path d="M147.643 0L147.643-37.800L138.787-37.800L138.787 0ZM138.499-43.920L148.003-43.920L148.003-52.272L138.499-52.272Z"/>
+          <path d="M164.376 0L164.376-52.488L155.448-52.488L155.448 0Z"/>
+          <path d="M181.037-37.800L172.109-37.800L172.109 0L181.037 0L181.037-17.784C181.037-17.784 182.477-29.808 195.221-29.808L195.221-38.232C185.429-38.880 181.685-31.536 181.037-29.808Z"/>
+        </g>
+      </g>
+      <g transform="translate(-238.53231176625587 -118.42935133328847) scale(2.2582845793149833)" id="logomark">
+        <g fill="#2177b4">
+          <path d="M11.3 65.7l25.5-54.3c3.9-8.3 15.7-8.5 19.9-.3L90 77.6c4.1 8.2-3.1 17.6-12.1 15.8L19 81.2c-7-1.5-10.8-9.1-7.7-15.5z"/>
+        </g>
+      </g>
+    </svg>    
   </div>
 
   <div class="row">
     <div class="col-md-4"></div>
     <div class="col-md-4">
-      <h4 class="mb-3">Sign in</h4>
       <form class="needs-validation" novalidate>
         <div class="mb-3">
-          <label for="username">Username</label>
-          <input type="text" class="form-control" id="username" required>
+          <label for="username" class="text-small">Username</label>
+          <input type="text" ng-model="$ctrl.username" class="form-control" id="username" required>
           <div class="invalid-feedback">
             Please enter username.
           </div>
         </div>
         <div class="mb-3">
-          <label for="password">Password</label>
-          <input type="password" class="form-control" id="password" required>
+          <label for="password" class="text-small">Password</label>
+          <input type="password" ng-model="$ctrl.password" class="form-control" id="password" required>
           <div class="invalid-feedback">
             Please enter password.
           </div>
         </div>
-        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-click="$ctrl.login()">Sign in</button>
+        <button class="btn btn-success btn-lg btn-block" type="submit" ng-click="$ctrl.login()">Sign in</button>
       </form>
     </div>
     <div class="col-md-4"></div>

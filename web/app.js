@@ -2,6 +2,7 @@ import config from './config';
 import route from './route';
 import app from './components/app';
 import login from './components/login';
+import sidebar from './components/sidebar';
 import dashboard from './components/dashboard';
 import tenantList from './components/tenant-list';
 import tenantDetail from './components/tenant-detail';
@@ -25,6 +26,7 @@ angular
   .module('posgram', [ 'ui.router', 'ui.bootstrap' ])
   .component('posApp', app)  
   .component('posLogin', login)  
+  .component('posSidebar', sidebar)
   .component('posDashboard', dashboard)
   .component('posTenantList', tenantList)
   .component('posTenantDetail', tenantDetail)
