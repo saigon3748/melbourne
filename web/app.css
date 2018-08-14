@@ -1,6 +1,7 @@
 body {
   font-size: .95rem;
   color: #3a4953;  
+  background-color: #feffff;
 }
 
 .feather {
@@ -10,6 +11,7 @@ body {
 }
 
 .bg-blue {
+  color: #fff;
   background-color: #2177b4;
 }
 
@@ -69,6 +71,7 @@ body {
 }
 
 .sidebar-sticky {
+  background-color: #ffffff;
   position: -webkit-sticky;
   position: sticky;
   top: 48px; /* Height of navbar */
