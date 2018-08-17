@@ -5,7 +5,7 @@ const promiseRetry = require('promise-retry');
 const schema = require('./schema');
 const BaseService = require('../base-service');
 const TenantService = require('../tenant/service');
-const KitchenService = require('../kitchen/service');
+const CookService = require('../cook/service');
 const pipeline = require('../../libs/pipeline');
 
 module.exports = class Service extends BaseService {
@@ -93,7 +93,7 @@ module.exports = class Service extends BaseService {
 
       let doCreateKitchen = () => {
         let doCreateKitchenItem = (item) => {
-          return new KitchenService(this._ctx)
+          return new CookService(this._ctx)
             .create({
               tenant: order.tenant,
               orderId: order._id,

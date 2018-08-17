@@ -4,9 +4,11 @@ const User = require('./user');
 const Menu = require('./menu');
 const Category = require('./category');
 const Order = require('./order');
-const Kitchen = require('./kitchen');
+const Cook = require('./cook');
 const Addon = require('./addon');
 const Cash = require('./cash');
+const Discount = require('./discount');
+const Place = require('./place');
 
 module.exports = class Domain {
   static Tenant(data) {
@@ -49,12 +51,20 @@ module.exports = class Domain {
     return new Order.Service(ctx);
   }
 
-  static Kitchen(data) {
-    return new Kitchen.Model(data);
+  static Discount(data) {
+    return new Discount.Model(data);
   }
 
-  static KitchenService(ctx) {
-    return new Kitchen.Service(ctx);
+  static DiscountService(ctx) {
+    return new Discount.Service(ctx);
+  }
+
+  static Cook(data) {
+    return new Cook.Model(data);
+  }
+
+  static CookService(ctx) {
+    return new Cook.Service(ctx);
   }
 
   static Addon(data) {
@@ -71,6 +81,14 @@ module.exports = class Domain {
 
   static CashService(ctx) {
     return new Cash.Service(ctx);
+  }
+
+  static Place(data) {
+    return new Place.Model(data);
+  }
+
+  static PlaceService(ctx) {
+    return new Place.Service(ctx);
   }
 }
 

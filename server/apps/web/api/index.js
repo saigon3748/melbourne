@@ -1,23 +1,16 @@
 const _ = require('lodash');
 const express = require('express');
-const AuthApi = require('./auth');
-const TenantApi = require('./tenant');
-const UserApi = require('./user');
-const MenuApi = require('./menu');
-const CategoryApi = require('./category');
-const OrderApi = require('./order');
-const KitchenApi = require('./kitchen');
-const AddonApi = require('./addon');
-const CashApi = require('./cash');
 
 module.exports = express.Router()
-  .use('/auth', AuthApi)  
-  .use('/tenants', TenantApi)  
-  .use('/users', UserApi)
-  .use('/menus', MenuApi)
-  .use('/categories', CategoryApi)
-  .use('/orders', OrderApi)
-  .use('/kitchens', KitchenApi)
-  .use('/addons', AddonApi)
-  .use('/cashes', CashApi)
+  .use('/auth', require('./auth'))  
+  .use('/tenants', require('./tenant'))  
+  .use('/users', require('./user'))
+  .use('/menus', require('./menu'))
+  .use('/categories', require('./category'))
+  .use('/orders', require('./order'))
+  .use('/cooks', require('./cook'))
+  .use('/addons', require('./addon'))
+  .use('/discounts', require('./discount'))
+  .use('/cashes', require('./cash'))
+  .use('/places', require('./place'))
 

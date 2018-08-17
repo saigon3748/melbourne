@@ -12,19 +12,10 @@ let schema = mongoose.Schema({
       name: { type: String, required: true }
     }, { _id: false })
   },
-  name: { type: String, required: true },
-  price: { type: Number, required: true },
-  category: mongoose.Schema({
-    _id: { type: mongoose.Schema.Types.ObjectId, ref: 'categories' },
-    name: { type: String, required: true }
-  }, { _id: false }),
-  imageUrl: { type: String },
-  isArchived: { type: Boolean, default: false }
+  name: { type: String, required: true }
 })
-
-schema.index({"name": "text", "category.name": "text"})
 
 schema.plugin(audit);
 schema.plugin(paginate);
 
-module.exports = mongoose.model('addons', schema)
+module.exports = mongoose.model('places', schema)

@@ -7,7 +7,6 @@ const paginate = require('mongoose-paginate');
 let schema = mongoose.Schema({
   code: { type: String, required: true, unique: true, uppercase: true },
   name: { type: String, required: true },
-  isLocked: { type: Boolean, default: false },
   parent: {
     type: mongoose.Schema({
       _id: { type: mongoose.Schema.Types.ObjectId, ref: 'tenants' },
@@ -16,13 +15,15 @@ let schema = mongoose.Schema({
     }, { _id: false })
   },
   utc: { type: Number },
-  isAutoPrint: { type: Boolean, default: true },
-  isInclusiveGST: { type: Boolean, default: true },
+  isPrintAutomotive: { type: Boolean, default: true },
+  isGSTInclusive: { type: Boolean, default: true },
+  isArchived: { type: Boolean, default: false },
   printers: {
     type: mongoose.Schema({
-      ip: { type: String },
-      isChickenReceipt: { type: Boolean },
       name: { type: String },
+      ip: { type: String },
+      isChef: { type: Boolean },
+      title: { type: String },
       header1: { type: String },
       header2: { type: String },
       header3: { type: String },

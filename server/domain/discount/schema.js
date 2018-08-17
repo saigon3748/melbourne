@@ -13,18 +13,25 @@ let schema = mongoose.Schema({
     }, { _id: false })
   },
   name: { type: String, required: true },
-  price: { type: Number, required: true },
+  discount: { type: Number, required: true },
+  isPercentage: { type: Boolean, default: false },
+  isAddonsInclusive: { type: Boolean, default: true },
+  isMostExpensive: { type: Boolean, default: false },
+  isLeastExpensive: { type: Boolean, default: false },
+  isCategoryApplied: { type: Boolean, default: false },      
   category: mongoose.Schema({
     _id: { type: mongoose.Schema.Types.ObjectId, ref: 'categories' },
     name: { type: String, required: true }
-  }, { _id: false }),
-  imageUrl: { type: String },
+  }, { _id: false }),  
+  isDateApplied: { type: Boolean, default: false },
+  fromDate: { type: Date, required: false },
+  toDate: { type: Date, required: false },
   isArchived: { type: Boolean, default: false }
 })
 
-schema.index({"name": "text", "category.name": "text"})
+schema.index({"name": "text"})
 
 schema.plugin(audit);
 schema.plugin(paginate);
 
-module.exports = mongoose.model('addons', schema)
+module.exports = mongoose.model('discounts', schema)

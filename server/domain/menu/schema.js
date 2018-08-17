@@ -13,15 +13,13 @@ let schema = mongoose.Schema({
     }, { _id: false })
   },
   name: { type: String, required: true },
-  unitPrice: { type: Number, required: true },
-  discount: { type: Number, default: 0 },
-  isPercentDiscount: { type: Boolean, default: false },
+  price: { type: Number, required: true },
   category: mongoose.Schema({
     _id: { type: mongoose.Schema.Types.ObjectId, ref: 'categories' },
     name: { type: String, required: true }
   }, { _id: false }),
-  image: { type: String },
-  isLocked: { type: Boolean, default: false }  
+  imageUrl: { type: String },
+  isArchived: { type: Boolean, default: false }
 })
 
 schema.index({"name": "text", "category.name": "text"})

@@ -6,18 +6,6 @@ const pipeline = require('../../../../libs/pipeline');
 
 module.exports = class Controller extends BaseController {
   constructor(ctx) {
-    super(ctx, Domain.KitchenService);
-  }
-
-  getToday() {
-    return this._service.getToday();
-  }
-
-  markCompleted() {
-    return this._service.markCompleted(this._ctx.req.body);    
-  }
-
-  markUncompleted() {
-    return this._service.markUncompleted(this._ctx.req.body);    
+    super(ctx, Domain.PlaceService);
   }
 }

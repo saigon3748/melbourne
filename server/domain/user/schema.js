@@ -18,11 +18,11 @@ let schema = mongoose.Schema({
   lastName: { type: String },
   isAdmin: { type: Boolean, default: false },
   isManager: { type: Boolean, default: false },
-  isLocked: { type: Boolean, default: false },
+  isArchived: { type: Boolean, default: false },
   lastSignedIn: { type: Date, default: Date.now }
 })
 
-schema.index({"username": "text", "name": "text"})
+schema.index({"username": "text", "firstName": "text", "lastName": "text"})
 
 schema.plugin(audit);
 schema.plugin(paginate);
