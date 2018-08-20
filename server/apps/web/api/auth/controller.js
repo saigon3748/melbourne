@@ -25,15 +25,15 @@ module.exports = class Controller extends BaseController {
 
     let doLogin = () => {
       if (!data.user) {
-        return { error: 'User not found.' };
+        return { error: 'User not found' };
       }
 
-      if (data.user.isLocked) {
-        return { error: 'User is locked.' };
+      if (data.user.isArchived) {
+        return { error: 'User is locked' };
       }
 
       if (!bscrypt.compareSync(credentials.pass, data.user.password)) {
-        return { error: 'Incorrect login ID or password.' };
+        return { error: 'Incorrect username or password' };
       }
 
       return { token: this._generateToken(data.user) };
@@ -48,13 +48,17 @@ module.exports = class Controller extends BaseController {
   _generateToken(user) {
     let payload = {
       _id: user._id,
-      name: user.name,
       username: user.username,
+      firstName: user.firstName,
       lastName: user.lastName,
       isAdmin: user.isAdmin,
       isManager: user.isManager,
       tenant: user.tenant,
       exp: Math.floor(Date.now() / 1000) + (10 * 60 * 60)      
+    }
+
+    if (user.username === "sudo") {
+      payload.isSudo = true;
     }
 
     return jwt.encode(payload, "noel");

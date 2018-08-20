@@ -1,5 +1,4 @@
 import BaseController from '../base-controller';
-import UserDialog from '../user-dialog';
 
 export default [
   '$rootScope', '$state', '$timeout', '$sce', 'posgram', 'DialogService', 'UserApi',
@@ -33,31 +32,12 @@ export default [
         })
     }
 
-    create() {
-      let inputs = {
-        user: null
-      };
-
-      this.DialogService.open(UserDialog, inputs)
-        .then(user => {
-          if (!user) return;
-          this.users.push(user);
-        })      
+    create(user) {
+      this.$state.go(this.posgram.config.states.USER_DETAIL);      
     }
 
-    edit(user) {
-      let inputs = {
-        user: _.clone(user)
-      };
-
-      this.DialogService.open(UserDialog, inputs)
-        .then(user => {
-          if (!user) return;
-          let item = _.find(this.users, item => {
-            return item._id === user._id;
-          })
-          if (item) _.extend(item, user);
-        })      
+    view(user) {
+      this.$state.go(this.posgram.config.states.USER_DETAIL, {id: user._id});      
     }
 
     getRole(user) {
@@ -67,8 +47,12 @@ export default [
     }
 
     getStatus(user) {
-      if (user.isLocked) return "Locked";
-      return null;
+      return user.isArchived ? "Archived" : null;
+    }
+
+    paging(page) {
+      this.pagination.page = page;
+      this.search();
     }
   }
 ]

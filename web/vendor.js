@@ -10,3 +10,4 @@ import "./node_modules/angular-ui-router/release/angular-ui-router.js";
 import "./node_modules/angular-jwt/dist/angular-jwt.js";
 import "./node_modules/angular-bootstrap/ui-bootstrap.js";
 import "./node_modules/angular-bootstrap/ui-bootstrap-tpls.js";
+import "./node_modules/toastr/build/toastr.min.js";

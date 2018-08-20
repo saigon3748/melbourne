@@ -1,45 +1,72 @@
 import BaseController from '../base-controller';
+import PasswordDialog from '../password-dialog';
 
 export default [
-  '$rootScope', '$scope', '$http', 'posgram', '$uibModalInstance', 'UserApi', 'user',
+  '$rootScope', '$scope', '$state', '$stateParams', 'posgram', 'DialogService', 'UserApi',
   class Controller extends BaseController {
-    constructor($rootScope, $scope, $http, posgram, $uibModalInstance, UserApi, user) {
+    constructor($rootScope, $scope, $state, $stateParams, posgram, DialogService, UserApi) {
       super()
-      this.$http = $http;
+      this.$state = $state;
       this.$scope = $scope;
-      this.$uibModalInstance = $uibModalInstance;
+      this.$stateParams = $stateParams;
+      this.posgram = posgram;
+      this.DialogService = DialogService;
       this.UserApi = UserApi;
-      this.user = user || {};
     }
 
-    cancel() {
-      this.$uibModalInstance.close(false);
+    $onInit() {
+      if (!this.$stateParams.id) return;
+
+      this.UserApi.findById(this.$stateParams.id)
+        .then(user => {
+          this.user = user;
+        })
+        .catch(err => {
+          toastr.error(err.message);
+        })      
+    }
+
+    get title() {
+      return this.$stateParams.id ? "User Detail" : "Create User";
+    }
+
+    changePassword() {
+      let inputs = {
+        user: _.clone(this.user)
+      };
+
+      this.DialogService.open(PasswordDialog, inputs)
+        .then(password => {
+          if (!password) return;
+          this.user.password = password;
+        })
     }
 
     save() {
-      if (this.user._id) this.create()
-      else this.update();
-      // return this.DeliveryApi.updateCOD(this.order._id, this.codAmount, this.notes)
-      //   .then(delivery => {
-      //     this.$uibModalInstance.close(delivery);
-      //   })
-      //   .catch(err => {
-      //     this.showDangerAlert("Cannot edit COD");
-      //   })
-    }
+      if (this.user._id) {
+        this.UserApi.update(this.user._id ,this.user)
+          .then(user => {
+            toastr.success('Updated succeeded');
+          })
+          .catch(err => {
+            toastr.error(err.error);
+          })
 
-    create() {
-      return this.UserApi.create(this.user)
+        return;
+      }
+
+      this.UserApi.create(this.user)
         .then(user => {
-          this.$uibModalInstance.close(user);
+          toastr.success('Created succeeded');
+          this.$state.go(this.posgram.config.states.USER_LIST);
         })
         .catch(err => {
-          // this.showDangerAlert("Cannot edit COD");
+          toastr.error(err.error);
         })
     }
 
-    update() {
-
+    cancel() {
+      this.$state.go(this.posgram.config.states.USER_LIST);
     }
   }
 ]

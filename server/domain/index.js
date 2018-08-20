@@ -9,6 +9,7 @@ const Addon = require('./addon');
 const Cash = require('./cash');
 const Discount = require('./discount');
 const Place = require('./place');
+const Printer = require('./printer');
 
 module.exports = class Domain {
   static Tenant(data) {
@@ -89,6 +90,14 @@ module.exports = class Domain {
 
   static PlaceService(ctx) {
     return new Place.Service(ctx);
+  }
+
+  static Printer(data) {
+    return new Printer.Model(data);
+  }
+
+  static PrinterService(ctx) {
+    return new Printer.Service(ctx);
   }
 }
 

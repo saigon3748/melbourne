@@ -12,7 +12,8 @@ module.exports = {
             UserSchema.create({
               username: 'sudo',
               password: 'nemo',
-              name: 'sudo'
+              firstName: 'super',
+              lastName: 'admin'
             });
           }
         });

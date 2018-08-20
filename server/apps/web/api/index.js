@@ -13,4 +13,5 @@ module.exports = express.Router()
   .use('/discounts', require('./discount'))
   .use('/cashes', require('./cash'))
   .use('/places', require('./place'))
+  .use('/printers', require('./printer'))
 

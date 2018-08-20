@@ -4,7 +4,7 @@ export default [
   '$modal', '$rootScope',
   class Service {
     constructor($modal, $rootScope) {
-      this.$uibModal = $modal;
+      this.$modal = $modal;
       this.$rootScope = $rootScope;
     }
 
@@ -27,7 +27,7 @@ export default [
         Object.assign(options, { resolve: resolve });
       }
 
-      return this.$uibModal.open(options).result;
+      return this.$modal.open(options).result;
     }
 
     confirm(message) {

@@ -15,25 +15,8 @@ let schema = mongoose.Schema({
     }, { _id: false })
   },
   utc: { type: Number },
-  isPrintAutomotive: { type: Boolean, default: true },
   isGSTInclusive: { type: Boolean, default: true },
-  isArchived: { type: Boolean, default: false },
-  printers: {
-    type: mongoose.Schema({
-      name: { type: String },
-      ip: { type: String },
-      isChef: { type: Boolean },
-      title: { type: String },
-      header1: { type: String },
-      header2: { type: String },
-      header3: { type: String },
-      header4: { type: String },
-      header5: { type: String },
-      footer1: { type: String },
-      footer2: { type: String },
-      footer3: { type: String }
-    }, { _id: false })
-  }
+  isArchived: { type: Boolean, default: false }
 })
 
 schema.index({"code": "text", "name": "text"})

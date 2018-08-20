@@ -1,47 +1,84 @@
-<div class="modal-header">
-  <h4 ng-if="$ctrl.user._id" class="modal-title">Edit user</h4>
-  <h4 ng-if="!$ctrl.user._id" class="modal-title">Create user</h4>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="#">Settings</a></li>
+      <li class="breadcrumb-item"><a href="#">Users</a></li>
+      <li class="breadcrumb-item active"><span ng-bind="$ctrl.title"></span></li>
+    </ol>
+  </nav>
+  <div ng-if="$ctrl.$stateParams.id" class="btn-toolbar mb-2 mb-md-0">
+    <div class="btn-group mr-2">
+      <button ng-click="$ctrl.changePassword()" class="btn btn-sm btn-outline-secondary">
+        Change Password
+      </button>
+    </div>
+  </div>
 </div>
-<div class="modal-body">
-  <form class="form-horizontal" role="form" novalidate name="editCodForm">
-    <div class="form-group">
-      <label class="control-label col-sm-3">Username</label>
-      <div class="col-sm-9">
-        <input class="form-control" ng-model="$ctrl.user.username" />
+
+<form>
+  <div ng-if="$ctrl.$stateParams.id" class="form-group row">
+    <label for="username" class="col-sm-2 col-form-label">Username</label>
+    <div class="col-sm-10">
+      <input type="text" readonly class="form-control-plaintext" id="username" ng-model="$ctrl.user.username">
+    </div>
+  </div>  
+  <div ng-if="!$ctrl.$stateParams.id" class="form-group row">
+    <label for="username" class="col-sm-2 col-form-label">Username</label>
+    <div class="col-sm-10">
+      <input type="input" class="form-control" id="username" ng-model="$ctrl.user.username">
+    </div>
+  </div>  
+  <div ng-if="!$ctrl.$stateParams.id" class="form-group row">
+    <label for="password" class="col-sm-2 col-form-label">Password</label>
+    <div class="col-sm-10">
+      <input type="password" class="form-control" id="password" ng-model="$ctrl.user.password">
+    </div>
+  </div>
+  <div ng-if="!$ctrl.$stateParams.id" class="form-group row">
+    <label for="confirmPassword" class="col-sm-2 col-form-label">Confirm Password</label>
+    <div class="col-sm-10">
+      <input type="password" class="form-control" id="confirmPassword" ng-model="$ctrl.user.confirmPassword">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="firstName" class="col-sm-2 col-form-label">First Name</label>
+    <div class="col-sm-10">
+      <input type="input" class="form-control" id="firstName" ng-model="$ctrl.user.firstName">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="lastName" class="col-sm-2 col-form-label">Last Name</label>
+    <div class="col-sm-10">
+      <input type="input" class="form-control" id="lastName" ng-model="$ctrl.user.lastName">
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-sm-2">Role</div>
+    <div class="col-sm-10">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="role" ng-model="$ctrl.user.isManager">
+        <label class="form-check-label" for="role">
+          Manager
+        </label>
       </div>
     </div>
-    <div class="form-group">
-      <label class="control-label col-sm-3">Password</label>
-      <div class="col-sm-9">
-        <input class="form-control" ng-model="$ctrl.user.password" />
+  </div>
+  <div class="form-group row">
+    <div class="col-sm-2">Status</div>
+    <div class="col-sm-10">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="status" ng-model="$ctrl.user.isArchived">
+        <label class="form-check-label" for="status">
+          Archived
+        </label>
       </div>
     </div>
-    <hr/>
-    <div class="form-group">
-      <label class="control-label col-sm-3">Name</label>
-      <div class="col-sm-9">
-        <input class="form-control" ng-model="$ctrl.user.name" />
-      </div>
-    </div>    
-    <div class="form-group">
-      <label class="control-label col-sm-3">Role</label>
-      <div class="col-sm-9">
-        <div class="checkbox">
-          <label><input type="checkbox" ng-model="$ctrl.user.isManager">Manager</label>
-        </div>
-      </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-sm-12">
+      <button ng-click="$ctrl.save()" type="submit" class="btn btn-primary float-right">Save</button>
+      <span class="float-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      <button ng-click="$ctrl.cancel()" class="btn btn-secondary float-right" type="button">Cancel</button>
     </div>
-    <div class="form-group">
-      <label class="control-label col-sm-3">Access</label>
-      <div class="col-sm-9">
-        <div class="checkbox">
-          <label><input type="checkbox" ng-model="$ctrl.user.isLocked">Locked</label>
-        </div>
-      </div>
-    </div>
-  </form>
-</div>
-<div class="modal-footer">
-  <button type="button" ng-click="$ctrl.cancel()" class="btn btn-default" data-dismiss="modal">Cancel</button>
-  <button type="button" ng-click="$ctrl.save()" class="btn btn-primary" data-dismiss="modal">Save</button>
-</div>
+  </div>
+</form>

@@ -18,10 +18,12 @@
     "lodash": "4.17.10",
     "moment": "2.22.2",
     "popper.js": "1.14.3",
+    "toastr": "2.1.4",
     "yarn": "1.7.0"
   },
   "devDependencies": {
     "babel-core": "6.26.3",
+    "babel-plugin-module-resolver": "3.1.1",
     "babel-preset-env": "1.7.0"
   }
 }

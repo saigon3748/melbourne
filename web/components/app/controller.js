@@ -9,25 +9,25 @@ export default [
     }
 
     get isAuthenticated() {
-      return this.AuthService.isAuthenticated;
+      return this.$rootScope.isAuthenticated;
     }
 
     get isSudo() {
-      return this.$rootScope.global.user.name === "sudo";
+      return this.$rootScope.user.isSudo;
     }
 
     get loggedUser() {
-      return this.$rootScope.global.user;
+      return this.$rootScope.user;
     }
 
     get tenant() {
-      return this.$rootScope.global.user.tenant;
+      return this.$rootScope.user.tenant;
     }
 
     logout() {
       window.localStorage.removeItem('token');
-      this.$rootScope.global.user = null;
-      this.$rootScope.isLoggedIn = false;
+      this.$rootScope.user = null;
+      this.$rootScope.isAuthenticated = false;
       this.$state.go(this.posgram.config.states.LOGIN);
     }    
   }

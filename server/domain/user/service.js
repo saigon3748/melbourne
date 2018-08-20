@@ -29,8 +29,8 @@ module.exports = class Service extends BaseService {
     }
 
     return pipeline([
-        doUpdate,
-        doUpdatePassword
-      ])
+      doUpdate,
+      doUpdatePassword
+    ])
   } 
 }

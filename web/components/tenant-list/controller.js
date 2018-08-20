@@ -34,35 +34,11 @@ export default [
     }
 
     create() {
-      let inputs = {
-        tenant: null
-      };
-
-      this.DialogService.open(TenantDialog, inputs)
-        .then(tenant => {
-          if (!tenant) return;
-          this.tenants.push(tenant);
-        })
+      this.$state.go(this.posgram.config.states.TENANT_DETAIL);
     }
 
-    edit(tenant) {
-      let inputs = {
-        tenant: _.clone(tenant)
-      };
-
-      this.DialogService.open(TenantDialog, inputs)
-        .then(tenant => {
-          if (!tenant) return;
-          let item = _.find(this.tenants, item => {
-            return item._id === tenant._id;
-          })
-          if (item) _.extend(item, tenant);
-        })
-    }
-
-    getTenantStatus(tenant) {
-      if (tenant.isLocked) return "Locked"
-      return "" 
+    view(tenant) {
+      this.$state.go(this.posgram.config.states.TENANT_DETAIL, {id: tenant._id});
     }
   }
 ]

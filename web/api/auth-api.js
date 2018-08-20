@@ -7,11 +7,21 @@ export default ['$http', '$q', 'posgram',
     }
 
     login(username, password) {
-      return this.$http.post(`${this.endpoint}/login`, null, {
-        headers: {
-          'Authorization': 'Basic ' + window.btoa(username + ':' + password)
-        }
-      })
+      let token = 'Basic ' + window.btoa(username + ':' + password);
+
+      return this.$q((resolve, reject) => {
+        this.$http.post(`${this.endpoint}/login`, null, {
+            headers: {
+              'Authorization': token
+            }
+          })
+          .then(res => {
+            resolve(res.data);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
     }
   }
 ]
