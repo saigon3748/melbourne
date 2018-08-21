@@ -87,6 +87,7 @@ module.exports = class QueryHelper {
             let key = statement.substring(0, operatorIndex)
             let value = statement.substring(operatorIndex + operators[i].length)
 
+            if (key === "jwt") continue;
             if (opts && _.includes(opts.excludes, key)) break;
 
             switch (operators[i]) {

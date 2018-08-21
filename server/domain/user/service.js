@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const fastCsv = require('fast-csv');
 const schema = require('./schema');
 const BaseService = require('../base-service');
 const pipeline = require('../../libs/pipeline');
@@ -33,4 +34,22 @@ module.exports = class Service extends BaseService {
       doUpdatePassword
     ])
   } 
+
+  download(query = {}, options) {
+    return new Promise((resolve, reject) => {
+      let transformer = doc => {
+        return {
+          "Username": doc.username,
+          "First Name": doc.firstName,
+          "Last Name": doc.lastName
+        }
+      }
+
+      let csvStream = fastCsv
+        .createWriteStream({headers: true})
+        .transform(transformer)
+
+      resolve(this.stream(query, options).pipe(csvStream));
+    });    
+  }
 }

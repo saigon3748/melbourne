@@ -32,6 +32,11 @@ export default [
         })
     }
 
+    download() {
+      let query = this.searchText ? `text=${this.searchText}` : null;
+      this.UserApi.download(query)
+    }
+
     create(user) {
       this.$state.go(this.posgram.config.states.USER_DETAIL);      
     }

@@ -61,6 +61,6 @@ module.exports = class Controller extends BaseController {
       payload.isSudo = true;
     }
 
-    return jwt.encode(payload, "noel");
+    return jwt.encode(payload, process.env.JWT_SECRET);
   }  
 }

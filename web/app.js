@@ -4,6 +4,7 @@ import config from './config';
 import route from './route';
 import app from './components/app';
 import login from './components/login';
+import avatar from './components/avatar';
 import sidebar from './components/sidebar';
 import dashboard from './components/dashboard';
 import analytics from './components/analytics';
@@ -36,6 +37,7 @@ angular
   .module('posgram', [ 'ui.router', 'ui.bootstrap', 'angular-jwt' ])
   .component('posApp', app)  
   .component('posLogin', login)  
+  .component('posAvatar', avatar)  
   .component('posSidebar', sidebar)
   .component('posDashboard', dashboard)
   .component('posAnalytics', analytics)

@@ -138,6 +138,13 @@ module.exports = class BaseService {
     });
   }
 
+  stream(query = {}, options) {
+    if (!query) throw new Error('Missing query');
+
+    query = this._filterTenant(query);
+    return this._repo.find(query).stream();
+  }
+
   _filterTenant(query) {
     if (!this._isTenantFiltered) return query;
 

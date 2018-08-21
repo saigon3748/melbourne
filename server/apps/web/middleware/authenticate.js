@@ -1,10 +1,14 @@
+const jwt = require('jwt-simple');
 const passport = require('passport');
 const { ExtractJwt, Strategy } = require('passport-jwt');
 
 let opts = {
-  jwtFromRequest: ExtractJwt.fromAuthHeader(),
-  secretOrKey: "noel",
-  passReqToCallback: true
+  passReqToCallback: true,
+  secretOrKey: process.env.JWT_SECRET,
+  jwtFromRequest: ExtractJwt.fromExtractors([
+    ExtractJwt.fromAuthHeaderWithScheme("JWT"),
+    ExtractJwt.fromUrlQueryParameter("jwt")
+  ])
 }
 
 passport.use(new Strategy(opts, (req, payload, done) => {
@@ -22,7 +26,6 @@ module.exports = function(req, res, next) {
     }
 
     req.user = user;
-    
     next();
   })(req, res, next);
 };

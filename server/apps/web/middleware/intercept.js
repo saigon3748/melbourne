@@ -1,3 +1,4 @@
+const { Readable } = require('stream'); 
 const _ = require('lodash');
 const pipeline = require('../../../libs/pipeline');
 const Context = require('../../../infra/utils/context');
@@ -12,7 +13,15 @@ module.exports = function(controller, method, enableLog = false) {
 
     return ctrl[method]()
       .then(result => {
-        res.json(result)
+        if (method === "download") {
+          res.setHeader('Content-disposition', 'attachment; filename=export.csv');
+          res.setHeader('Content-Type', 'text/csv');
+          res.flushHeaders();
+          result.pipe(res);
+          return;
+        }
+
+        res.json(result);
       })
       .catch(err => {
         if (err.output) {
@@ -20,9 +29,7 @@ module.exports = function(controller, method, enableLog = false) {
           res.status(payload.statusCode).json(payload);
           return;
         }
-
-        console.log('error catched in middleware', err)
-
+console.log('intercept middleware', err)
         let payload = {
           "statusCode": 500,
           "error": "Internal Server Error",

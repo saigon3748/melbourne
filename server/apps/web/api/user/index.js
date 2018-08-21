@@ -11,6 +11,10 @@ module.exports = express.Router()
     middleware.authenticate, 
     middleware.intercept(controller, 'create'))
 
+  .get('/download', 
+    middleware.authenticate, 
+    middleware.intercept(controller, 'download'))
+
   .get('/:id', 
     middleware.authenticate, 
     middleware.intercept(controller, 'findById'))

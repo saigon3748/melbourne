@@ -81,4 +81,18 @@ export default class BaseApi {
         });
     });
   }
+
+  download(query, options) {
+    let token = window.localStorage.getItem('token');
+    let url = `${this.endpoint}/download?jwt=${token}`;
+    if (query) url = `${url}&${query}`;
+    if (options) {
+      if (url.indexOf('?') < 0) url = `${url}?`;
+      if (options.page) url = `${url}&page=${options.page}`;
+      if (options.limit) url = `${url}&limit=${options.limit}`;
+    }
+
+    window.open(url)
+    // this.$http.get(url)
+  }  
 }
