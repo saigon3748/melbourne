@@ -25,7 +25,7 @@ let schema = mongoose.Schema({
   isArchived: { type: Boolean, default: false }
 })
 
-schema.index({"name": "text"})
+schema.index({"name": "text", "category.name": "text"})
 
 schema.plugin(audit);
 schema.plugin(paginate);

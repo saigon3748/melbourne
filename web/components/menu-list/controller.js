@@ -1,5 +1,4 @@
 import BaseController from '../base-controller';
-import MenuDialog from '../menu-dialog';
 
 export default [
   '$rootScope', '$state', '$timeout', '$sce', 'posgram', 'DialogService', 'MenuApi',
@@ -33,59 +32,26 @@ export default [
         })
     }
 
+    download() {
+      let query = this.searchText ? `text=${this.searchText}` : null;
+      this.MenuApi.download(query)
+    }
+
     create() {
-      let inputs = {
-        menu: null
-      };
-
-      this.DialogService.open(MenuDialog, inputs)
-        .then(menu => {
-          if (!menu) return;
-          this.menus.push(menu);
-        })      
+      this.$state.go(this.posgram.config.states.MENU_DETAIL);      
     }
 
-    edit(menu) {
-      let inputs = {
-        menu: _.clone(menu)
-      };
-
-      this.DialogService.open(MenuDialog, inputs)
-        .then(menu => {
-          if (!menu) return;
-          let item = _.find(this.menus, item => {
-            return item._id === menu._id;
-          })
-          if (item) _.extend(item, menu);
-        })      
-    }
-
-    delete(menu) {
-      this.DialogService.confirm("Do you want to delete?")
-        .then(confirmed => {
-          if (!confirmed) return;
-          this.MenuApi.delete(menu._id)
-            .then(result => {
-              this.menus = _.filter(this.menus, item => {
-                return item._id != menu._id;
-              })                       
-              toastr.success('Deleted successfully');
-            })
-            .catch(err => {
-              toastr.error('Deleted failed');
-            })          
-        })
-    }
-
-    getDiscount(menu) {
-      if (!menu.discount) return null;
-      if (menu.isPercentDiscount) return `${menu.discount}%`;
-      return "$" + `${menu.discount}`;
+    view(menu) {
+      this.$state.go(this.posgram.config.states.MENU_DETAIL, {id: menu._id});      
     }
 
     getStatus(menu) {
-      if (menu.isLocked) return "Locked";
-      return null;
+      return menu.isArchived ? "Archived" : null;
+    }
+    
+    paging(page) {
+      this.pagination.page = page;
+      this.search();
     }
   }
 ]

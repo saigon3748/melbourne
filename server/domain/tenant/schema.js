@@ -14,8 +14,8 @@ let schema = mongoose.Schema({
       name: { type: String, required: true }
     }, { _id: false })
   },
-  utc: { type: Number },
-  isGSTInclusive: { type: Boolean, default: true },
+  utc: { type: Number, default: 0 },
+  isTaxInclusive: { type: Boolean, default: true },
   isArchived: { type: Boolean, default: false }
 })
 

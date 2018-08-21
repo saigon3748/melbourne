@@ -1,73 +1,48 @@
 import BaseController from '../base-controller';
-import MenuDialog from '../menu-dialog';
+import PasswordDialog from '../password-dialog';
 
 export default [
-  '$rootScope', '$state', '$timeout', '$sce', 'posgram', 'DialogService', 'MenuApi',
+  '$rootScope', '$scope', '$state', '$stateParams', 'posgram', 'DialogService', 'CategoryApi', 'OrderApi',
   class Controller extends BaseController {
-    constructor($rootScope, $state, $timeout, $sce, posgram, DialogService, MenuApi) {
-      super();
-      this.$rootScope = $rootScope;
+    constructor($rootScope, $scope, $state, $stateParams, posgram, DialogService, CategoryApi, OrderApi) {
+      super()
       this.$state = $state;
-      this.$timeout = $timeout;
-      this.$sce = $sce;
+      this.$scope = $scope;
+      this.$stateParams = $stateParams;
       this.posgram = posgram;
       this.DialogService = DialogService;
-      this.MenuApi = MenuApi;
+      this.OrderApi = OrderApi;
+      this.CategoryApi = CategoryApi;
     }
 
     $onInit() {
-      this.pagination = {
-        page: 1,
-        limit: 10
-      };
+      if (!this.$stateParams.id) return;
 
-      this.search();
-    }
-
-    search() {
-      let query = this.searchText ? `text=${this.searchText}` : null;
-      this.MenuApi.find(query, this.pagination)
-        .then(result => {
-          this.menus = result.docs || [];
-          this.pagination = _.extend(this.pagination, _.pick(result, ['total', 'limit', 'page', 'pages']));
+      this.OrderApi.findById(this.$stateParams.id)
+        .then(order => {
+          this.order = order;
+        })
+        .catch(err => {
+          toastr.error(err.message);
         })
     }
 
-    create() {
-      let inputs = {
-        menu: null
-      };
-
-      this.DialogService.open(MenuDialog, inputs)
-        .then(menu => {
-          if (!menu) return;
-          this.menus.push(menu);
-        })      
+    save() {
+      this.OrderApi.update(this.order._id ,this.order)
+        .then(order => {
+          toastr.success('Updated succeeded');
+        })
+        .catch(err => {
+          toastr.error(err.error);
+        })
     }
 
-    edit(menu) {
-      let inputs = {
-        menu: _.clone(menu)
-      };
-
-      this.DialogService.open(MenuDialog, inputs)
-        .then(menu => {
-          if (!menu) return;
-          let item = _.find(this.menus, item => {
-            return item._id === menu._id;
-          })
-          if (item) _.extend(item, menu);
-        })      
-    }
-
-    getTags(menu) {
-      if (!menu.tags) return null;
-      return menu.tags.reduce((value, item) => `${value}, ${item}`);
-    }
-
-    getStatus(menu) {
-      if (menu.isLocked) return "Locked";
-      return null;
+    cancel() {
+      this.DialogService.confirm("Do you want to discard change?")
+        .then(confirmed => {
+          if (!confirmed) return;
+          this.$state.go(this.posgram.config.states.ORDER_LIST);
+        })
     }
   }
 ]

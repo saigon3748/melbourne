@@ -1,5 +1,4 @@
 import BaseController from '../base-controller';
-import ReceiptDialog from '../receipt-dialog';
 
 export default [
   '$rootScope', '$state', '$timeout', '$sce', 'posgram', 'DialogService', 'OrderApi',
@@ -28,51 +27,27 @@ export default [
       let query = this.searchText ? `text=${this.searchText}` : null;
       this.OrderApi.find(query, this.pagination)
         .then(result => {
-          this.orders = result.docs || [];
+          this.menus = result.docs || [];
           this.pagination = _.extend(this.pagination, _.pick(result, ['total', 'limit', 'page', 'pages']));
         })
     }
 
+    download() {
+      let query = this.searchText ? `text=${this.searchText}` : null;
+      this.OrderApi.download(query)
+    }
+
+    create() {
+      this.$state.go(this.posgram.config.states.ORDER_DETAIL);      
+    }
+
     view(order) {
-      let inputs = {
-        order: _.clone(order)
-      };
-
-      this.DialogService.open(ReceiptDialog, inputs)
-        .then(order => {
-          if (!order) return;
-          let item = _.find(this.orders, item => {
-            return item._id === order._id;
-          })
-          if (item) _.extend(item, order);
-        })      
+      this.$state.go(this.posgram.config.states.ORDER_DETAIL, {id: order._id});      
     }
-
-    delete(order) {
-      this.DialogService.confirm("Do you want to delete?")
-        .then(confirmed => {
-          if (!confirmed) return;
-          this.OrderApi.delete(order._id)
-            .then(result => {
-              this.orders = _.filter(this.orders, item => {
-                return item._id != order._id;
-              })                       
-              toastr.success('Deleted successfully');
-            })
-            .catch(err => {
-              toastr.error('Deleted failed');
-            })          
-        })
-    }
-
-    getTags(order) {
-      if (!order.tags) return null;
-      return order.tags.reduce((value, item) => `${value}, ${item}`);
-    }
-
-    getStatus(order) {
-      if (order.isLocked) return "Locked";
-      return null;
+    
+    paging(page) {
+      this.pagination.page = page;
+      this.search();
     }
   }
 ]

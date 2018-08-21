@@ -31,11 +31,11 @@ export default [
         template: '<pos-account/>'
       })
       .state(posgram.config.states.TENANT_LIST, {
-        url: '/admin/shops',
+        url: '/shops',
         template: '<pos-tenant-list/>'
       })
       .state(posgram.config.states.TENANT_DETAIL, {
-        url: '/admin/shop/:id',
+        url: '/shop/:id',
         template: '<pos-tenant-detail/>'
       })
       .state(posgram.config.states.USER_LIST, {
@@ -45,10 +45,6 @@ export default [
       .state(posgram.config.states.USER_DETAIL, {
         url: '/users/:id',
         template: '<pos-user-detail/>'
-      })
-      .state(posgram.config.states.CART, {
-        url: '/cart',
-        template: '<pos-cart/>'
       })
       .state(posgram.config.states.ORDER_LIST, {
         url: '/orders',
@@ -61,6 +57,10 @@ export default [
       .state(posgram.config.states.MENU_LIST, {
         url: '/menus',
         template: '<pos-menu-list/>'
+      })
+      .state(posgram.config.states.MENU_DETAIL, {
+        url: '/menus/:id',
+        template: '<pos-menu-detail/>'
       })
       .state(posgram.config.states.CATEGORY_LIST, {
         url: '/categories',

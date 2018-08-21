@@ -1,5 +1,4 @@
 import BaseController from '../base-controller';
-import TenantDialog from '../tenant-dialog';
 
 export default [
   '$rootScope', '$state', '$timeout', '$sce', 'posgram', 'DialogService', 'TenantApi',

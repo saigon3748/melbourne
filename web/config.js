@@ -1,5 +1,4 @@
 export default {
-  cors: false,
   api: 'http://localhost:8000/api',
   states: {
     HOME: 'Home',
@@ -13,14 +12,14 @@ export default {
     TENANT_DETAIL: 'TenantDetail',
     USER_LIST: 'UserList',
     USER_DETAIL: 'UserDetail',
-    CART: 'Cart',
     ORDER_LIST: 'OrderList',
     ORDER_DETAIL: 'OrderDetail',
     MENU_LIST: 'MenuList',
-    CATEGORY_DETAIL: 'CategoryDetail',
+    MENU_DETAIL: 'MenuDetail',
     CATEGORY_LIST: 'CategoryList',
-    DISCOUNT_DETAIL: 'DiscountDetail',
-    DISCOUNT_LIST: 'DiscountList'
+    CATEGORY_DETAIL: 'CategoryDetail',
+    DISCOUNT_LIST: 'DiscountList',
+    DISCOUNT_DETAIL: 'DiscountDetail'
   },
   actions: {
     VIEW: 'View',

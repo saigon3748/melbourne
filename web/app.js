@@ -13,10 +13,10 @@ import trash from './components/trash';
 import account from './components/account';
 import tenantList from './components/tenant-list';
 import tenantDetail from './components/tenant-detail';
-import cart from './components/cart';
 import orderList from './components/order-list';
 import orderDetail from './components/order-detail';
 import menuList from './components/menu-list';
+import menuDetail from './components/menu-detail';
 import categoryList from './components/category-list';
 import categoryDetail from './components/category-detail';
 import discountList from './components/discount-list';
@@ -50,10 +50,10 @@ angular
   .component('posAccount', account)
   .component('posTenantList', tenantList)
   .component('posTenantDetail', tenantDetail)
-  .component('posCart', cart)
   .component('posOrderList', orderList)
   .component('posOrderDetail', orderDetail)
   .component('posMenuList', menuList)
+  .component('posMenuDetail', menuDetail)
   .component('posCategoryList', categoryList)
   .component('posCategoryDetail', categoryDetail)
   .component('posDiscountList', discountList)

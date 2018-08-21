@@ -17,14 +17,7 @@ let schema = mongoose.Schema({
   parent: mongoose.Schema({
     _id: { type: mongoose.Schema.Types.ObjectId, ref: 'categories' },
     name: { type: String, required: true }
-  }, { _id: false }),  
-  subs: [ 
-    mongoose.Schema({
-      _id: { type: mongoose.Schema.Types.ObjectId, ref: 'categories' },
-      name: { type: String, required: true },
-      displayIndex: { type: Number, default: 1 }
-    }, { _id: false })
-  ],
+  }, { _id: false }),
   isArchived: { type: Boolean, default: false }  
 })
 
