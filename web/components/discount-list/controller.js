@@ -1,9 +1,9 @@
 import BaseController from '../base-controller';
 
 export default [
-  '$rootScope', '$state', '$timeout', '$sce', 'posgram', 'DialogService', 'CategoryApi',
+  '$rootScope', '$state', '$timeout', '$sce', 'posgram', 'DialogService', 'DiscountApi',
   class Controller extends BaseController {
-    constructor($rootScope, $state, $timeout, $sce, posgram, DialogService, CategoryApi) {
+    constructor($rootScope, $state, $timeout, $sce, posgram, DialogService, DiscountApi) {
       super();
       this.$rootScope = $rootScope;
       this.$state = $state;
@@ -11,7 +11,7 @@ export default [
       this.$sce = $sce;
       this.posgram = posgram;
       this.DialogService = DialogService;
-      this.CategoryApi = CategoryApi;
+      this.DiscountApi = DiscountApi;
     }
 
     $onInit() {
@@ -25,30 +25,38 @@ export default [
 
     search() {
       let query = this.searchText ? `text=${this.searchText}` : null;
-      this.CategoryApi.find(query, this.pagination)
+      this.DiscountApi.find(query, this.pagination)
         .then(result => {
-          this.categories = result.docs || [];
+          this.discounts = result.docs || [];
           this.pagination = _.extend(this.pagination, _.pick(result, ['total', 'limit', 'page', 'pages']));
         })
     }
 
     download() {
       let query = this.searchText ? `text=${this.searchText}` : null;
-      this.CategoryApi.download(query)
+      this.DiscountApi.download(query)
     }
 
     create() {
-      this.$state.go(this.posgram.config.states.CATEGORY_DETAIL);      
+      this.$state.go(this.posgram.config.states.DISCOUNT_DETAIL);      
     }
 
     view(category) {
-      this.$state.go(this.posgram.config.states.CATEGORY_DETAIL, {id: category._id});      
+      this.$state.go(this.posgram.config.states.DISCOUNT_DETAIL, {id: category._id});      
     }
 
     getStatus(user) {
       return user.isArchived ? "Archived" : null;
     }
 
+    getDiscount(discount) {
+      if (discount.isPercentOff) {
+        return discount.discount + "%";
+      }
+
+      return "$" + discount.discount;
+    }
+    
     paging(page) {
       this.pagination.page = page;
       this.search();

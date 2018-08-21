@@ -45,14 +45,14 @@ module.exports = class BaseService {
           resolve(result);
         });
       });      
-    } else {
-      return new Promise((resolve, reject) => {
-        this._repo.find(query, (err, result) => {
-          if (err) throw Boom.badImplementation(err.message, err);
-          resolve(result);
-        });
-      }); 
     }
+
+    return new Promise((resolve, reject) => {
+      this._repo.find(query, (err, result) => {
+        if (err) throw Boom.badImplementation(err.message, err);
+        resolve(result);
+      });
+    }); 
   }
 
   create(data) {
@@ -94,6 +94,31 @@ module.exports = class BaseService {
 
     return new Promise((resolve, reject) => {
       this._repo.update(query, data, (err) => {
+        if (err) throw Boom.badImplementation(err.message, err);
+        resolve();
+      });
+    });
+  }
+
+  update(query = {}, data) {
+    if (!query) throw new Error('Missing query');
+    if (!data) throw new Error('Missing data');
+
+    query = this._filterTenant(query);
+
+    _.extend(data, {
+      updatedAt: new Date(),
+      updatedBy: {
+        _id: this._ctx.user._id,
+        username: this._ctx.user.username,
+        name: this._ctx.user.name
+      }
+    })
+
+    let options = { multi: true };
+
+    return new Promise((resolve, reject) => {
+      this._repo.update(query, data, options, (err) => {
         if (err) throw Boom.badImplementation(err.message, err);
         resolve();
       });

@@ -66,7 +66,11 @@ export default [
     }
 
     cancel() {
-      this.$state.go(this.posgram.config.states.USER_LIST);
+      this.DialogService.confirm("Do you want to discard change?")
+        .then(confirmed => {
+          if (!confirmed) return;
+          this.$state.go(this.posgram.config.states.USER_LIST);
+        })
     }
   }
 ]

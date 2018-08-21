@@ -17,7 +17,10 @@ export default {
     ORDER_LIST: 'OrderList',
     ORDER_DETAIL: 'OrderDetail',
     MENU_LIST: 'MenuList',
-    CATEGORY_LIST: 'CategoryList'
+    CATEGORY_DETAIL: 'CategoryDetail',
+    CATEGORY_LIST: 'CategoryList',
+    DISCOUNT_DETAIL: 'DiscountDetail',
+    DISCOUNT_LIST: 'DiscountList'
   },
   actions: {
     VIEW: 'View',

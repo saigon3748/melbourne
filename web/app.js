@@ -18,6 +18,9 @@ import orderList from './components/order-list';
 import orderDetail from './components/order-detail';
 import menuList from './components/menu-list';
 import categoryList from './components/category-list';
+import categoryDetail from './components/category-detail';
+import discountList from './components/discount-list';
+import discountDetail from './components/discount-detail';
 import userList from './components/user-list';
 import userDetail from './components/user-detail';
 import authService from './services/auth-service';
@@ -28,6 +31,7 @@ import tenantApi from './api/tenant-api';
 import userApi from './api/user-api';
 import menuApi from './api/menu-api';
 import categoryApi from './api/category-api';
+import discountApi from './api/discount-api';
 import orderApi from './api/order-api';
 
 window.toastr = toastr;
@@ -51,6 +55,9 @@ angular
   .component('posOrderDetail', orderDetail)
   .component('posMenuList', menuList)
   .component('posCategoryList', categoryList)
+  .component('posCategoryDetail', categoryDetail)
+  .component('posDiscountList', discountList)
+  .component('posDiscountDetail', discountDetail)
   .component('posUserList', userList)
   .component('posUserDetail', userDetail)
   .service('AuthService', authService)
@@ -61,6 +68,7 @@ angular
   .service('UserApi', userApi)
   .service('MenuApi', menuApi)
   .service('CategoryApi', categoryApi)
+  .service('DiscountApi', discountApi)
   .service('OrderApi', orderApi)  
   .constant('posgram', { config: config })
   .config(route)

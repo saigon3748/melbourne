@@ -59,12 +59,24 @@ export default [
         template: '<pos-order-detail/>'
       })
       .state(posgram.config.states.MENU_LIST, {
-        url: '/menu',
+        url: '/menus',
         template: '<pos-menu-list/>'
       })
       .state(posgram.config.states.CATEGORY_LIST, {
-        url: '/category',
+        url: '/categories',
         template: '<pos-category-list/>'
       })      
+      .state(posgram.config.states.CATEGORY_DETAIL, {
+        url: '/categories/:id',
+        template: '<pos-category-detail/>'
+      })
+      .state(posgram.config.states.DISCOUNT_LIST, {
+        url: '/discounts',
+        template: '<pos-discount-list/>'
+      })      
+      .state(posgram.config.states.DISCOUNT_DETAIL, {
+        url: '/discounts/:id',
+        template: '<pos-discount-detail/>'
+      })
   }
 ]

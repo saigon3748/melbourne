@@ -6,7 +6,7 @@
   <p class="text-center">{{$ctrl.message}}</p>
 </div>
 <div class="modal-footer">
-  <button ng-if="$ctrl.type == 'info'" type="button" ng-click="$ctrl.closeModal(true)" class="btn btn-default" data-dismiss="modal">Ok</button>
-  <button ng-if="$ctrl.type == 'confirm'" type="button" ng-click="$ctrl.closeModal(false)" class="btn btn-default" data-dismiss="modal">No</button>
-  <button ng-if="$ctrl.type == 'confirm'" type="button" ng-click="$ctrl.closeModal(true)" class="btn btn-primary" data-dismiss="modal">Yes</button>
+  <button ng-if="$ctrl.type == 'info'" type="button" ng-click="$ctrl.closeModal(true)" class="btn btn-primary">Ok</button>
+  <button ng-if="$ctrl.type == 'confirm'" type="button" ng-click="$ctrl.closeModal(false)" class="btn btn-secondary">No</button>
+  <button ng-if="$ctrl.type == 'confirm'" type="button" ng-click="$ctrl.closeModal(true)" class="btn btn-primary">Yes</button>
 </div>

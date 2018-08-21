@@ -12,17 +12,23 @@ let schema = mongoose.Schema({
       name: { type: String, required: true }
     }, { _id: false })
   },
-  parent: { type: mongoose.Schema.Types.ObjectId, ref: 'categories' },
   name: { type: String, required: true },
   displayIndex: { type: Number, default: 1 },
+  parent: mongoose.Schema({
+    _id: { type: mongoose.Schema.Types.ObjectId, ref: 'categories' },
+    name: { type: String, required: true }
+  }, { _id: false }),  
   subs: [ 
     mongoose.Schema({
       _id: { type: mongoose.Schema.Types.ObjectId, ref: 'categories' },
       name: { type: String, required: true },
       displayIndex: { type: Number, default: 1 }
     }, { _id: false })
-  ]
+  ],
+  isArchived: { type: Boolean, default: false }  
 })
+
+schema.index({"name": "text", "parent.name": "text"})
 
 schema.plugin(audit);
 schema.plugin(paginate);
