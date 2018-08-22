@@ -68,8 +68,20 @@ class Sidebar extends React.Component {
               <MaterialIcons name='restaurant-menu' color={'#6c757d'} size={20} />
             </Left>
             <Body>
-              <TouchableOpacity onPress={this.props.gotoKitchen}>
-                <Text>Kitchen</Text>
+              <TouchableOpacity onPress={this.props.gotoCooks}>
+                <Text>Cooks</Text>
+              </TouchableOpacity>
+            </Body>
+            <Right>
+            </Right>
+          </ListItem>
+          <ListItem icon>
+            <Left>
+              <MaterialIcons name='settings' color={'#6c757d'} size={20} />
+            </Left>
+            <Body>
+              <TouchableOpacity onPress={this.props.gotoPrinters}>
+                <Text>Printers</Text>
               </TouchableOpacity>
             </Body>
             <Right>
@@ -82,21 +94,6 @@ class Sidebar extends React.Component {
             <Body>
               <TouchableOpacity onPress={this.props.gotoDashboard}>
                 <Text>Dashboard</Text>
-              </TouchableOpacity>
-            </Body>
-            <Right>
-            </Right>
-          </ListItem>
-        </List>
-
-        <List style={{marginTop: 40}}>
-          <ListItem icon>
-            <Left>
-              <MaterialIcons name='settings' color={'#6c757d'} size={20} />
-            </Left>
-            <Body>
-              <TouchableOpacity onPress={this.props.gotoSettings}>
-                <Text>Settings</Text>
               </TouchableOpacity>
             </Body>
             <Right>

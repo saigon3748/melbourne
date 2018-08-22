@@ -33,15 +33,15 @@ const router = (state = initialState, action) => {
         state
       );
       break;
-    case "KITCHEN":
+    case "COOKS":
       nextState = Navigator.router.getStateForAction(
-        NavigationActions.navigate({ routeName: 'KITCHEN', params: { payload: action.payload } }),
+        NavigationActions.navigate({ routeName: 'COOKS', params: { payload: action.payload } }),
         state
       );
       break;
-    case "SETTINGS":
+    case "PRINTERS":
       nextState = Navigator.router.getStateForAction(
-        NavigationActions.navigate({ routeName: 'SETTINGS', params: { payload: action.payload } }),
+        NavigationActions.navigate({ routeName: 'PRINTERS', params: { payload: action.payload } }),
         state
       );
       break;

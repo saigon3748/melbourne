@@ -7,5 +7,5 @@ const pipeline = require('../../../../libs/pipeline');
 module.exports = class Controller extends BaseController {
   constructor(ctx) {
     super(ctx, Domain.PrinterService);
-  }
+  } 
 }

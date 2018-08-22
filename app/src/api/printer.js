@@ -1,10 +1,10 @@
 import { AsyncStorage } from 'react-native';
 import Config from '../config';
 
-const getToday = () => {
+const get = () => {
   return new Promise((resolve, reject) => {
     AsyncStorage.getItem('token', (err, token) => {
-      fetch(Config.API + '/kitchens/today', {
+      fetch(Config.API + '/printers', {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -17,54 +17,59 @@ const getToday = () => {
         resolve(result);
       })
       .catch(error => {
-        reject('Retrieved orders failed');
+        reject('Retrieved printers failed');
       });
     });
   });
 }
 
-const markCompleted = (ids) => {
+const create = (data) => {
   return new Promise((resolve, reject) => {
     AsyncStorage.getItem('token', (err, token) => {
-      fetch(Config.API + '/kitchens/markCompleted', {
+      fetch(Config.API + '/printers', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
           'Authorization': 'JWT ' + token
         },
-        body: JSON.stringify(ids)
+        body: JSON.stringify(data)
       })
-      .then(response => resolve(response))
+      .then(response => response.json())
+      .then(result => {
+        resolve(result);
+      })
       .catch(error => {
-        reject('Marked completed failed');
+        reject('Created printer failed');
       });
     });
   });
 }
 
-const markUncompleted = (ids) => {
+const update = (id, data) => {
   return new Promise((resolve, reject) => {
     AsyncStorage.getItem('token', (err, token) => {
-      fetch(Config.API + '/kitchens/markUncompleted', {
-        method: 'POST',
+      fetch(Config.API + `/printers/${id}`, {
+        method: 'PUT',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
           'Authorization': 'JWT ' + token
         },
-        body: JSON.stringify(ids)
+        body: JSON.stringify(data)
       })
-      .then(response => resolve(response))
+      .then(result => {
+        resolve(result);
+      })
       .catch(error => {
-        reject('Marked uncompleted failed');
+        reject('Updated printer failed');
       });
     });
   });
 }
 
 export default {
-  getToday,
-  markCompleted,
-  markUncompleted
+  get,
+  create,
+  update
 }

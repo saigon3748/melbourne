@@ -7,8 +7,8 @@ import Topbar from '../components/topbar';
 import Sidebar from '../components/sidebar';
 import Dashboard from '../components/dashboard';
 import Order from '../components/order';
-import Kitchen from '../components/kitchen';
-import Settings from '../components/settings';
+import Cooks from '../components/cooks';
+import Printers from '../components/printers';
 
 export default StackNavigator({
   LOGIN: { screen: Login },
@@ -16,8 +16,8 @@ export default StackNavigator({
     MAIN: { screen: DrawerNavigator({
         ORDER: { screen: Order },
         DASHBOARD: { screen: Dashboard },
-        KITCHEN: { screen: Kitchen },
-        SETTINGS: { screen: Settings }
+        COOKS: { screen: Cooks },
+        PRINTERS: { screen: Printers }
       }, {
         gesturesEnabled: false,
         contentComponent: Sidebar

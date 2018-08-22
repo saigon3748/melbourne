@@ -19,14 +19,14 @@ export default (dispatch) => {
         type: "ORDER"
       })
     },
-    gotoKitchen: () => {
+    gotoCooks: () => {
       dispatch({
-        type: "KITCHEN"
+        type: "COOKS"
       })
     },
-    gotoSettings: () => {
+    gotoPrinters: () => {
       dispatch({
-        type: "SETTINGS"
+        type: "PRINTERS"
       })
     }
   }  

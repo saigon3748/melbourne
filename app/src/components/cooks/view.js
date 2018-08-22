@@ -4,10 +4,10 @@ import React from 'react';
 import { Dimensions, NativeModules, AsyncStorage, Alert, ScrollView, View, TouchableOpacity, TouchableHighlight, StyleSheet, Image, ImageBackground, TextInput, FlatList } from 'react-native';
 import { Container, Content, Card, CardItem, Form, Item, Header, Left, Body, Right, Button, Icon, Title, List, ListItem, Text, Thumbnail, Input, InputGroup, Label, Toast } from 'native-base';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { MenuApi, OrderApi, TenantApi, KitchenApi } from '../../api';
+import { MenuApi, OrderApi, TenantApi, CookApi } from '../../api';
 import { Helper } from '../../utils';
 
-class Kitchen extends React.Component {
+class Cook extends React.Component {
   constructor(props) {
     super(props);
     this.intervalId;
@@ -27,7 +27,7 @@ class Kitchen extends React.Component {
   }
 
   componentDidMount() {
-    KitchenApi.getToday()
+    CookApi.getToday()
       .then(result => {
         this.setState({
           orders: result
@@ -35,7 +35,7 @@ class Kitchen extends React.Component {
       })
 
     this.intervalId = setInterval(() => {
-      KitchenApi.getToday()
+      CookApi.getToday()
         .then(result => {
           this.setState({
             orders: result
@@ -51,7 +51,7 @@ class Kitchen extends React.Component {
   }
 
   onRefresh() {
-    KitchenApi.getToday()
+    CookApi.getToday()
       .then(result => {
         this.setState({
           orders: result
@@ -59,20 +59,20 @@ class Kitchen extends React.Component {
       })    
   }
 
-  onCompleteAll() {
+  onCookedAll() {
     Alert.alert(
       'Alert', 
       'Do you want to mark completed all?',
       [ { text: 'Cancel' }, 
         { text: 'OK', onPress: () => {
           let ids = this.state.orders.map(item => item._id);
-          KitchenApi.markCompleted(ids)
+          CookApi.markCooked(ids)
             .then(result => {
               this.setState({
                 orders: []
               });
 
-              KitchenApi.getToday()
+              CookApi.getToday()
                 .then(result => {
                   this.setState({
                     orders: result
@@ -83,14 +83,14 @@ class Kitchen extends React.Component {
     );
   }
 
-  onComplete(id) {
+  onCooked(id) {
     let orders = [...this.state.orders];
     let order = _.find(orders, item => {
       return item._id === id;
     });
 
     if (order) {
-      order.isCompleted = true;
+      order.isCooked = true;
     }
 
     this.setState({
@@ -102,9 +102,9 @@ class Kitchen extends React.Component {
         return item._id === id;
       });
 
-      if (!order.isCompleted) return;
+      if (!order.isCooked) return;
 
-      KitchenApi.markCompleted([id])
+      CookApi.markCooked([id])
         .then(result => {
           let orders = _.filter(this.state.orders, item => {
             return item._id != id;
@@ -117,8 +117,8 @@ class Kitchen extends React.Component {
     }, 1000 * 5)
   }
 
-  onUncomplete(id) {
-    KitchenApi.markUncompleted([id])
+  onUncooked(id) {
+    CookApi.markUncooked([id])
       .then(result => {
         let orders = [...this.state.orders];
         let order = _.find(orders, item => {
@@ -126,7 +126,7 @@ class Kitchen extends React.Component {
         });
 
         if (order) {
-          order.isCompleted = false;
+          order.isCooked = false;
         }
 
         this.setState({
@@ -203,13 +203,13 @@ const {height: screenHeight} = Dimensions.get('window');
                       <View style={{width: 100, alignItems: 'center'}}>
                         <View style={{width: 80, alignItems: 'center'}}>
                           {(() => {
-                            if (item.isCompleted) {
+                            if (item.isCooked) {
                               return (
-                                <Button full small style={{backgroundColor: '#2177b4'}} onPress={() => {this.onUncomplete(item._id)}}><Text> UNDO </Text></Button>                      
+                                <Button full small style={{backgroundColor: '#2177b4'}} onPress={() => {this.onUncooked(item._id)}}><Text> UNDO </Text></Button>                      
                               )
                             } else {
                               return (
-                                <Button full small style={{backgroundColor: '#2FA495'}} onPress={() => {this.onComplete(item._id)}}><Text> DONE </Text></Button>                      
+                                <Button full small style={{backgroundColor: '#2FA495'}} onPress={() => {this.onCoooked(item._id)}}><Text> DONE </Text></Button>                      
                               )
                             }
                           })()}
@@ -230,7 +230,7 @@ const {height: screenHeight} = Dimensions.get('window');
           </View>
           <View style={{width: 50}}></View>
           <View style={{width: 180}}>
-            <Button full style={{marginTop: 10, backgroundColor: '#2177b4'}} onPress={() => this.onCompleteAll()}><Text> COMPLETE ALL </Text></Button>
+            <Button full style={{marginTop: 10, backgroundColor: '#2177b4'}} onPress={() => this.onCookedAll()}><Text> COMPLETE ALL </Text></Button>
           </View>
           <View style={{flex: 1}}></View>
         </View>
@@ -241,7 +241,7 @@ const {height: screenHeight} = Dimensions.get('window');
   }
 }
 
-Kitchen.propTypes = {
+Cook.propTypes = {
 };
 
-export default Kitchen;
+export default Cook;
