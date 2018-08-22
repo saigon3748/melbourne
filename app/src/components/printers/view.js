@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import moment from "moment";
 import React from 'react';
-import { Dimensions, NativeModules, AsyncStorage, Alert, ScrollView, View, TouchableOpacity, TouchableHighlight, StyleSheet, Image, ImageBackground, TextInput, FlatList } from 'react-native';
+import { NativeEventEmitter, Dimensions, NativeModules, AsyncStorage, Alert, ScrollView, View, TouchableOpacity, TouchableHighlight, StyleSheet, Image, ImageBackground, TextInput, FlatList } from 'react-native';
 import { Container, Content, Card, CardItem, Form, Item, Header, Left, Body, Right, Button, Icon, Title, List, ListItem, Text, Thumbnail, Input, InputGroup, Label, Toast, Switch } from 'native-base';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { PrinterApi } from '../../api';
@@ -14,17 +14,36 @@ class Printers extends React.Component {
     this.state = {
       isSignedIn: false,
       selectedPrinter: null,
-      printers: []
+      printers: [],
+      networkPrinters: []
     }
+
+    this.emitter = new NativeEventEmitter(NativeModules.RNPrinterScanner);
+    this.listener = this.emitter.addListener(
+      'EventPrinterFound',
+      (printer) => {
+        let networkPrinters = [...this.state.networkPrinters]
+        networkPrinters.push(printer);
+        this.setState({
+          networkPrinters: networkPrinters
+        })
+      }
+    );    
   }
 
   componentWillMount() {
+    NativeModules.RNPrinterScanner.scan();
+
     AsyncStorage.getItem('payload', (err, payload) => {
       if (!payload) return;
       this.setState({
         isSignedIn: true
       });     
     });
+  }
+
+  componentWillUnmount() {
+    this.listener.remove();
   }
 
   componentDidMount() {
@@ -60,6 +79,13 @@ class Printers extends React.Component {
         this.setState({
           selectedPrinter: null
         })    
+
+        PrinterApi.get()
+          .then(result => {
+            this.setState({
+              printers: result
+            });
+          });
       })
       .catch(err => {
         alert(err)
@@ -82,6 +108,15 @@ class Printers extends React.Component {
     this.setState({
       selectedPrinter: selectedPrinter
     });    
+  }
+
+  onNetworkPrinterSelected(printer) {
+    let selectedPrinter = {...this.state.selectedPrinter};
+    selectedPrinter.macAddress = printer.target;
+
+    this.setState({
+      selectedPrinter: selectedPrinter
+    });
   }
 
   onCookingReceiptChanged(value) {
@@ -197,42 +232,40 @@ class Printers extends React.Component {
                 backgroundColor: '#FFF',
                 height: screenHeight - 50
               }}>
-                <ScrollView style={{flex: 1, flexDirection: 'column', marginLeft: 30, marginRight: 10}}>
-                  <List style={{marginTop: 40}}>
-                    <ListItem icon>
-                      <Left>
-                        <MaterialIcons name='print' color={'#6c757d'} size={20} />            
-                      </Left>
-                      <Body>
-                        <Text>Printers</Text>
-                      </Body>
-                      <Right>
-                      </Right>
-                    </ListItem>
-                  </List>
+                <List style={{marginTop: 40}}>
+                  <ListItem icon>
+                    <Left>
+                      <MaterialIcons name='print' color={'#6c757d'} size={20} />            
+                    </Left>
+                    <Body>
+                      <Text>Printers</Text>
+                    </Body>
+                    <Right>
+                    </Right>
+                  </ListItem>
+                </List>
 
-                  <View style={{flex: 1, marginBottom: 10}}>
-                    <ScrollView style={{flex: 1, flexDirection: 'column', marginLeft: 30, marginRight: 10}}>
-                      <List>
-                        {this.state.printers.map(item => (
-                          <ListItem key={item._id} style={{height: 50}}>
-                            <Body>
-                              <View style={{flexDirection: "row"}}>
-                                <Text style={{width: 200}}>{item.name}</Text>
-                                <Text style={{width: 200}}>{item.macAddress}</Text>
-                              </View>
-                            </Body>
-                            <Right>
-                              <TouchableOpacity activeOpacity={1.0} onPress={() => this.onPrinterSelected(item)}>
-                                <Icon name="arrow-forward" />
-                              </TouchableOpacity>
-                            </Right>
-                          </ListItem>
-                        ))}
-                      </List>
-                    </ScrollView>
-                  </View>
-                </ScrollView>
+                <View style={{flex: 1, marginBottom: 10}}>
+                  <ScrollView style={{flex: 1, flexDirection: 'column', marginLeft: 30, marginRight: 10}}>
+                    <List>
+                      {this.state.printers.map(item => (
+                        <ListItem key={item._id} style={{height: 50}}>
+                          <Body>
+                            <View style={{flexDirection: "row"}}>
+                              <Text style={{width: 200}}>{item.name}</Text>
+                              <Text style={{width: 200}}>{item.macAddress}</Text>
+                            </View>
+                          </Body>
+                          <Right>
+                            <TouchableOpacity activeOpacity={1.0} onPress={() => this.onPrinterSelected(item)}>
+                              <Icon name="arrow-forward" />
+                            </TouchableOpacity>
+                          </Right>
+                        </ListItem>
+                      ))}
+                    </List>
+                  </ScrollView>
+                </View>
               </View>   
           </Content>
         </Container>
@@ -246,10 +279,10 @@ class Printers extends React.Component {
               flexDirection: 'column',
               justifyContent: 'space-between',
               backgroundColor: '#FFF',
-              height: screenHeight - 50
+              height: screenHeight - 120
             }}>
               <ScrollView style={{flex: 1, flexDirection: 'column', marginLeft: 30, marginRight: 10}}>            
-                <View style={{ marginLeft: 50, marginTop: 50 }}>
+                <View style={{ marginLeft: 50, marginTop: 50, marginBottom: 50 }}>
                   <View style={{ flexDirection: 'row' }}>
                     <View style={{width: 200}}>
                       <Text>Name</Text>
@@ -261,13 +294,35 @@ class Printers extends React.Component {
                   </View>
                   <View style={{ flexDirection: 'row', marginTop: 20 }}>
                     <View style={{width: 200}}>
-                      <Text>MAC Address</Text>
+                      <Text>Printer IP</Text>
                     </View>
                     <View style={{width: 500}}>
                       <TextInput defaultValue={this.state.selectedPrinter.macAddress} onChangeText={(text) => this.onMacAddressChanged(text)} style={{height: 35, borderColor: '#d2d3d4', borderWidth: 1}}/>          
                     </View>
                     <View style={{flex: 1}}></View>
                   </View>
+                  <View style={{ flexDirection: 'row', marginTop: 20 }}>
+                    <View style={{width: 200}}>
+                      <Text>Select Printer</Text>
+                    </View>
+                    <View style={{width: 500}}>
+                      <List> 
+                      {this.state.networkPrinters.map(item => (
+                        <ListItem key={item.target} onPress={() => this.onNetworkPrinterSelected(item)}>  
+                          <Left>
+                            <Text>{item.name}</Text>
+                          </Left>  
+                          <Body> 
+                            <Text>{item.target}</Text> 
+                          </Body>  
+                          <Right>  
+                          </Right> 
+                        </ListItem>
+                      ))}
+                      </List>
+                    </View>
+                    <View style={{flex: 1}}></View>  
+                  </View>                      
                   <View style={{ flexDirection: 'row', marginTop: 20 }}>
                     <View style={{width: 200}}>
                       <Text>Cooking Receipt</Text>
@@ -368,22 +423,20 @@ class Printers extends React.Component {
                     <View style={{flex: 1}}></View>
                   </View>
                 </View>
-
-                <View style={{flex: 1}} />
-
-                <View style={{height: 65, flexDirection: 'row', backgroundColor: '#f2f3f4'}}>
-                  <View style={{flex: 1}}></View>
-                  <View style={{width: 180}}>
-                    <Button full style={{marginTop: 10, backgroundColor: '#6c757d'}} onPress={() => this.onCancel()}><Text> CANCEL </Text></Button>
-                  </View>
-                  <View style={{width: 50}}></View>
-                  <View style={{width: 180}}>
-                    <Button full style={{marginTop: 10, backgroundColor: '#2177b4'}} onPress={() => this.onSave()}><Text> SAVE </Text></Button>
-                  </View>
-                  <View style={{flex: 1}}></View>
-                </View> 
-              </ScrollView>                  
+              </ScrollView> 
             </View>
+
+            <View style={{height: 65, flexDirection: 'row', backgroundColor: '#f2f3f4'}}>
+              <View style={{flex: 1}}></View>
+              <View style={{width: 180}}>
+                <Button full style={{marginTop: 10, backgroundColor: '#6c757d'}} onPress={() => this.onCancel()}><Text> CANCEL </Text></Button>
+              </View>
+              <View style={{width: 50}}></View>
+              <View style={{width: 180}}>
+                <Button full style={{marginTop: 10, backgroundColor: '#2177b4'}} onPress={() => this.onSave()}><Text> SAVE </Text></Button>
+              </View>
+              <View style={{flex: 1}}></View>
+            </View> 
           </Content>
         </Container>
       )

@@ -77,7 +77,7 @@ class Sidebar extends React.Component {
           </ListItem>
           <ListItem icon>
             <Left>
-              <MaterialIcons name='settings' color={'#6c757d'} size={20} />
+              <MaterialIcons name='print' color={'#6c757d'} size={20} />
             </Left>
             <Body>
               <TouchableOpacity onPress={this.props.gotoPrinters}>
@@ -106,7 +106,7 @@ class Sidebar extends React.Component {
         <View style={{marginTop: 20, marginBottom: 20, marginLeft: 10, marginRight: 10}}>
           <MaterialIcons name='account-circle' color={'#6c757d'} size={60} style={{textAlign: 'center', marginBottom: 20}} />
           <Text style={{textAlign: 'center', marginBottom: 40}}>
-            {(() => { return this.state.payload.name })()}
+            {(() => { return this.state.payload.firstName + " " + this.state.payload.lastName })()}
           </Text>
           <Button full onPress={this.props.logout} style={{backgroundColor: '#2177b4'}}><Text> SIGN OUT </Text></Button>
         </View>
