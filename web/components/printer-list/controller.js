@@ -40,6 +40,18 @@ export default [
       this.$state.go(this.posgram.config.states.PRINTER_DETAIL, {id: printer._id});      
     }
 
+    delete(printer) {
+      this.DialogService.confirm("Do you want to delete?")
+        .then(confirmed => {
+          if (!confirmed) return;
+          this.PrinterApi.delete(printer._id)
+            .then(result => {
+              toastr.success('Deleted succeeded');
+              this.search();
+            })
+        })
+    }
+
     paging(page) {
       this.pagination.page = page;
       this.search();
