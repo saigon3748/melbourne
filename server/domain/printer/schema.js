@@ -13,9 +13,9 @@ let schema = mongoose.Schema({
     }, { _id: false })
   },
   name: { type: String, required: true },
-  printer: { type: String, required: true },
-  isChefReceipt: { type: Boolean, default: true },
-  isPrintAuto: { type: Boolean, default: true },  
+  macAddress: { type: String, required: true },
+  isCookingReceipt: { type: Boolean, default: false },
+  isOrderAndPrint: { type: Boolean, default: false },  
   title: { type: String },
   header1: { type: String },
   header2: { type: String },

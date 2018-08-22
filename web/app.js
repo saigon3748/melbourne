@@ -21,6 +21,10 @@ import categoryList from './components/category-list';
 import categoryDetail from './components/category-detail';
 import discountList from './components/discount-list';
 import discountDetail from './components/discount-detail';
+import printerList from './components/printer-list';
+import printerDetail from './components/printer-detail';
+import cashList from './components/cash-list';
+import placeList from './components/place-list';
 import userList from './components/user-list';
 import userDetail from './components/user-detail';
 import authService from './services/auth-service';
@@ -33,6 +37,9 @@ import menuApi from './api/menu-api';
 import categoryApi from './api/category-api';
 import discountApi from './api/discount-api';
 import orderApi from './api/order-api';
+import printerApi from './api/printer-api';
+import cashApi from './api/cash-api';
+import placeApi from './api/place-api';
 
 window.toastr = toastr;
 window._ = _;
@@ -60,6 +67,10 @@ angular
   .component('posDiscountDetail', discountDetail)
   .component('posUserList', userList)
   .component('posUserDetail', userDetail)
+  .component('posPrinterList', printerList)
+  .component('posPrinterDetail', printerDetail)
+  .component('posCashList', cashList)
+  .component('posPlaceList', placeList)
   .service('AuthService', authService)
   .service('DialogService', dialogService)
   .service('WebsocketService', websocketService)
@@ -70,6 +81,9 @@ angular
   .service('CategoryApi', categoryApi)
   .service('DiscountApi', discountApi)
   .service('OrderApi', orderApi)  
+  .service('PrinterApi', printerApi)  
+  .service('CashApi', cashApi)  
+  .service('PlaceApi', placeApi)  
   .constant('posgram', { config: config })
   .config(route)
   .config(['$locationProvider', function ($locationProvider) {

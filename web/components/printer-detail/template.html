@@ -1,0 +1,107 @@
+<div class="container p-3 mb-3">
+  <div class="row">
+    <div class="col" style="padding-left: 0px;">
+      <h4>{{$ctrl.title}}</h4>
+    </div>
+    <div class="col-6">
+    </div>
+    <div class="col-1">
+      <pos-avatar/>   
+    </div>
+  </div>
+</div>
+
+<form>
+  <div class="form-group row">
+    <label for="name" class="col-sm-2 col-form-label">Name</label>
+    <div class="col-sm-10">
+      <input type="input" class="form-control" id="name" ng-model="$ctrl.printer.name">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="macAddress" class="col-sm-2 col-form-label">MAC Address</label>
+    <div class="col-sm-10">
+      <input type="input" class="form-control" id="macAddress" ng-model="$ctrl.printer.macAddress">
+    </div>
+  </div>
+  <fieldset class="form-group">
+    <div class="row">
+      <legend class="col-form-label col-sm-2 pt-0">Options</legend>
+      <div class="col-sm-10">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="isCookingReceipt" ng-model="$ctrl.printer.isCookingReceipt">
+          <label class="form-check-label" for="isCookingReceipt">
+            Cooking Receipt
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="isOrderAndPrint" ng-model="$ctrl.printer.isOrderAndPrint">
+          <label class="form-check-label" for="isOrderAndPrint">
+            Order & Print
+          </label>
+        </div>
+      </div>
+    </div>
+  </fieldset>
+  <div class="form-group row">
+    <label for="title" class="col-sm-2 col-form-label">Receipt Title</label>
+    <div class="col-sm-10">
+      <input type="input" class="form-control" id="title" ng-model="$ctrl.printer.title">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="header1" class="col-sm-2 col-form-label">Receipt Header 1</label>
+    <div class="col-sm-10">
+      <input type="input" class="form-control" id="header1" ng-model="$ctrl.printer.header1">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="header2" class="col-sm-2 col-form-label">Receipt Header 2</label>
+    <div class="col-sm-10">
+      <input type="input" class="form-control" id="header2" ng-model="$ctrl.printer.header2">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="header3" class="col-sm-2 col-form-label">Receipt Header 3</label>
+    <div class="col-sm-10">
+      <input type="input" class="form-control" id="header3" ng-model="$ctrl.printer.header3">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="header4" class="col-sm-2 col-form-label">Receipt Header 4</label>
+    <div class="col-sm-10">
+      <input type="input" class="form-control" id="header4" ng-model="$ctrl.printer.header4">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="header5" class="col-sm-2 col-form-label">Receipt Header 5</label>
+    <div class="col-sm-10">
+      <input type="input" class="form-control" id="header5" ng-model="$ctrl.printer.header5">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="footer1" class="col-sm-2 col-form-label">Receipt Footer 1</label>
+    <div class="col-sm-10">
+      <input type="input" class="form-control" id="footer1" ng-model="$ctrl.printer.footer1">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="footer2" class="col-sm-2 col-form-label">Receipt Footer 2</label>
+    <div class="col-sm-10">
+      <input type="input" class="form-control" id="footer2" ng-model="$ctrl.printer.footer2">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="footer3" class="col-sm-2 col-form-label">Receipt Footer 3</label>
+    <div class="col-sm-10">
+      <input type="input" class="form-control" id="footer3" ng-model="$ctrl.printer.footer3">
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-sm-12">
+      <button ng-click="$ctrl.save()" type="submit" class="btn btn-primary float-right">Save</button>
+      <span class="float-right">&nbsp;&nbsp;</span>
+      <button ng-click="$ctrl.cancel()" class="btn btn-secondary float-right" type="button">Cancel</button>
+    </div>
+  </div>
+</form>

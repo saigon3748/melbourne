@@ -1,0 +1,17 @@
+<div class="modal-header">
+  <h4 class="modal-title">Cash</h4>
+</div>
+<div class="modal-body">
+  <form class="form-horizontal" role="form" novalidate>
+    <div class="form-group row">
+      <label for="cash" class="col-sm-5 col-form-label">Cash</label>
+      <div class="col-sm-7">
+        <input type="input" class="form-control" id="cash" ng-model="$ctrl.cash">
+      </div>
+    </div>   
+  </form>
+</div>
+<div class="modal-footer">  
+  <button type="button" ng-click="$ctrl.cancel()" class="btn btn-secondary">Cancel</button>
+  <button type="button" ng-click="$ctrl.save()" class="btn btn-primary">Save</button>
+</div>

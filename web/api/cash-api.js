@@ -1,9 +1,9 @@
 import BaseApi from './base-api'
 
 export default ['$http', '$q', 'posgram',
-  class DiscountApi extends BaseApi {
+  class CashApi extends BaseApi {
     constructor($http, $q, posgram) {
-      super($http, $q, posgram, 'discounts');
+      super($http, $q, posgram, 'cashes');
     }
   }
 ]

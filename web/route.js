@@ -78,5 +78,21 @@ export default [
         url: '/discounts/:id',
         template: '<pos-discount-detail/>'
       })
+      .state(posgram.config.states.PRINTER_LIST, {
+        url: '/printers',
+        template: '<pos-printer-list/>'
+      })
+      .state(posgram.config.states.PRINTER_DETAIL, {
+        url: '/printers/:id',
+        template: '<pos-printer-detail/>'
+      })
+      .state(posgram.config.states.CASH_LIST, {
+        url: '/cashes',
+        template: '<pos-cash-list/>'
+      })      
+      .state(posgram.config.states.PLACE_LIST, {
+        url: '/places/:id',
+        template: '<pos-place-list/>'
+      })
   }
 ]

@@ -12,7 +12,8 @@ let schema = mongoose.Schema({
       name: { type: String, required: true }
     }, { _id: false })
   },
-  name: { type: String, required: true }
+  name: { type: String, required: true },
+  zone: { type: String }
 })
 
 schema.plugin(audit);

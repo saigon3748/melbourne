@@ -19,7 +19,11 @@ export default {
     CATEGORY_LIST: 'CategoryList',
     CATEGORY_DETAIL: 'CategoryDetail',
     DISCOUNT_LIST: 'DiscountList',
-    DISCOUNT_DETAIL: 'DiscountDetail'
+    DISCOUNT_DETAIL: 'DiscountDetail',
+    PRINTER_LIST: 'PrinterList',
+    PRINTER_DETAIL: 'PrinterDetail',
+    CASH_LIST: 'CashList',
+    PLACE_LIST: 'PlaceList'
   },
   actions: {
     VIEW: 'View',
