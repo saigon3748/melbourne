@@ -7,7 +7,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { MenuApi, OrderApi, TenantApi, CookApi } from '../../api';
 import { Helper } from '../../utils';
 
-class Cook extends React.Component {
+class Cooks extends React.Component {
   constructor(props) {
     super(props);
     this.intervalId;
@@ -147,101 +147,100 @@ class Cook extends React.Component {
   }
 
   render() {
-const {height: screenHeight} = Dimensions.get('window');
-    return (
-  <Container style={{backgroundColor: '#fff'}}>
-    <Content>
-      <View style={{
-        flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        backgroundColor: '#fff',
-        height: screenHeight - 50
-      }}>
-        <List style={{marginTop: 40}}>
-          <ListItem icon>
-            <Left>
-              <MaterialIcons name='assignment' color={'#6c757d'} size={20} />            
-            </Left>
-            <Body>
-              <Text>Today</Text>
-            </Body>
-            <Right>
-            </Right>
-          </ListItem>
-        </List>
+    const {height: screenHeight} = Dimensions.get('window');
 
-        <View style={{flex: 1, marginBottom: 10}}>
-          <ScrollView style={{flex: 1, flexDirection: 'column', marginLeft: 30, marginRight: 10}}>
-            <List>
-              {this.state.orders.map(item => (
-                <ListItem key={item._id} style={{height: 50}}>
-                  <Body>
-                    <View style={{flexDirection: "row"}}>
-                      <Text style={{width: 50}}>#{item.orderRef}</Text>
-                      <Text style={{width: 50, textAlign: 'right'}}>{item.quantity}</Text>
-                      <View style={{width: 50}}>
-                        {(() => {
-                          if (item.isTakeaway) {
-                            return (
-                              <Button full small style={{backgroundColor: '#EE2738'}}>
-                                <MaterialIcons name='directions-walk' color={'#fff'} size={20} />
-                              </Button>
-                            )
-                          } else {
-                            return (
-                              <View/>
-                            )
-                          }
-                        })()}
-                      </View>
-                      <Text style={{width: 200}}>{item.name}</Text>
-                      <Text style={{flex: 1}}>{this.getNote(item)}</Text>
-                      <Text style={{width: 50}}>
-                        {(() => { return moment(item.createdAt).format("HH:mm") })()}
-                      </Text>
-                      <View style={{width: 100, alignItems: 'center'}}>
-                        <View style={{width: 80, alignItems: 'center'}}>
+    return (
+      <Container style={{backgroundColor: '#fff'}}>
+        <Content>
+          <View style={{
+            flex: 1,
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            backgroundColor: '#fff',
+            height: screenHeight - 50
+          }}>
+            <List style={{marginTop: 40}}>
+              <ListItem icon>
+                <Left>
+                  <MaterialIcons name='assignment' color={'#6c757d'} size={20} />            
+                </Left>
+                <Body>
+                  <Text>Today's Cooks</Text>
+                </Body>
+                <Right>
+                </Right>
+              </ListItem>
+            </List>
+
+            <ScrollView style={{flex: 1, flexDirection: 'column', marginLeft: 30, marginRight: 10}}>
+              <List>
+                {this.state.orders.map(item => (
+                  <ListItem key={item._id} style={{height: 50}}>
+                    <Body>
+                      <View style={{flexDirection: "row"}}>
+                        <Text style={{width: 50}}>#{item.orderRef}</Text>
+                        <Text style={{width: 50, textAlign: 'right'}}>{item.quantity}</Text>
+                        <View style={{width: 50}}>
                           {(() => {
-                            if (item.isCooked) {
+                            if (item.isTakeaway) {
                               return (
-                                <Button full small style={{backgroundColor: '#2177b4'}} onPress={() => {this.onUncooked(item._id)}}><Text> UNDO </Text></Button>                      
+                                <Button full small style={{backgroundColor: '#EE2738'}}>
+                                  <MaterialIcons name='directions-walk' color={'#fff'} size={20} />
+                                </Button>
                               )
                             } else {
                               return (
-                                <Button full small style={{backgroundColor: '#2FA495'}} onPress={() => {this.onCoooked(item._id)}}><Text> DONE </Text></Button>                      
+                                <View/>
                               )
                             }
                           })()}
                         </View>
+                        <Text style={{width: 200}}>{item.name}</Text>
+                        <Text style={{flex: 1}}>{this.getNote(item)}</Text>
+                        <Text style={{width: 50}}>
+                          {(() => { return moment(item.createdAt).format("HH:mm") })()}
+                        </Text>
+                        <View style={{width: 100, alignItems: 'center'}}>
+                          <View style={{width: 80, alignItems: 'center'}}>
+                            {(() => {
+                              if (item.isCooked) {
+                                return (
+                                  <Button full small style={{backgroundColor: '#2177b4'}} onPress={() => {this.onUncooked(item._id)}}><Text> UNDO </Text></Button>                      
+                                )
+                              } else {
+                                return (
+                                  <Button full small style={{backgroundColor: '#2FA495'}} onPress={() => {this.onCoooked(item._id)}}><Text> DONE </Text></Button>                      
+                                )
+                              }
+                            })()}
+                          </View>
+                        </View>
                       </View>
-                    </View>
-                  </Body>
-                </ListItem>
-              ))}
-            </List>
-          </ScrollView>
-        </View>
+                    </Body>
+                  </ListItem>
+                ))}
+              </List>
+            </ScrollView>
 
-        <View style={{height: 65, flexDirection: 'row', backgroundColor: '#f2f3f4'}}>
-          <View style={{flex: 1}}></View>
-          <View style={{width: 180}}>
-            <Button full style={{marginTop: 10, backgroundColor: '#6c757d'}} onPress={() => this.onRefresh()}><Text> REFRESH </Text></Button>
-          </View>
-          <View style={{width: 50}}></View>
-          <View style={{width: 180}}>
-            <Button full style={{marginTop: 10, backgroundColor: '#2177b4'}} onPress={() => this.onCookedAll()}><Text> COMPLETE ALL </Text></Button>
-          </View>
-          <View style={{flex: 1}}></View>
-        </View>
-      </View>      
-    </Content>
-  </Container>            
+            <View style={{height: 65, flexDirection: 'row', backgroundColor: '#f2f3f4'}}>
+              <View style={{flex: 1}}></View>
+              <View style={{width: 180}}>
+                <Button full style={{marginTop: 10, backgroundColor: '#6c757d'}} onPress={() => this.onRefresh()}><Text> REFRESH </Text></Button>
+              </View>
+              <View style={{width: 50}}></View>
+              <View style={{width: 180}}>
+                <Button full style={{marginTop: 10, backgroundColor: '#2177b4'}} onPress={() => this.onCookedAll()}><Text> COMPLETE ALL </Text></Button>
+              </View>
+              <View style={{flex: 1}}></View>
+            </View>
+          </View>      
+        </Content>
+      </Container>            
     );
   }
 }
 
-Cook.propTypes = {
+Cooks.propTypes = {
 };
 
-export default Cook;
+export default Cooks;

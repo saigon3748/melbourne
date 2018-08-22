@@ -74,22 +74,41 @@ class Printers extends React.Component {
 
     let selectedPrinter = {...this.state.selectedPrinter}
 
-    PrinterApi.update(selectedPrinter._id, selectedPrinter)
-      .then(result => {
-        this.setState({
-          selectedPrinter: null
-        })    
+    if (selectedPrinter._id) {
+      PrinterApi.update(selectedPrinter._id, selectedPrinter)
+        .then(result => {
+          this.setState({
+            selectedPrinter: null
+          })    
 
-        PrinterApi.get()
-          .then(result => {
-            this.setState({
-              printers: result
+          PrinterApi.get()
+            .then(result => {
+              this.setState({
+                printers: result
+              });
             });
-          });
-      })
-      .catch(err => {
-        alert(err)
-      })
+        })
+        .catch(err => {
+          alert(err)
+        })
+    } else {
+      PrinterApi.create(selectedPrinter)
+        .then(result => {
+          this.setState({
+            selectedPrinter: null
+          })    
+
+          PrinterApi.get()
+            .then(result => {
+              this.setState({
+                printers: result
+              });
+            });
+        })
+        .catch(err => {
+          alert(err)
+        })      
+    }
   }
 
   onPrinterNameChanged(text) {
@@ -241,6 +260,9 @@ class Printers extends React.Component {
                       <Text>Printers</Text>
                     </Body>
                     <Right>
+                      <TouchableOpacity activeOpacity={1.0} onPress={() => this.onPrinterSelected({})}>
+                        <MaterialIcons name='add' color={'#6c757d'} size={20} />            
+                      </TouchableOpacity>
                     </Right>
                   </ListItem>
                 </List>
