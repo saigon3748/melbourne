@@ -1,4 +1,4 @@
-import "./node_modules/jquery/dist/jquery.js";
+// import "./node_modules/jquery/dist/jquery.js";
 import "./node_modules/jquery/dist/jquery.slim.js";
 import "./node_modules/popper.js/dist/popper.js";
 import "./node_modules/bootstrap/dist/js/bootstrap.js";
@@ -10,4 +10,6 @@ import "./node_modules/angular-ui-router/release/angular-ui-router.js";
 import "./node_modules/angular-jwt/dist/angular-jwt.js";
 import "./node_modules/angular-bootstrap/ui-bootstrap.js";
 import "./node_modules/angular-bootstrap/ui-bootstrap-tpls.js";
-import "./node_modules/toastr/build/toastr.min.js";
+// import "/node_modules/toastr/build/toastr.min.js";
+import "./node_modules/ng-file-upload/dist/ng-file-upload-shim.min.js";
+import "./node_modules/ng-file-upload/dist/ng-file-upload.min.js";

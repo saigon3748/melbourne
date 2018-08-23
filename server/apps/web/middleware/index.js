@@ -1,9 +1,11 @@
 const intercept = require('./intercept');
 const authenticate = require('./authenticate');
 const authorize = require('./authorize');
+const { uploadMenu } = require('./upload');
 
 module.exports = {
-  intercept: intercept,
-  authorize: authorize,
-  authenticate: authenticate
+  intercept,
+  authorize,
+  authenticate,
+  uploadMenu
 }

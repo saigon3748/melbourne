@@ -1,7 +1,7 @@
 import { AsyncStorage } from 'react-native';
 import Config from '../config';
 
-const get = () => {
+const getAll = () => {
   return new Promise((resolve, reject) => {
     AsyncStorage.getItem('token', (err, token) => {
       fetch(Config.API + '/printers', {
@@ -46,7 +46,7 @@ const create = (data) => {
   });
 }
 
-const update = (id, data) => {
+const updateById = (id, data) => {
   return new Promise((resolve, reject) => {
     AsyncStorage.getItem('token', (err, token) => {
       fetch(Config.API + `/printers/${id}`, {
@@ -69,7 +69,7 @@ const update = (id, data) => {
 }
 
 export default {
-  get,
+  getAll,
   create,
-  update
+  updateById
 }

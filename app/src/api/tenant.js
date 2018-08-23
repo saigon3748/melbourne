@@ -23,27 +23,6 @@ const getById = (id) => {
   });
 }
 
-const updateById = (id, data) => {
-  return new Promise((resolve, reject) => {
-    AsyncStorage.getItem('token', (err, token) => {
-      fetch(Config.API + `/tenants/updateById/${id}`, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': 'JWT ' + token
-        },
-        body: JSON.stringify(data)
-      })
-      .then(result => resolve(result))
-      .catch(error => {
-        reject('Updated company failed');
-      });
-    });
-  });
-}
-
 export default {
-  getById,
-  updateById
+  getById
 }

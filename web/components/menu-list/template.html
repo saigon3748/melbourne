@@ -45,6 +45,7 @@
         <th>Name</th>
         <th>Price</th>
         <th>Category</th>
+        <th>Image</th>
         <th>Status</th>
         <th></th>
       </tr>
@@ -54,6 +55,9 @@
         <td>{{menu.name}}</td>
         <td>{{menu.price | currency}}</td>
         <td>{{menu.category.name}}</td>         
+        <td>
+          <img ng-src="{{menu.imageUrl}}" style="height: 25px; width: 25px; display: block;"/>
+        </td>         
         <td>{{$ctrl.getStatus(menu)}}</td>
         <td>
           <button class="btn btn-sm btn-outline-secondary" ng-click="$ctrl.view(menu)">View</button>

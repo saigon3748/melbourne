@@ -2,20 +2,24 @@ import BaseController from '../base-controller';
 import PasswordDialog from '../password-dialog';
 
 export default [
-  '$rootScope', '$scope', '$state', '$stateParams', 'posgram', 'DialogService', 'CategoryApi', 'MenuApi',
+  '$rootScope', '$scope', '$state', '$stateParams', '$timeout', 'posgram', 'DialogService', 'CategoryApi', 'MenuApi', 'Upload',
   class Controller extends BaseController {
-    constructor($rootScope, $scope, $state, $stateParams, posgram, DialogService, CategoryApi, MenuApi) {
+    constructor($rootScope, $scope, $state, $stateParams, $timeout, posgram, DialogService, CategoryApi, MenuApi, Upload) {
       super()
       this.$state = $state;
       this.$scope = $scope;
       this.$stateParams = $stateParams;
+      this.$timeout = $timeout;
       this.posgram = posgram;
       this.DialogService = DialogService;
       this.MenuApi = MenuApi;
       this.CategoryApi = CategoryApi;
+      this.Upload = Upload;
     }
 
     $onInit() {
+      this.selectedFiles = [];
+
       this.CategoryApi.find()
         .then(categories => {
           this.categories = categories;
@@ -28,6 +32,7 @@ export default [
         this.MenuApi.findById(this.$stateParams.id)
           .then(menu => {
             this.menu = menu;
+            this.fileUrl = this.menu.imageUrl;
           })
           .catch(err => {
             toastr.error(err.message);
@@ -39,27 +44,47 @@ export default [
       return this.$stateParams.id ? "Menu Detail" : "Create Menu";
     }
 
+    onImageChange() {
+      if (!this.file) return;
+
+      let reader = new FileReader();
+      reader.onload = (e) => {
+        this.$timeout(() => {
+          this.fileUrl = e.target.result;
+        });
+      }
+
+      reader.readAsDataURL(this.file);
+    }
+
     save() {
       if (this.menu._id) {
-        this.MenuApi.update(this.menu._id ,this.menu)
-          .then(menu => {
-            toastr.success('Updated succeeded');
+        this.Upload.upload({
+          url: `${this.posgram.config.api}/menus/${this.menu._id}`,
+          method: 'PUT',
+          data: _.extend(this.menu, {
+            file: this.file
           })
-          .catch(err => {
-            toastr.error(err.error);
-          })
+        }).then((result) => {
+          toastr.success('Updated succeeded');
+        }, (err) => {
+          toastr.error('Updated failed');
+        });
 
         return;
       }
 
-      this.MenuApi.create(this.menu)
-        .then(menu => {
-          toastr.success('Created succeeded');
-          this.$state.go(this.posgram.config.states.MENU_LIST);
+      this.Upload.upload({
+        url: `${this.posgram.config.api}/menus`,
+        data: _.extend(this.menu, {
+          file: this.file
         })
-        .catch(err => {
-          toastr.error(err.error);
-        })
+      }).then((result) => {
+        toastr.success('Created succeeded');
+        this.$state.go(this.posgram.config.states.MENU_LIST);
+      }, (err) => {
+        toastr.error('Created failed');
+      });
     }
 
     cancel() {

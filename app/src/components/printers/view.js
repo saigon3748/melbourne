@@ -47,7 +47,7 @@ class Printers extends React.Component {
   }
 
   componentDidMount() {
-    PrinterApi.get()
+    PrinterApi.getAll()
       .then(result => {
         this.setState({
           printers: result
@@ -75,13 +75,13 @@ class Printers extends React.Component {
     let selectedPrinter = {...this.state.selectedPrinter}
 
     if (selectedPrinter._id) {
-      PrinterApi.update(selectedPrinter._id, selectedPrinter)
+      PrinterApi.updateById(selectedPrinter._id, selectedPrinter)
         .then(result => {
           this.setState({
             selectedPrinter: null
           })    
 
-          PrinterApi.get()
+          PrinterApi.getAll()
             .then(result => {
               this.setState({
                 printers: result
@@ -98,7 +98,7 @@ class Printers extends React.Component {
             selectedPrinter: null
           })    
 
-          PrinterApi.get()
+          PrinterApi.getAll()
             .then(result => {
               this.setState({
                 printers: result
