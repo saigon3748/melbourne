@@ -41,7 +41,9 @@ let uploadMenu = function (req, res, next) {
   })
   .single('file')(req, res, err => {
     if (err) throw err;
-    req.body.imageUrl = req.file.location;
+    if (req.file && req.file.location) {
+      req.body.imageUrl = req.file.location;
+    }
     next();
   })
 }

@@ -101,31 +101,51 @@ class Order extends React.Component {
 
     if (this.selectedCategory) {
       return _.filter(menus, item => {
-        return this.includesMenuItem(this.selectedCategory, item);
+        return item.category._id === this.selectedCategory._id;
       })
-    } 
+    }
 
     if (this.categoryStack.length === 0) {
       return menus;
     }
 
     let category = this.categoryStack[this.categoryStack.length - 1];
+    let subCategories = this.getSubCategories(category);
 
     return _.filter(menus, item => {
-      return this.includesMenuItem(category, item);
+      return _.some(subCategories, category => {
+        return category._id === item.category._id;
+      });
     })
   }
 
-  includesMenuItem(category, item) {
-    if (item.category._id === category._id) {
+  getSubCategories(category) {
+    let subs = [category];
+
+    this.categories.forEach(item => {
+      if (!item.parent) return;
+      if (item.parent._id === category._id) {
+        subs = subs.concat(this.getSubCategories(item));
+      }
+    })
+
+    return subs;
+  }
+
+  includesMenuItem(category, menu) {
+    if (menu.category._id === category._id) {
       return true;
     }
+
+    let parentCategory = _.find(this.categories, item => {
+      return menu.category._id === item.category._id;
+    })
 
     let result = false;
     if (category.subs && category.subs.length > 0) {
       category.subs.forEach(sub => {
         if (!result) {
-          result = this.includesMenuItem(sub, item)
+          result = this.includesMenuItem(sub, menu)
         }
       })
     }
@@ -143,10 +163,12 @@ class Order extends React.Component {
     }
 
     let category = this.categoryStack[this.categoryStack.length - 1];
-    if (category.subs && category.subs.length > 0) {
-      return _.sortBy(_.filter(categories, item => {
-        return item.parent === category._id;
-      }), ['displayIndex'])
+    let subs = _.filter(categories, item => {
+      return item.parent && item.parent._id === category._id;
+    });
+
+    if (subs.length > 0) {
+      return _.sortBy(subs, ['displayIndex']);
     }
 
     return _.sortBy(this.state.filteredCategories, ['displayIndex']);
@@ -154,8 +176,12 @@ class Order extends React.Component {
 
   onSelectCategory(category) {
     this.categoryStack = this.categoryStack || [];
-    
-    if (category.subs && category.subs.length > 0) {
+
+    let subs = _.filter(this.categories, item => {
+      return item.parent && item.parent._id === category._id;
+    });
+
+    if (subs.length > 0) {
       this.categoryStack.push(category);
     } else {
       if (this.selectedCategory && this.selectedCategory._id === category._id) {
