@@ -17,6 +17,7 @@ class Order extends React.Component {
     this.selectedCategory = null;
 
     this.state = {
+      displayMode: 'MENUS', // MENUS, ADDONS, DISCOUNTS
       isSignedIn: false,
       isConfirmModalVisible: false,
       isExtraModalVisible: false,
@@ -132,27 +133,6 @@ class Order extends React.Component {
     return subs;
   }
 
-  includesMenuItem(category, menu) {
-    if (menu.category._id === category._id) {
-      return true;
-    }
-
-    let parentCategory = _.find(this.categories, item => {
-      return menu.category._id === item.category._id;
-    })
-
-    let result = false;
-    if (category.subs && category.subs.length > 0) {
-      category.subs.forEach(sub => {
-        if (!result) {
-          result = this.includesMenuItem(sub, menu)
-        }
-      })
-    }
-
-    return result;
-  }
-
   filterCategories() {
     let categories = this.categories || [];
 
@@ -199,6 +179,7 @@ class Order extends React.Component {
 
   onBackCategory() {
     this.categoryStack = this.categoryStack || [];
+
     if (this.categoryStack.length > 0) {
       this.categoryStack = this.categoryStack.slice(0, this.categoryStack.length - 1)
     }
@@ -215,6 +196,7 @@ class Order extends React.Component {
     this.selectedCategory = null;
 
     this.setState({
+      displayMode: 'MENUS',
       isEdittingNote: false,
       selectedAddonItem: { extra: [] },
       filteredMenus: this.filterMenus(),
@@ -227,7 +209,8 @@ class Order extends React.Component {
         total: 0.00,
         cash: 0.00,
         change: 0.00,
-        items: []
+        items: [],
+        discounts: []
       }
     })
 
@@ -395,7 +378,7 @@ class Order extends React.Component {
     order.discountAmt = 0.00;
 
     order.items.forEach(item => {
-      let subtotal = _.round(item.unitPrice * item.quantity, 2);
+      let subtotal = _.round(item.price * item.quantity, 2);
       let discount = 0.00;
 
       if (item.discount) {
@@ -408,7 +391,7 @@ class Order extends React.Component {
 
       if (item.extra && item.extra.length > 0) {
         item.extra.forEach(extra => {
-          extra.subtotal = _.round(extra.quantity * extra.unitPrice, 2);
+          extra.subtotal = _.round(extra.quantity * extra.price, 2);
           extra.total = _.round(extra.subtotal - (extra.discount || 0), 2);
           subtotal += extra.subtotal;
           discount += extra.discount || 0;
@@ -420,7 +403,7 @@ class Order extends React.Component {
       order.discountAmt += discount;
     });
 
-    if (this.tenant.settings.isInclusiveGST) {
+    if (this.tenant.isGSTInclusive) {
       order.total = _.round(order.subtotal - order.discountAmt, 2);
       order.tax = _.round(order.total * 0.11, 2);
     } else {
@@ -452,7 +435,7 @@ class Order extends React.Component {
     order.discountAmt = 0.00;
 
     order.items.forEach(item => {
-      let subtotal = _.round(item.unitPrice * item.quantity, 2);
+      let subtotal = _.round(item.price * item.quantity, 2);
       let discount = 0.00;
 
       if (item.discount) {
@@ -465,7 +448,7 @@ class Order extends React.Component {
 
       if (item.extra && item.extra.length > 0) {
         item.extra.forEach(extra => {
-          extra.subtotal = _.round(extra.quantity * extra.unitPrice, 2);
+          extra.subtotal = _.round(extra.quantity * extra.price, 2);
           extra.total = _.round(extra.subtotal - (extra.discount || 0), 2);
           subtotal += extra.subtotal;
           discount += extra.discount || 0;
@@ -477,7 +460,7 @@ class Order extends React.Component {
       order.discountAmt += discount;
     });
 
-    if (this.tenant.settings.isInclusiveGST) {
+    if (this.tenant.isGSTInclusive) {
       order.total = _.round(order.subtotal - order.discountAmt, 2);
       order.tax = _.round(order.total * 0.11, 2);
     } else {
@@ -541,7 +524,7 @@ class Order extends React.Component {
     order.discountAmt = 0.00;
 
     order.items.forEach(item => {
-      let subtotal = _.round(item.unitPrice * item.quantity, 2);
+      let subtotal = _.round(item.price * item.quantity, 2);
       let discount = 0.00;
 
       if (item.discount) {
@@ -554,7 +537,7 @@ class Order extends React.Component {
 
       if (item.extra && item.extra.length > 0) {
         item.extra.forEach(extra => {
-          extra.subtotal = _.round(extra.quantity * extra.unitPrice, 2);
+          extra.subtotal = _.round(extra.quantity * extra.price, 2);
           extra.total = _.round(extra.subtotal - (extra.discount || 0), 2);
           subtotal += extra.subtotal;
           discount += extra.discount || 0;
@@ -566,7 +549,7 @@ class Order extends React.Component {
       order.discountAmt += discount;
     });
 
-    if (this.tenant.settings.isInclusiveGST) {
+    if (this.tenant.isGSTInclusive) {
       order.total = _.round(order.subtotal - order.discountAmt, 2);
       order.tax = _.round(order.total * 0.11, 2);
     } else {
@@ -602,7 +585,7 @@ class Order extends React.Component {
     order.discountAmt = 0.00;
 
     order.items.forEach(item => {
-      let subtotal = _.round(item.unitPrice * item.quantity, 2);
+      let subtotal = _.round(item.price * item.quantity, 2);
       let discount = 0.00;
 
       if (item.discount) {
@@ -615,7 +598,7 @@ class Order extends React.Component {
 
       if (item.extra && item.extra.length > 0) {
         item.extra.forEach(extra => {
-          extra.subtotal = _.round(extra.quantity * extra.unitPrice, 2);
+          extra.subtotal = _.round(extra.quantity * extra.price, 2);
           extra.total = _.round(extra.subtotal - (extra.discount || 0), 2);
           subtotal += extra.subtotal;
           discount += extra.discount || 0;
@@ -627,7 +610,7 @@ class Order extends React.Component {
       order.discountAmt += discount;
     });
 
-    if (this.tenant.settings.isInclusiveGST) {
+    if (this.tenant.isGSTInclusive) {
       order.total = _.round(order.subtotal - order.discountAmt, 2);
       order.tax = _.round(order.total * 0.11, 2);
     } else {
@@ -648,7 +631,7 @@ class Order extends React.Component {
 
       let order = {...this.state.order};
       order.discountAmt = _.round(discount, 2);
-      if (this.tenant.settings.isInclusiveGST) {
+      if (this.tenant.isGSTInclusive) {
         order.total = _.round(order.subtotal - order.discountAmt, 2);
         order.tax = _.round(order.total * 0.11, 2);
       } else {
@@ -856,7 +839,7 @@ class Order extends React.Component {
                             <View style={{flexDirection: "row"}}>
                               <Text style={{width: 200}}>{extra.name}</Text>
                               <Text style={{width: 70, textAlign: 'right'}}>
-                                {(() => { return Helper.formatCurrency(extra.unitPrice) })()}
+                                {(() => { return Helper.formatCurrency(extra.price) })()}
                               </Text>
                               <Text style={{width: 70, textAlign: 'right'}}>{extra.quantity}</Text>
                               <Text style={{width: 70}}></Text>
@@ -899,43 +882,53 @@ class Order extends React.Component {
                     flexDirection: 'row', 
                     flexWrap: 'wrap'
                   }}>
-                    {this.state.filteredMenus.map(menuItem => {
-                      return (
-                        <TouchableOpacity key={menuItem._id} activeOpacity={1.0} onPress={() => this.onAddItem(menuItem._id)}>
-                          <View style={{width: 150, height: 150, marginTop: 10, marginLeft: 10, backgroundColor: '#2FA495'}}>
-                            {(() => { 
-                              if (menuItem.imageUrl) {
-                                return (
-                                  <ImageBackground
-                                    style={{width: 150, height: 150}}
-                                    source={{uri: menuItem.imageUrl}}>
-                                    <View style={{backgroundColor: 'rgba(221, 226, 229, 0.85)'}}>
-                                      <Text style={{marginTop: 3, marginLeft: 3, marginRight: 3}}>
-                                        {menuItem.name}
-                                      </Text>
-                                      <Text style={{marginTop: 3, marginLeft: 3, marginRight: 3, marginBottom: 3}}>
-                                        {(() => { return Helper.formatCurrency(menuItem.unitPrice) })()}
-                                      </Text>
-                                    </View>
-                                  </ImageBackground>
-                                )
-                              } else {
-                                return (
-                                  <View style={{backgroundColor: 'rgba(221, 226, 229, 0.85)'}}>
-                                    <Text style={{marginTop: 3, marginLeft: 3, marginRight: 3}}>
-                                      {menuItem.name}
-                                    </Text>
-                                    <Text style={{marginTop: 3, marginLeft: 3, marginRight: 3, marginBottom: 3}}>
-                                      {(() => { return Helper.formatCurrency(menuItem.unitPrice) })()}
-                                    </Text>
-                                  </View>
-                                )                            
-                              }
-                            })()}
-                          </View>
-                        </TouchableOpacity>
-                      )
-                    })}
+                    {(() => {
+                      if (this.state.displayMode === "MENUS") {
+                        return this.state.filteredMenus.map(menuItem => {
+                          return (
+                            <TouchableOpacity key={menuItem._id} activeOpacity={1.0} onPress={() => this.onAddItem(menuItem._id)}>
+                              <View style={{width: 150, height: 150, marginTop: 10, marginLeft: 10, backgroundColor: '#2FA495'}}>
+                                {(() => { 
+                                  if (menuItem.imageUrl) {
+                                    return (
+                                      <ImageBackground
+                                        style={{width: 150, height: 150}}
+                                        source={{uri: menuItem.imageUrl}}>
+                                        <View style={{backgroundColor: 'rgba(221, 226, 229, 0.85)'}}>
+                                          <Text style={{marginTop: 3, marginLeft: 3, marginRight: 3}}>
+                                            {menuItem.name}
+                                          </Text>
+                                          <Text style={{marginTop: 3, marginLeft: 3, marginRight: 3, marginBottom: 3}}>
+                                            {(() => { return Helper.formatCurrency(menuItem.price) })()}
+                                          </Text>
+                                        </View>
+                                      </ImageBackground>
+                                    )
+                                  } else {
+                                    return (
+                                      <View style={{backgroundColor: 'rgba(221, 226, 229, 0.85)'}}>
+                                        <Text style={{marginTop: 3, marginLeft: 3, marginRight: 3}}>
+                                          {menuItem.name}
+                                        </Text>
+                                        <Text style={{marginTop: 3, marginLeft: 3, marginRight: 3, marginBottom: 3}}>
+                                          {(() => { return Helper.formatCurrency(menuItem.price) })()}
+                                        </Text>
+                                      </View>
+                                    )                            
+                                  }
+                                })()}
+                              </View>
+                            </TouchableOpacity>
+                          )
+                        })
+                      } else {
+                        if (this.state.displayMode === "ADDONS") {
+                        } else {
+                          if (this.state.displayMode === "DISCOUNTS") {
+                          }
+                        }
+                      }
+                    })()}
                   </View>
                 </ScrollView>
               </View>
@@ -954,7 +947,7 @@ class Order extends React.Component {
                         <View style={{flex: 1, flexDirection: 'row'}}>
                           <Text style={{flex: 1}}>{item.name}</Text>
                           <Text style={{width: 70, textAlign: 'right'}}>
-                            {(() => { return Helper.formatCurrency(item.unitPrice) })()}
+                            {(() => { return Helper.formatCurrency(item.price) })()}
                           </Text>
                         </View>
                         <View style={{flex: 1, flexDirection: 'row', marginTop: 10}}>
@@ -1068,37 +1061,47 @@ class Order extends React.Component {
               </View>
             </View>
 
-            <View style={{flex: 1, flexDirection: 'row', backgroundColor: '#f2f3f4'}}>
-              <View style={{width: 150, height: 60, marginTop: 10, marginLeft: 10, marginRight: 10}}>
-                <Button full large onPress={() => this.onBackCategory()} style={{backgroundColor: '#2177b4'}}>
-                  <MaterialIcons name='subdirectory-arrow-left' color={'#fff'} size={20} />              
-                </Button>
-              </View>
-              <View style={{flex: 1}}>
-                <ScrollView horizontal={true} style={{flex: 1, flexDirection: 'row'}}>
-                  {this.state.filteredCategories.map(category => (
-                    <View key={category._id} style={{width: 150, height: 60, marginTop: 10, marginRight: 10}}>
-                      {(() => {
-                        if (this.selectedCategory && this.selectedCategory._id === category._id) {
-                          return (
-                            <Button full large success onPress={() => this.onSelectCategory(category)} style={{backgroundColor: '#EE2738'}}><Text style={{fontSize: 16}}> {category.name} </Text></Button>
-                          )
-                        } else {
-                          return (
-                            <Button full large success onPress={() => this.onSelectCategory(category)} style={{backgroundColor: '#2FA495'}}><Text style={{fontSize: 16}}> {category.name} </Text></Button>
-                          )                      
-                        }
-                      })()}
+            {(() => {
+              if (this.state.displayMode === "MENUS") {
+                return (
+                  <View style={{flex: 1, flexDirection: 'row', backgroundColor: '#f2f3f4'}}>
+                    <View style={{width: 150, height: 60, marginTop: 10, marginLeft: 10, marginRight: 10}}>
+                      <Button full large onPress={() => this.onBackCategory()} style={{backgroundColor: '#2177b4'}}>
+                        <MaterialIcons name='subdirectory-arrow-left' color={'#fff'} size={20} />              
+                      </Button>
                     </View>
-                  ))}
-                </ScrollView>
-              </View>
-              <View style={{marginLeft: 10}}>
-              </View>           
-            </View>
+                    <View style={{flex: 1}}>
+                      <ScrollView horizontal={true} style={{flex: 1, flexDirection: 'row'}}>
+                        {this.state.filteredCategories.map(category => (
+                          <View key={category._id} style={{width: 150, height: 60, marginTop: 10, marginRight: 10}}>
+                            {(() => {
+                              if (this.selectedCategory && this.selectedCategory._id === category._id) {
+                                return (
+                                  <Button full large success onPress={() => this.onSelectCategory(category)} style={{backgroundColor: '#EE2738'}}><Text style={{fontSize: 16}}> {category.name} </Text></Button>
+                                )
+                              } else {
+                                return (
+                                  <Button full large success onPress={() => this.onSelectCategory(category)} style={{backgroundColor: '#2FA495'}}><Text style={{fontSize: 16}}> {category.name} </Text></Button>
+                                )                      
+                              }
+                            })()}
+                          </View>
+                        ))}
+                      </ScrollView>
+                    </View>
+                  </View>
+                )
+              } else {
+                if (this.state.displayMode === "ADDONS") {
+                } else {
+                  if (this.state.displayMode === "DISCOUNTS") {
+                  }
+                }
+              }
+            })()}
           </View>
         </Content>
-      </Container>            
+      </Container>
     );
   }
 }
