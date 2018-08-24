@@ -17,7 +17,7 @@ const getToday = () => {
         resolve(result);
       })
       .catch(error => {
-        reject('Retrieved orders failed');
+        reject('Get cooks failed');
       });
     });
   });

@@ -9,6 +9,7 @@ module.exports = express.Router()
 
   .post('/', 
     middleware.authenticate, 
+    middleware.uploadMenu,
     middleware.intercept(controller, 'create'))
 
   .get('/:id', 
@@ -17,6 +18,7 @@ module.exports = express.Router()
 
   .put('/:id', 
     middleware.authenticate, 
+    middleware.uploadMenu,
     middleware.intercept(controller, 'updateById'))
 
   .delete('/:id', 

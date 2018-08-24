@@ -16,6 +16,8 @@ export default {
     ORDER_DETAIL: 'OrderDetail',
     MENU_LIST: 'MenuList',
     MENU_DETAIL: 'MenuDetail',
+    ADDON_LIST: 'AddonList',
+    ADDON_DETAIL: 'AddonDetail',
     CATEGORY_LIST: 'CategoryList',
     CATEGORY_DETAIL: 'CategoryDetail',
     DISCOUNT_LIST: 'DiscountList',

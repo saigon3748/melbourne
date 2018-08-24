@@ -5,27 +5,36 @@ import { Container, Content, Card, CardItem, Form, Item, Header, Left, Body, Rig
 import { TextInputMask } from 'react-native-masked-text'
 import Modal from "react-native-modal";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { MenuApi, OrderApi, TenantApi, PrinterApi } from '../../api';
+import { MenuApi, OrderApi, TenantApi, PrinterApi, AddonApi, CashApi, CategoryApi, DiscountApi } from '../../api';
 import { Helper } from '../../utils';
+
+const DISPLAY_MODE = {
+  MENU: 1,
+  ADDON: 2,
+  DISCOUNT: 3,
+  CHECKOUT: 4
+}
 
 class Order extends React.Component {
   constructor(props) {
     super(props);
+
     this.menus = [];
+    this.cashes = [];
+    this.addons = [];
+    this.printers = [];
+    this.discounts = [];
     this.categories = [];
     this.categoryStack = [];
     this.selectedCategory = null;
 
     this.state = {
-      displayMode: 'MENUS', // MENUS, ADDONS, DISCOUNTS
+      displayMode: DISPLAY_MODE.MENU,
       isSignedIn: false,
       isConfirmModalVisible: false,
       isExtraModalVisible: false,
       isEdittingNote: false,
-      selectedAddonItem: { extra: [] },
-      cashList: [],
-      addonList: [],
-      printerList: [],
+      selectedOrderItem: { addons: [], discounts: [] },
       filteredMenus: [],
       filteredCategories: [],
       order: {
@@ -59,7 +68,7 @@ class Order extends React.Component {
   }
 
   componentDidMount() {
-    MenuApi.getMenuList()
+    MenuApi.get()
       .then(result => {
         this.menus = result;
         this.setState({
@@ -67,7 +76,7 @@ class Order extends React.Component {
         });
       })
 
-    MenuApi.getCategoryList()
+    CategoryApi.get()
       .then(result => {
         this.categories = result;
         this.setState({
@@ -75,25 +84,24 @@ class Order extends React.Component {
         });
       })
 
-    MenuApi.getCashList()
+    CashApi.get()
       .then(result => {
-        this.setState({
-          cashList: result
-        });
+        this.cashes = result;
       })
 
-    MenuApi.getAddonList()
+    AddonApi.get()
       .then(result => {
-        this.setState({
-          addonList: result
-        });
+        this.addons = result;
       })
 
-    PrinterApi.getAll()
+    DiscountApi.get()
       .then(result => {
-        this.setState({
-          printerList: result
-        });
+        this.discounts = result;
+      })
+
+    PrinterApi.get()
+      .then(result => {
+        this.printers = result;
       })
   }
 
@@ -196,9 +204,9 @@ class Order extends React.Component {
     this.selectedCategory = null;
 
     this.setState({
-      displayMode: 'MENUS',
+      displayMode: DISPLAY_MODE.MENU,
       isEdittingNote: false,
-      selectedAddonItem: { extra: [] },
+      selectedOrderItem: { addons: [], discounts: [] },
       filteredMenus: this.filterMenus(),
       filteredCategories: this.filterCategories(),      
       order: {
@@ -369,7 +377,7 @@ class Order extends React.Component {
       item = _.find(this.menus, item => {
         return item._id === id;
       });
-      item = {...item, quantity: 1, extra: []};
+      item = {...item, quantity: 1, addons: [], discounts: []};
       order.items.push(item);
     }
 
@@ -389,8 +397,8 @@ class Order extends React.Component {
         }
       }
 
-      if (item.extra && item.extra.length > 0) {
-        item.extra.forEach(extra => {
+      if (item.addons && item.addons.length > 0) {
+        item.addons.forEach(extra => {
           extra.subtotal = _.round(extra.quantity * extra.price, 2);
           extra.total = _.round(extra.subtotal - (extra.discount || 0), 2);
           subtotal += extra.subtotal;
@@ -446,8 +454,8 @@ class Order extends React.Component {
         }
       }
 
-      if (item.extra && item.extra.length > 0) {
-        item.extra.forEach(extra => {
+      if (item.addons && item.addons.length > 0) {
+        item.addons.forEach(extra => {
           extra.subtotal = _.round(extra.quantity * extra.price, 2);
           extra.total = _.round(extra.subtotal - (extra.discount || 0), 2);
           subtotal += extra.subtotal;
@@ -487,36 +495,48 @@ class Order extends React.Component {
     });
   }
 
-  onAddonItem(id) {
-    let order = {...this.state.order};
-    let item = _.find(order.items, item => {
-      return item._id === id;
-    });
-
+  showMenuScreen() {
     this.setState({
-      selectedAddonItem: item
+      displayMode: DISPLAY_MODE.MENU
     });
+  }
 
-    this.showExtraModal(true);
+  showAddonScreen(orderItem) {
+    this.setState({
+      displayMode: DISPLAY_MODE.ADDON,
+      selectedOrderItem: orderItem
+    });
+  }
+
+  showDiscountScreen() {
+    this.setState({
+      displayMode: DISPLAY_MODE.DISCOUNT
+    });
+  }
+
+  showCheckoutScreen() {
+    this.setState({
+      displayMode: DISPLAY_MODE.CHECKOUT
+    });
   }
 
   onAddExtra(id) {
     let order = {...this.state.order};
     let item = _.find(order.items, item => {
-      return item._id === this.state.selectedAddonItem._id;
+      return item._id === this.state.selectedOrderItem._id;
     });
-    let extra = _.find(item.extra, extra => {
+    let addon = _.find(item.addons, extra => {
       return extra._id === id;
     });
 
-    if (extra) {
-      extra.quantity++;
+    if (addon) {
+      addon.quantity++;
     } else {
-      extra = _.find(this.state.addonList, extra => {
+      addon = _.find(this.addons, extra => {
         return extra._id === id;
       });
-      extra = {...extra, quantity: 1};
-      item.extra.push(extra);
+      addon = {...addon, quantity: 1};
+      item.addons.push(addon);
     }
 
     order.subtotal = 0.00;
@@ -535,8 +555,8 @@ class Order extends React.Component {
         }
       }
 
-      if (item.extra && item.extra.length > 0) {
-        item.extra.forEach(extra => {
+      if (item.addons && item.addons.length > 0) {
+        item.addons.forEach(extra => {
           extra.subtotal = _.round(extra.quantity * extra.price, 2);
           extra.total = _.round(extra.subtotal - (extra.discount || 0), 2);
           subtotal += extra.subtotal;
@@ -560,22 +580,22 @@ class Order extends React.Component {
 
     this.setState({
       order: order,
-      selectedAddonItem: {...item}
+      selectedOrderItem: {...item}
     })
   }
 
   onRemoveExtra(id) {
     let order = {...this.state.order};
     let item = _.find(order.items, item => {
-      return item._id === this.state.selectedAddonItem._id;
+      return item._id === this.state.selectedOrderItem._id;
     });
-    let extra = _.find(item.extra, extra => {
+    let addon = _.find(item.addons, extra => {
       return extra._id === id;
     });
 
-    extra.quantity--;
-    if (extra.quantity === 0) {
-      item.extra = _.filter(item.extra, extra => {
+    addon.quantity--;
+    if (addon.quantity === 0) {
+      item.addons = _.filter(item.addons, extra => {
         return extra._id != id;
       });
     }
@@ -596,8 +616,8 @@ class Order extends React.Component {
         }
       }
 
-      if (item.extra && item.extra.length > 0) {
-        item.extra.forEach(extra => {
+      if (item.addons && item.addons.length > 0) {
+        item.addons.forEach(extra => {
           extra.subtotal = _.round(extra.quantity * extra.price, 2);
           extra.total = _.round(extra.subtotal - (extra.discount || 0), 2);
           subtotal += extra.subtotal;
@@ -621,7 +641,7 @@ class Order extends React.Component {
 
     this.setState({
       order: order,
-      selectedAddonItem: {...item}
+      selectedOrderItem: {...item}
     });
   }
 
@@ -727,7 +747,7 @@ class Order extends React.Component {
                   </View>
                   <View style={{flex: 1}}>
                     <ScrollView horizontal={true} style={{flex: 1, flexDirection: 'row'}}>
-                      {this.state.cashList.map(cash => (
+                      {this.cashes.map(cash => (
                         <View key={cash._id} style={{width: 150, height: 72, marginTop: 10, marginRight: 10}}>
                           <Button full large onPress={() => this.onCashSelected(cash.amount)} success style={{backgroundColor: '#2FA495'}}>
                             <Text style={{fontSize: 16}}>
@@ -812,7 +832,7 @@ class Order extends React.Component {
                   </View>
                   <View style={{flex: 1}}>
                     <ScrollView horizontal={true} style={{flex: 1, flexDirection: 'row'}}>
-                      {this.state.addonList.map(addon => (
+                      {this.addons.map(addon => (
                         <View key={addon._id} style={{width: 150, height: 72, marginTop: 10, marginRight: 10}}>
                           <Button full large onPress={() => this.onAddExtra(addon._id)} success style={{backgroundColor: '#2FA495'}}>
                             <Text style={{fontSize: 16}}>{addon.name}</Text>
@@ -827,13 +847,13 @@ class Order extends React.Component {
                 <View style={{flex: 1, flexDirection: 'column', backgroundColor: '#fff'}}>
                   <View style={{height: 40, marginTop: 30, marginLeft: 10, marginRight: 10}}>
                     <View style={{flex: 1, flexDirection: 'row'}}>
-                      <Text style={{flex: 1}}>{this.state.selectedAddonItem.name}</Text>
+                      <Text style={{flex: 1}}>{this.state.selectedOrderItem.name}</Text>
                     </View>
                   </View>
 
                   <ScrollView style={{flex: 1, flexDirection: 'column', marginLeft: 30, marginRight: 10}}>
                     <List>
-                      {this.state.selectedAddonItem.extra.map(extra => (
+                      {this.state.selectedOrderItem.addons.map(extra => (
                         <ListItem key={extra._id} style={{height: 50}}>
                           <Body>
                             <View style={{flexDirection: "row"}}>
@@ -883,17 +903,30 @@ class Order extends React.Component {
                     flexWrap: 'wrap'
                   }}>
                     {(() => {
-                      if (this.state.displayMode === "MENUS") {
-                        return this.state.filteredMenus.map(menuItem => {
-                          return (
-                            <TouchableOpacity key={menuItem._id} activeOpacity={1.0} onPress={() => this.onAddItem(menuItem._id)}>
-                              <View style={{width: 150, height: 150, marginTop: 10, marginLeft: 10, backgroundColor: '#2FA495'}}>
-                                {(() => { 
-                                  if (menuItem.imageUrl) {
-                                    return (
-                                      <ImageBackground
-                                        style={{width: 150, height: 150}}
-                                        source={{uri: menuItem.imageUrl}}>
+                      switch(this.state.displayMode) {
+                        case DISPLAY_MODE.MENU:
+                          return this.state.filteredMenus.map(menuItem => {
+                            return (
+                              <TouchableOpacity key={menuItem._id} activeOpacity={1.0} onPress={() => this.onAddItem(menuItem._id)}>
+                                <View style={{width: 150, height: 150, marginTop: 10, marginLeft: 10, backgroundColor: '#2FA495'}}>
+                                  {(() => { 
+                                    if (menuItem.imageUrl) {
+                                      return (
+                                        <ImageBackground
+                                          style={{width: 150, height: 150}}
+                                          source={{uri: menuItem.imageUrl}}>
+                                          <View style={{backgroundColor: 'rgba(221, 226, 229, 0.85)'}}>
+                                            <Text style={{marginTop: 3, marginLeft: 3, marginRight: 3}}>
+                                              {menuItem.name}
+                                            </Text>
+                                            <Text style={{marginTop: 3, marginLeft: 3, marginRight: 3, marginBottom: 3}}>
+                                              {(() => { return Helper.formatCurrency(menuItem.price) })()}
+                                            </Text>
+                                          </View>
+                                        </ImageBackground>
+                                      )
+                                    } else {
+                                      return (
                                         <View style={{backgroundColor: 'rgba(221, 226, 229, 0.85)'}}>
                                           <Text style={{marginTop: 3, marginLeft: 3, marginRight: 3}}>
                                             {menuItem.name}
@@ -902,31 +935,61 @@ class Order extends React.Component {
                                             {(() => { return Helper.formatCurrency(menuItem.price) })()}
                                           </Text>
                                         </View>
-                                      </ImageBackground>
-                                    )
-                                  } else {
-                                    return (
-                                      <View style={{backgroundColor: 'rgba(221, 226, 229, 0.85)'}}>
-                                        <Text style={{marginTop: 3, marginLeft: 3, marginRight: 3}}>
-                                          {menuItem.name}
-                                        </Text>
-                                        <Text style={{marginTop: 3, marginLeft: 3, marginRight: 3, marginBottom: 3}}>
-                                          {(() => { return Helper.formatCurrency(menuItem.price) })()}
-                                        </Text>
-                                      </View>
-                                    )                            
-                                  }
-                                })()}
-                              </View>
-                            </TouchableOpacity>
-                          )
-                        })
-                      } else {
-                        if (this.state.displayMode === "ADDONS") {
-                        } else {
-                          if (this.state.displayMode === "DISCOUNTS") {
-                          }
-                        }
+                                      )
+                                    }
+                                  })()}
+                                </View>
+                              </TouchableOpacity>
+                            )
+                          })
+                          break;
+
+                        case DISPLAY_MODE.ADDON:
+                          return this.addons.map(addon => {
+                            return (
+                              <TouchableOpacity key={addon._id} activeOpacity={1.0} onPress={() => this.onAddExtra(addon._id)}>
+                                <View style={{width: 150, height: 150, marginTop: 10, marginLeft: 10, backgroundColor: '#2FA495'}}>
+                                  <View style={{backgroundColor: 'rgba(221, 226, 229, 0.85)'}}>
+                                    <Text style={{marginTop: 3, marginLeft: 3, marginRight: 3}}>
+                                      {addon.name}
+                                    </Text>
+                                    <Text style={{marginTop: 3, marginLeft: 3, marginRight: 3, marginBottom: 3}}>
+                                      {(() => { return Helper.formatCurrency(addon.price) })()}
+                                    </Text>
+                                  </View>
+                                </View>
+                              </TouchableOpacity>
+                            )
+                          })
+                          break;
+
+                        case DISPLAY_MODE.DISCOUNT:
+                          return this.discounts.map(discount => {
+                            return (
+                              <TouchableOpacity key={discount._id} activeOpacity={1.0} onPress={() => this.addDiscount(discount)}>
+                                <View style={{width: 150, height: 150, marginTop: 10, marginLeft: 10, backgroundColor: '#2FA495'}}>
+                                  <View style={{backgroundColor: 'rgba(221, 226, 229, 0.85)'}}>
+                                    <Text style={{marginTop: 3, marginLeft: 3, marginRight: 3}}>
+                                      {discount.name}
+                                    </Text>
+                                    <Text style={{marginTop: 3, marginLeft: 3, marginRight: 3, marginBottom: 3}}>
+                                      {(() => { 
+                                        if (discount.isPercentOff) {
+                                          return `${discount.discount}%`;
+                                        } else {
+                                          return Helper.formatCurrency(discount.discount);
+                                        }
+                                      })()}
+                                    </Text>
+                                  </View>
+                                </View>
+                              </TouchableOpacity>
+                            )
+                          })                        
+                          break;
+
+                        case DISPLAY_MODE.CHECKOUT:
+                          break;
                       }
                     })()}
                   </View>
@@ -934,89 +997,168 @@ class Order extends React.Component {
               </View>
               
               <View style={{flex: 1, flexDirection: 'column', backgroundColor: '#f2f3f4', marginTop: 10, marginBottom: 10}}>
-                <View style={{flexDirection: 'row', marginTop: 10, marginLeft: 10, marginRight: 10}}>
-                  <Text style={{textAlign: 'center', fontSize: 25, color: 'rgb(70, 70, 70)'}}>ORDER</Text>
-                </View>
+                {(() => {
+                  switch(this.state.displayMode) {
+                    case DISPLAY_MODE.MENU:
+                      return (
+                        <View style={{flexDirection: 'row', marginTop: 10, marginLeft: 10, marginRight: 10}}>
+                          <Text style={{fontSize: 25, color: 'rgb(70, 70, 70)'}}>ORDER</Text>
+                        </View>
+                      )
+                      break;
+
+                    case DISPLAY_MODE.ADDON:
+                      return (
+                        <View style={{flexDirection: 'row', marginTop: 10, marginLeft: 10, marginRight: 10}}>
+                          <Text style={{textAlign: 'center', fontSize: 25, color: 'rgb(70, 70, 70)'}}>ADD-ONS</Text>
+                        </View>
+                      )
+                      break;
+
+                    case DISPLAY_MODE.DISCOUNT:
+                      return (
+                        <View style={{flexDirection: 'row', marginTop: 10, marginLeft: 10, marginRight: 10}}>
+                          <Text style={{fontSize: 25, color: 'rgb(70, 70, 70)'}}>DISCOUNTS</Text>
+                        </View>
+                      )
+                      break;
+
+                    case DISPLAY_MODE.CHECKOUT:
+                      return (
+                        <View style={{flexDirection: 'row', marginTop: 10, marginLeft: 10, marginRight: 10}}>
+                          <Text style={{fontSize: 25, color: 'rgb(70, 70, 70)'}}>ORDER</Text>
+                        </View>
+                      )                    
+                      break;
+                  }
+                })()}
 
                 <ScrollView style={{flex: 1, flexDirection: 'column'}}>
-                  <FlatList style={{marginLeft: 10, marginRight: 10}}
-                    data={this.state.order.items}
-                    keyExtractor={(item) => item._id}
-                    renderItem={({item, separators}) => (
-                      <View style={{marginTop: 20}}>
-                        <View style={{flex: 1, flexDirection: 'row'}}>
-                          <Text style={{flex: 1}}>{item.name}</Text>
-                          <Text style={{width: 70, textAlign: 'right'}}>
-                            {(() => { return Helper.formatCurrency(item.price) })()}
-                          </Text>
-                        </View>
-                        <View style={{flex: 1, flexDirection: 'row', marginTop: 10}}>
-                          <View style={{width: 50}}>
-                            <Button full small style={{backgroundColor: '#2177b4'}} onPress={() => {this.onAddItem(item._id)}}>
-                              <MaterialIcons name='add' color={'#fff'} size={20} />
-                            </Button>
-                          </View>
-                          <View style={{width: 50}}>
-                            <Button full small style={{backgroundColor: '#6c757d'}} onPress={() => {this.onRemoveItem(item._id)}}>
-                              <MaterialIcons name='remove' color={'#fff'} size={20} />
-                            </Button>
-                          </View>
-                          <View style={{width: 50}}>
-                            {(() => {
-                              if (item.isTakeaway) {
-                                return (
-                                  <Button full small style={{backgroundColor: '#EE2738'}} onPress={() => {this.onTakeawayItem(item._id)}}>
-                                    <MaterialIcons name='directions-walk' color={'#fff'} size={20} />
-                                  </Button>
-                                )
-                              } else {
-                                return (
-                                  <Button full small style={{backgroundColor: '#2FA495'}} onPress={() => {this.onTakeawayItem(item._id)}}>
-                                    <MaterialIcons name='directions-walk' color={'#fff'} size={20} />
-                                  </Button>
-                                )
-                              }
-                            })()}
-                          </View>
-                          <View style={{width: 50}}>
-                            <Button full small style={{backgroundColor: '#2177b4'}} onPress={() => {this.onEditNoteItem(item._id)}}>
-                              <MaterialIcons name='subject' color={'#fff'} size={20} />
-                            </Button>
-                          </View>
-                          <View style={{width: 50}}>
-                            {(() => {
-                              if (item.extra && item.extra.length > 0) {
-                                return (
-                                  <Button full small style={{backgroundColor: '#EE2738'}} onPress={() => {this.onAddonItem(item._id)}}>
-                                    <MaterialIcons name='add-circle-outline' color={'#fff'} size={20} />
-                                  </Button>
-                                )
-                              } else {
-                                return (
-                                  <Button full small style={{backgroundColor: '#6c757d'}} onPress={() => {this.onAddonItem(item._id)}}>
-                                    <MaterialIcons name='add-circle-outline' color={'#fff'} size={20} />
-                                  </Button>
-                                )
-                              }
-                            })()}
-                          </View>
-                          <View style={{flex: 1}}/>
-                          <Text style={{width: 70, textAlign: 'right', color: '#EE2738'}}>x{item.quantity}</Text>
-                        </View>
-                        {(() => {
-                          if (item.isEdittingNote) {
-                            return (
-                              <TextInput defaultValue={item.note} onChangeText={(text) => this.onItemNoteChanged(item._id, text)} multiline = {true} style={{marginTop: 10, fontSize: 20, height: 85, backgroundColor: '#fff', borderColor: '#d2d3d4', borderWidth: 1}}/>          
-                            )
-                          } else {
-                            return (
-                              <View />
-                            )
-                          } 
-                        })()}
-                      </View>
-                    )}
-                  />
+                  {(() => {
+                    switch(this.state.displayMode) {
+                      case DISPLAY_MODE.MENU:
+                        return (
+                          <FlatList style={{marginLeft: 10, marginRight: 10}}
+                            data={this.state.order.items}
+                            keyExtractor={(item) => item._id}
+                            renderItem={({item, separators}) => (
+                              <View style={{marginTop: 20}}>
+                                <View style={{flex: 1, flexDirection: 'row'}}>
+                                  <Text style={{flex: 1}}>{item.name}</Text>
+                                  <Text style={{width: 70, textAlign: 'right'}}>
+                                    {(() => { return Helper.formatCurrency(item.price) })()}
+                                  </Text>
+                                </View>
+                                <View style={{flex: 1, flexDirection: 'row', marginTop: 10}}>
+                                  <View style={{width: 50}}>
+                                    <Button full small style={{backgroundColor: '#2177b4'}} onPress={() => {this.onAddItem(item._id)}}>
+                                      <MaterialIcons name='add' color={'#fff'} size={20} />
+                                    </Button>
+                                  </View>
+                                  <View style={{width: 50}}>
+                                    <Button full small style={{backgroundColor: '#6c757d'}} onPress={() => {this.onRemoveItem(item._id)}}>
+                                      <MaterialIcons name='remove' color={'#fff'} size={20} />
+                                    </Button>
+                                  </View>
+                                  <View style={{width: 50}}>
+                                    {(() => {
+                                      if (item.isTakeaway) {
+                                        return (
+                                          <Button full small style={{backgroundColor: '#EE2738'}} onPress={() => {this.onTakeawayItem(item._id)}}>
+                                            <MaterialIcons name='directions-walk' color={'#fff'} size={20} />
+                                          </Button>
+                                        )
+                                      } else {
+                                        return (
+                                          <Button full small style={{backgroundColor: '#2FA495'}} onPress={() => {this.onTakeawayItem(item._id)}}>
+                                            <MaterialIcons name='directions-walk' color={'#fff'} size={20} />
+                                          </Button>
+                                        )
+                                      }
+                                    })()}
+                                  </View>
+                                  <View style={{width: 50}}>
+                                    <Button full small style={{backgroundColor: '#2177b4'}} onPress={() => {this.onEditNoteItem(item._id)}}>
+                                      <MaterialIcons name='subject' color={'#fff'} size={20} />
+                                    </Button>
+                                  </View>
+                                  <View style={{width: 50}}>
+                                    {(() => {
+                                      if (item.addons && item.addons.length > 0) {
+                                        return (
+                                          <Button full small style={{backgroundColor: '#EE2738'}} onPress={() => {this.showAddonScreen(item)}}>
+                                            <MaterialIcons name='add-circle-outline' color={'#fff'} size={20} />
+                                          </Button>
+                                        )
+                                      } else {
+                                        return (
+                                          <Button full small style={{backgroundColor: '#6c757d'}} onPress={() => {this.showAddonScreen(item)}}>
+                                            <MaterialIcons name='add-circle-outline' color={'#fff'} size={20} />
+                                          </Button>
+                                        )
+                                      }
+                                    })()}
+                                  </View>
+                                  <View style={{flex: 1}}/>
+                                  <Text style={{width: 70, textAlign: 'right', color: '#EE2738'}}>x{item.quantity}</Text>
+                                </View>
+                                {(() => {
+                                  if (item.isEdittingNote) {
+                                    return (
+                                      <TextInput defaultValue={item.note} onChangeText={(text) => this.onItemNoteChanged(item._id, text)} multiline = {true} style={{marginTop: 10, fontSize: 20, height: 85, backgroundColor: '#fff', borderColor: '#d2d3d4', borderWidth: 1}}/>          
+                                    )
+                                  } else {
+                                    return (
+                                      <View />
+                                    )
+                                  } 
+                                })()}
+                              </View>
+                            )}
+                          />
+                        )
+                        break;
+
+                      case DISPLAY_MODE.ADDON:
+                        return (
+                          <FlatList style={{marginLeft: 10, marginRight: 10}}
+                            data={this.state.selectedOrderItem.addons}
+                            keyExtractor={(item) => item._id}
+                            renderItem={({item, separators}) => (
+                              <View style={{marginTop: 20}}>
+                                <View style={{flex: 1, flexDirection: 'row'}}>
+                                  <Text style={{flex: 1}}>{item.name}</Text>
+                                  <Text style={{width: 70, textAlign: 'right'}}>
+                                    {(() => { return Helper.formatCurrency(item.price) })()}
+                                  </Text>
+                                </View>
+                                <View style={{flex: 1, flexDirection: 'row', marginTop: 10}}>
+                                  <View style={{width: 50}}>
+                                    <Button full small style={{backgroundColor: '#2177b4'}} onPress={() => {this.onAddExtra(item._id)}}>
+                                      <MaterialIcons name='add' color={'#fff'} size={20} />
+                                    </Button>
+                                  </View>
+                                  <View style={{width: 50}}>
+                                    <Button full small style={{backgroundColor: '#6c757d'}} onPress={() => {this.onRemoveExtra(item._id)}}>
+                                      <MaterialIcons name='remove' color={'#fff'} size={20} />
+                                    </Button>
+                                  </View>
+                                  <View style={{flex: 1}}/>
+                                  <Text style={{width: 70, textAlign: 'right', color: '#EE2738'}}>x{item.quantity}</Text>
+                                </View>
+                              </View>
+                            )}
+                          />                          
+                        )
+                        break;
+
+                      case DISPLAY_MODE.DISCOUNT:
+                        break;
+
+                      case DISPLAY_MODE.CHECKOUT:
+                        break;
+                    }
+                  })()}
                 </ScrollView>
 
                 <View style={{height: 90, marginTop: 30, marginLeft: 10, marginRight: 10}}>
@@ -1062,41 +1204,95 @@ class Order extends React.Component {
             </View>
 
             {(() => {
-              if (this.state.displayMode === "MENUS") {
-                return (
-                  <View style={{flex: 1, flexDirection: 'row', backgroundColor: '#f2f3f4'}}>
-                    <View style={{width: 150, height: 60, marginTop: 10, marginLeft: 10, marginRight: 10}}>
-                      <Button full large onPress={() => this.onBackCategory()} style={{backgroundColor: '#2177b4'}}>
-                        <MaterialIcons name='subdirectory-arrow-left' color={'#fff'} size={20} />              
-                      </Button>
+              switch(this.state.displayMode) {
+                case DISPLAY_MODE.MENU:
+                  return (
+                    <View style={{flex: 1, flexDirection: 'row', backgroundColor: '#f2f3f4'}}>
+                      <View style={{width: 150, height: 60, marginTop: 10, marginLeft: 10, marginRight: 10}}>
+                        {(() => {
+                          return (
+                            <Button full large onPress={() => this.showDiscountScreen()} style={{backgroundColor: '#2177b4'}}>
+                              <Text style={{fontSize: 20}}> DISCOUNT </Text>              
+                            </Button>
+                          )
+                        })()}
+                      </View>
+                      <View style={{width: 60, height: 60, marginTop: 10, marginLeft: 10, marginRight: 20}}>
+                        {(() => {
+                          return (
+                            <Button full large onPress={() => this.onBackCategory()} style={{backgroundColor: '#2177b4'}}>
+                              <MaterialIcons name='arrow-upward' color={'#fff'} size={20} />              
+                            </Button>
+                          )
+                        })()}
+                      </View>
+                      <View style={{flex: 1}}>
+                        <ScrollView horizontal={true} style={{flex: 1, flexDirection: 'row'}}>
+                          {this.state.filteredCategories.map(category => (
+                            <View key={category._id} style={{width: 150, height: 60, marginTop: 10, marginRight: 10}}>
+                              {(() => {
+                                if (this.selectedCategory && this.selectedCategory._id === category._id) {
+                                  return (
+                                    <Button full large success onPress={() => this.onSelectCategory(category)} style={{backgroundColor: '#EE2738'}}><Text style={{fontSize: 18}}> {category.name} </Text></Button>
+                                  )
+                                } else {
+                                  return (
+                                    <Button full large success onPress={() => this.onSelectCategory(category)} style={{backgroundColor: '#2FA495'}}><Text style={{fontSize: 18}}> {category.name} </Text></Button>
+                                  )
+                                }
+                              })()}
+                            </View>
+                          ))}
+                        </ScrollView>
+                      </View>
                     </View>
-                    <View style={{flex: 1}}>
-                      <ScrollView horizontal={true} style={{flex: 1, flexDirection: 'row'}}>
-                        {this.state.filteredCategories.map(category => (
-                          <View key={category._id} style={{width: 150, height: 60, marginTop: 10, marginRight: 10}}>
-                            {(() => {
-                              if (this.selectedCategory && this.selectedCategory._id === category._id) {
-                                return (
-                                  <Button full large success onPress={() => this.onSelectCategory(category)} style={{backgroundColor: '#EE2738'}}><Text style={{fontSize: 16}}> {category.name} </Text></Button>
-                                )
-                              } else {
-                                return (
-                                  <Button full large success onPress={() => this.onSelectCategory(category)} style={{backgroundColor: '#2FA495'}}><Text style={{fontSize: 16}}> {category.name} </Text></Button>
-                                )                      
-                              }
-                            })()}
-                          </View>
-                        ))}
-                      </ScrollView>
+                  )
+                  break;
+
+                case DISPLAY_MODE.ADDON:
+                  return (
+                    <View style={{flex: 1, flexDirection: 'row', height: 60, backgroundColor: '#f2f3f4'}}>
+                      <View style={{width: 150, height: 60, marginTop: 10, marginLeft: 10, marginRight: 10}}>
+                        <Button full large onPress={() => this.showMenuScreen()} style={{backgroundColor: '#2177b4'}}>
+                          <Text style={{fontSize: 20}}> MENU </Text>
+                        </Button>
+                      </View>
+                      <View style={{flex: 1, flexDirection: 'row'}}>
+                        <Text style={{flex: 1, fontSize: 20, marginTop: 27, marginLeft: 30}}>
+                          Select add-ons for {this.state.selectedOrderItem.name}
+                        </Text>
+                      </View>
                     </View>
-                  </View>
-                )
-              } else {
-                if (this.state.displayMode === "ADDONS") {
-                } else {
-                  if (this.state.displayMode === "DISCOUNTS") {
-                  }
-                }
+                  )
+                  break;
+
+                case DISPLAY_MODE.DISCOUNT:
+                  return (
+                    <View style={{flex: 1, flexDirection: 'row', height: 60, backgroundColor: '#f2f3f4'}}>
+                      <View style={{width: 150, height: 60, marginTop: 10, marginLeft: 10, marginRight: 10}}>
+                        <Button full large onPress={() => this.showMenuScreen()} style={{backgroundColor: '#2177b4'}}>
+                          <Text style={{fontSize: 20}}> MENU </Text>              
+                        </Button>
+                      </View>
+                      <View style={{flex: 1}}>
+                      </View>
+                    </View>
+                  )
+                  break;
+
+                case DISPLAY_MODE.CHECKOUT:
+                  return (
+                    <View style={{flex: 1, flexDirection: 'row', height: 60, backgroundColor: '#f2f3f4'}}>
+                      <View style={{width: 150, height: 60, marginTop: 10, marginLeft: 10, marginRight: 10}}>
+                        <Button full large onPress={() => this.showMenuScreen()} style={{backgroundColor: '#2177b4'}}>
+                          <Text style={{fontSize: 20}}> MENU </Text>              
+                        </Button>
+                      </View>
+                      <View style={{flex: 1}}>
+                      </View>
+                    </View>
+                  )
+                  break;
               }
             })()}
           </View>

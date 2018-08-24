@@ -62,6 +62,14 @@ export default [
         url: '/menus/:id',
         template: '<pos-menu-detail/>'
       })
+      .state(posgram.config.states.ADDON_LIST, {
+        url: '/addons',
+        template: '<pos-addon-list/>'
+      })
+      .state(posgram.config.states.ADDON_DETAIL, {
+        url: '/addons/:id',
+        template: '<pos-addon-detail/>'
+      })
       .state(posgram.config.states.CATEGORY_LIST, {
         url: '/categories',
         template: '<pos-category-list/>'

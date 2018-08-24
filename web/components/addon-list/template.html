@@ -1,7 +1,7 @@
 <div class="container p-3 mb-3">
   <div class="row">
     <div class="col" style="padding-left: 0px;">
-      <h4>Menus</h4>
+      <h4>Add-ons</h4>
     </div>
     <div class="col-6">
       <div class="btn-group float-right">
@@ -51,16 +51,16 @@
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="menu in $ctrl.menus"> 
-        <td>{{menu.name}}</td>
-        <td>{{menu.price | currency}}</td>
-        <td>{{menu.category.name}}</td>         
+      <tr ng-repeat="addon in $ctrl.addons"> 
+        <td>{{addon.name}}</td>
+        <td>{{addon.price | currency}}</td>
+        <td>{{addon.category.name}}</td>         
         <td>
-          <img ng-if="menu.imageUrl" ng-src="{{menu.imageUrl}}" style="height: 30px; width: 30px; display: block;"/>
+          <img ng-if="addon.imageUrl" ng-src="{{addon.imageUrl}}" style="height: 30px; width: 30px; display: block;"/>
         </td>         
-        <td>{{$ctrl.getStatus(menu)}}</td>
+        <td>{{$ctrl.getStatus(addon)}}</td>
         <td>
-          <button class="btn btn-sm btn-outline-secondary" ng-click="$ctrl.view(menu)">View</button>
+          <button class="btn btn-sm btn-outline-secondary" ng-click="$ctrl.view(addon)">View</button>
         </td>
       </tr>
     </tbody>

@@ -32,7 +32,7 @@ let schema = mongoose.Schema({
       price: { type: Number, required: true, default: 0 },
       subtotal: { type: Number, required: true, default: 0 },
       total: { type: Number, required: true, default: 0 },
-      extra: [ 
+      addons: [ 
         mongoose.Schema({
           _id: { type: mongoose.Schema.Types.ObjectId, ref: 'addons' },
           name: { type: String, required: true },

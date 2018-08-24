@@ -17,6 +17,8 @@ import orderList from './components/order-list';
 import orderDetail from './components/order-detail';
 import menuList from './components/menu-list';
 import menuDetail from './components/menu-detail';
+import addonList from './components/addon-list';
+import addonDetail from './components/addon-detail';
 import categoryList from './components/category-list';
 import categoryDetail from './components/category-detail';
 import discountList from './components/discount-list';
@@ -34,6 +36,7 @@ import authApi from './api/auth-api';
 import tenantApi from './api/tenant-api';
 import userApi from './api/user-api';
 import menuApi from './api/menu-api';
+import addonApi from './api/addon-api';
 import categoryApi from './api/category-api';
 import discountApi from './api/discount-api';
 import orderApi from './api/order-api';
@@ -61,6 +64,8 @@ angular
   .component('posOrderDetail', orderDetail)
   .component('posMenuList', menuList)
   .component('posMenuDetail', menuDetail)
+  .component('posAddonList', addonList)
+  .component('posAddonDetail', addonDetail)
   .component('posCategoryList', categoryList)
   .component('posCategoryDetail', categoryDetail)
   .component('posDiscountList', discountList)
@@ -78,12 +83,13 @@ angular
   .service('TenantApi', tenantApi)
   .service('UserApi', userApi)
   .service('MenuApi', menuApi)
+  .service('AddonApi', addonApi)
   .service('CategoryApi', categoryApi)
   .service('DiscountApi', discountApi)
-  .service('OrderApi', orderApi)  
-  .service('PrinterApi', printerApi)  
-  .service('CashApi', cashApi)  
-  .service('PlaceApi', placeApi)  
+  .service('OrderApi', orderApi)
+  .service('PrinterApi', printerApi)
+  .service('CashApi', cashApi)
+  .service('PlaceApi', placeApi)
   .factory("fileReader", function($q, $log) {
     var onLoad = function(reader, deferred, scope) {
       return function() {

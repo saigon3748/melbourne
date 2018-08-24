@@ -4,7 +4,7 @@ import Config from '../config';
 const get = () => {
   return new Promise((resolve, reject) => {
     AsyncStorage.getItem('token', (err, token) => {
-      fetch(Config.API + '/menus', {
+      fetch(Config.API + '/cashes', {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -13,11 +13,11 @@ const get = () => {
         }
       })
       .then(response => response.json())
-      .then(data => {
-        resolve(data);
+      .then(result => {
+        resolve(result);
       })
       .catch(error => {
-        reject(error);
+        reject('Get cashes failed');
       });
     });
   });
