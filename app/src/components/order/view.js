@@ -645,6 +645,30 @@ class Order extends React.Component {
     });
   }
 
+  addMenu(menu) {
+
+  }
+
+  removeMenu(menu) {
+
+  }
+
+  addAddon(addon) {
+    
+  }
+
+  removeAddon(addon) {
+    
+  }
+
+  addDiscount(discount) {
+
+  }
+
+  removeDiscount(discount) {
+
+  }
+
   onDiscountChanged(text){
     try {
       let discount = Number(text.replace(/[^0-9\.-]+/g,""));
@@ -908,7 +932,7 @@ class Order extends React.Component {
                           return this.state.filteredMenus.map(menuItem => {
                             return (
                               <TouchableOpacity key={menuItem._id} activeOpacity={1.0} onPress={() => this.onAddItem(menuItem._id)}>
-                                <View style={{width: 150, height: 150, marginTop: 10, marginLeft: 10, backgroundColor: '#2FA495'}}>
+                                <View style={{width: 150, height: 150, marginTop: 10, marginLeft: 10, backgroundColor: '#408AF8'}}>
                                   {(() => { 
                                     if (menuItem.imageUrl) {
                                       return (
@@ -948,7 +972,7 @@ class Order extends React.Component {
                           return this.addons.map(addon => {
                             return (
                               <TouchableOpacity key={addon._id} activeOpacity={1.0} onPress={() => this.onAddExtra(addon._id)}>
-                                <View style={{width: 150, height: 150, marginTop: 10, marginLeft: 10, backgroundColor: '#2FA495'}}>
+                                <View style={{width: 150, height: 150, marginTop: 10, marginLeft: 10, backgroundColor: '#3ECF8E'}}>
                                   <View style={{backgroundColor: 'rgba(221, 226, 229, 0.85)'}}>
                                     <Text style={{marginTop: 3, marginLeft: 3, marginRight: 3}}>
                                       {addon.name}
@@ -967,7 +991,7 @@ class Order extends React.Component {
                           return this.discounts.map(discount => {
                             return (
                               <TouchableOpacity key={discount._id} activeOpacity={1.0} onPress={() => this.addDiscount(discount)}>
-                                <View style={{width: 150, height: 150, marginTop: 10, marginLeft: 10, backgroundColor: '#2FA495'}}>
+                                <View style={{width: 150, height: 150, marginTop: 10, marginLeft: 10, backgroundColor: '#6772E5'}}>
                                   <View style={{backgroundColor: 'rgba(221, 226, 229, 0.85)'}}>
                                     <Text style={{marginTop: 3, marginLeft: 3, marginRight: 3}}>
                                       {discount.name}
@@ -1065,13 +1089,13 @@ class Order extends React.Component {
                                       if (item.isTakeaway) {
                                         return (
                                           <Button full small style={{backgroundColor: '#EE2738'}} onPress={() => {this.onTakeawayItem(item._id)}}>
-                                            <MaterialIcons name='directions-walk' color={'#fff'} size={20} />
+                                            <MaterialIcons name='layers' color={'#fff'} size={20} />
                                           </Button>
                                         )
                                       } else {
                                         return (
                                           <Button full small style={{backgroundColor: '#2FA495'}} onPress={() => {this.onTakeawayItem(item._id)}}>
-                                            <MaterialIcons name='directions-walk' color={'#fff'} size={20} />
+                                            <MaterialIcons name='layers' color={'#fff'} size={20} />
                                           </Button>
                                         )
                                       }
@@ -1087,13 +1111,13 @@ class Order extends React.Component {
                                       if (item.addons && item.addons.length > 0) {
                                         return (
                                           <Button full small style={{backgroundColor: '#EE2738'}} onPress={() => {this.showAddonScreen(item)}}>
-                                            <MaterialIcons name='add-circle-outline' color={'#fff'} size={20} />
+                                            <MaterialIcons name='code' color={'#fff'} size={20} />
                                           </Button>
                                         )
                                       } else {
                                         return (
                                           <Button full small style={{backgroundColor: '#6c757d'}} onPress={() => {this.showAddonScreen(item)}}>
-                                            <MaterialIcons name='add-circle-outline' color={'#fff'} size={20} />
+                                            <MaterialIcons name='code' color={'#fff'} size={20} />
                                           </Button>
                                         )
                                       }
