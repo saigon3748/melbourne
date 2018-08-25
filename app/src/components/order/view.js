@@ -31,9 +31,6 @@ class Order extends React.Component {
     this.state = {
       displayMode: DISPLAY_MODE.MENU,
       isSignedIn: false,
-      isConfirmModalVisible: false,
-      isExtraModalVisible: false,
-      isEdittingNote: false,
       selectedMenu: { addons: [], discounts: [] },
       filteredMenus: [],
       filteredCategories: [],
@@ -161,7 +158,7 @@ class Order extends React.Component {
     return _.sortBy(this.state.filteredCategories, ['displayIndex']);
   }
 
-  onSelectCategory(category) {
+  selectCategory(category) {
     this.categoryStack = this.categoryStack || [];
 
     let subs = _.filter(this.categories, item => {
@@ -184,7 +181,7 @@ class Order extends React.Component {
     });
   }
 
-  onBackCategory() {
+  backCategory() {
     this.categoryStack = this.categoryStack || [];
 
     if (this.categoryStack.length > 0) {
@@ -204,7 +201,6 @@ class Order extends React.Component {
 
     this.setState({
       displayMode: DISPLAY_MODE.MENU,
-      isEdittingNote: false,
       selectedMenu: { addons: [], discounts: [] },
       filteredMenus: this.filterMenus(),
       filteredCategories: this.filterCategories(),      
@@ -223,7 +219,7 @@ class Order extends React.Component {
     this.showConfirmModal(false);
   }
 
-  onDiscard() {
+  discard() {
     Alert.alert(
       `Alert`, 
       'Do you want to discard?',
@@ -234,16 +230,16 @@ class Order extends React.Component {
     );    
   }
 
-  onOrder() {
+  checkout() {
     if (!this.state.order || !this.state.order.items || this.state.order.items.length === 0) {
       alert("Select items to create order");
       return;
     }
 
-    this.showConfirmModal(true);
+    this.showCheckoutScreen()
   }
 
-  onSave() {
+  save() {
     if (!this.state.order || !this.state.order.items || this.state.order.items.length === 0) {
       alert("Select items to create order");
       return;
@@ -326,13 +322,7 @@ class Order extends React.Component {
     }
   }
 
-  onEditNote() {
-    this.setState({
-      isEdittingNote: !this.state.isEdittingNote
-    })
-  }
-
-  onEditNoteItem(id) {
+  noteMenu(id) {
     let order = {...this.state.order};
 
     order.items.forEach(item => {
@@ -348,10 +338,10 @@ class Order extends React.Component {
     })
   }
 
-  onItemNoteChanged(id, text) {
+  onMenuNoteChanged(menu, text) {
     let order = {...this.state.order};
     let item = _.find(order.items, item => {
-      return item._id === id;
+      return item._id === menu._id;
     });
 
     if (item) {
@@ -618,10 +608,10 @@ class Order extends React.Component {
     this.calculate(order);
   }
 
-  onCashSelected(cash){
+  selectCash(cash){
     try {
       let order = {...this.state.order};
-      order.cash = _.round(cash, 2);
+      order.cash = _.round(cash.cash, 2);
       order.change = _.round(order.cash - order.total, 2);
 
       this.setState({
@@ -657,14 +647,6 @@ class Order extends React.Component {
     });
   }
 
-  showConfirmModal(visible) {
-    this.setState({isConfirmModalVisible: visible});
-  }
-
-  showExtraModal(visible) {
-    this.setState({isExtraModalVisible: visible});
-  }
-
   render() {
     if (!this.state.isSignedIn) return null;
     const {height: screenHeight} = Dimensions.get('window');
@@ -679,167 +661,6 @@ class Order extends React.Component {
             backgroundColor: '#fff',
             height: screenHeight - 50
           }}>
-            <Modal isVisible={this.state.isConfirmModalVisible}
-              onBackdropPress={() => this.showConfirmModal(false)}>
-              <View style={{
-                flexDirection: 'column', 
-                padding: 20,
-                height: 500,
-                borderRadius: 4,
-                backgroundColor: "white",
-                borderColor: "rgba(0, 0, 0, 0.1)"
-              }}>
-                <View style={{flexDirection: 'row', backgroundColor: '#f2f3f4'}}>
-                  <View style={{width: 150, height: 72, marginTop: 10, marginLeft: 10, marginRight: 10}}>
-                    <Button full large style={{backgroundColor: '#2177b4'}}>
-                      <Text>CASH</Text>
-                    </Button>
-                  </View>
-                  <View style={{flex: 1}}>
-                    <ScrollView horizontal={true} style={{flex: 1, flexDirection: 'row'}}>
-                      {this.cashes.map(cash => (
-                        <View key={cash._id} style={{width: 150, height: 72, marginTop: 10, marginRight: 10}}>
-                          <Button full large onPress={() => this.onCashSelected(cash.amount)} success style={{backgroundColor: '#2FA495'}}>
-                            <Text style={{fontSize: 16}}>
-                              {(() => { return Helper.formatCurrency(cash.amount) })()}
-                            </Text>
-                          </Button>
-                        </View>
-                      ))}
-                    </ScrollView>
-                  </View>
-                  <View style={{marginLeft: 10}}>
-                  </View>
-                </View>
-                <View style={{flex: 1, flexDirection: 'column', backgroundColor: '#fff'}}>
-                  <View style={{height: 40, marginTop: 30, marginLeft: 10, marginRight: 10}}>
-                    <View style={{flex: 1, flexDirection: 'row'}}>
-                      <Text style={{flex: 1}}>CASH</Text>
-                      <TextInputMask type={'money'} options={{unit: '$', separator: '.', delimiter: ','}} selectTextOnFocus value={(() => { return Helper.formatCurrency(this.state.order.cash) })()} onChangeText={(text) => this.onCashChanged(text)} style={{fontSize: 20, height: 35, backgroundColor: '#fff', borderColor: '#d2d3d4', borderWidth: 1, textAlign: 'right', flex: 1}}/>          
-                    </View>
-                  </View>
-
-                  <View style={{height: 40, marginTop: 10, marginLeft: 10, marginRight: 10}}>
-                    <View style={{flex: 1, flexDirection: 'row'}}>
-                      <Text style={{flex: 1}}>DISCOUNT</Text>
-                      <TextInputMask type={'money'} options={{unit: '$', separator: '.', delimiter: ','}} selectTextOnFocus value={(() => { return Helper.formatCurrency(this.state.order.discount) })()} onChangeText={(text) => this.onDiscountChanged(text)} style={{fontSize: 20, height: 35, backgroundColor: '#fff', borderColor: '#d2d3d4', borderWidth: 1, textAlign: 'right', flex: 1}}/>          
-                    </View>
-                  </View>
-
-                  <View style={{height: 40, marginTop: 10, marginLeft: 10, marginRight: 10}}>
-                    <View style={{flex: 1, flexDirection: 'row'}}>
-                      <Text style={{flex: 1}}>NOTE</Text>
-                      <TextInput defaultValue={this.state.order.note} onChangeText={(text) => this.onNoteChanged(text)} style={{fontSize: 20, height: 35, backgroundColor: '#fff', borderColor: '#d2d3d4', borderWidth: 1, flex: 1}}/>
-                    </View>
-                  </View>
-
-                  <View style={{height: 40, marginTop: 10, marginLeft: 10, marginRight: 10}}>
-                    <View style={{flex: 1, flexDirection: 'row'}}>
-                      <Text style={{flex: 1, fontSize: 30, color: 'rgb(70, 70, 70)'}}>TOTAL</Text>
-                      <Text style={{width: 200, textAlign: 'right', fontSize: 30, color: '#EE2738'}}>
-                        {(() => { return Helper.formatCurrency(this.state.order.total) })()}
-                      </Text>
-                    </View>
-                  </View>
-
-                  <View style={{height: 40, marginTop: 10, marginLeft: 10, marginRight: 10}}>
-                    <View style={{flex: 1, flexDirection: 'row'}}>
-                      <Text style={{flex: 1, fontSize: 30, color: 'rgb(70, 70, 70)'}}>CHANGE</Text>
-                      <Text style={{width: 200, textAlign: 'right', fontSize: 30}}>
-                        {(() => { return Helper.formatCurrency(this.state.order.change) })()}
-                      </Text>
-                    </View>
-                  </View>
-
-                  <View style={{flexDirection: 'row', marginTop: 50, marginBottom: 10, marginLeft: 10, marginRight: 10}}>
-                    <View style={{flex: 1}} />
-                    <View style={{width: 170, marginRight: 10}}>
-                      <Button full onPress={() => this.showConfirmModal(false)} style={{backgroundColor: '#6c757d'}}><Text> CLOSE </Text></Button>
-                    </View>
-                    <View style={{width: 170}}>
-                      <Button full onPress={() => this.onSave()} style={{backgroundColor: '#2177b4'}}><Text> SAVE </Text></Button>
-                    </View>
-                  </View>
-                </View>            
-              </View>
-            </Modal>
-
-            <Modal isVisible={this.state.isExtraModalVisible}
-              onBackdropPress={() => this.showExtraModal(false)}>
-              <View style={{
-                flexDirection: 'column', 
-                padding: 20,
-                height: 500,
-                borderRadius: 4,
-                backgroundColor: "white",
-                borderColor: "rgba(0, 0, 0, 0.1)"
-              }}>
-                <View style={{flexDirection: 'row', backgroundColor: '#f2f3f4'}}>
-                  <View style={{width: 150, height: 72, marginTop: 10, marginLeft: 10, marginRight: 10}}>
-                    <Button full large style={{backgroundColor: '#2177b4'}}>
-                      <Text>ADD-ONS</Text>
-                    </Button>
-                  </View>
-                  <View style={{flex: 1}}>
-                    <ScrollView horizontal={true} style={{flex: 1, flexDirection: 'row'}}>
-                      {this.addons.map(addon => (
-                        <View key={addon._id} style={{width: 150, height: 72, marginTop: 10, marginRight: 10}}>
-                          <Button full large onPress={() => this.onAddExtra(addon._id)} success style={{backgroundColor: '#2FA495'}}>
-                            <Text style={{fontSize: 16}}>{addon.name}</Text>
-                          </Button>
-                        </View>
-                      ))}
-                    </ScrollView>
-                  </View>
-                  <View style={{marginLeft: 10}}>
-                  </View>
-                </View>
-                <View style={{flex: 1, flexDirection: 'column', backgroundColor: '#fff'}}>
-                  <View style={{height: 40, marginTop: 30, marginLeft: 10, marginRight: 10}}>
-                    <View style={{flex: 1, flexDirection: 'row'}}>
-                      <Text style={{flex: 1}}>{this.state.selectedMenu.name}</Text>
-                    </View>
-                  </View>
-
-                  <ScrollView style={{flex: 1, flexDirection: 'column', marginLeft: 30, marginRight: 10}}>
-                    <List>
-                      {this.state.selectedMenu.addons.map(extra => (
-                        <ListItem key={extra._id} style={{height: 50}}>
-                          <Body>
-                            <View style={{flexDirection: "row"}}>
-                              <Text style={{width: 200}}>{extra.name}</Text>
-                              <Text style={{width: 70, textAlign: 'right'}}>
-                                {(() => { return Helper.formatCurrency(extra.price) })()}
-                              </Text>
-                              <Text style={{width: 70, textAlign: 'right'}}>{extra.quantity}</Text>
-                              <Text style={{width: 70}}></Text>
-                              <View style={{width: 50}}>
-                                <Button full small style={{backgroundColor: '#2177b4'}} onPress={() => {this.onAddExtra(extra._id)}}>
-                                  <MaterialIcons name='add' color={'#fff'} size={20} />
-                                </Button>
-                              </View>
-                              <View style={{width: 50}}>
-                                <Button full small style={{backgroundColor: '#6c757d'}} onPress={() => {this.onRemoveExtra(extra._id)}}>
-                                  <MaterialIcons name='remove' color={'#fff'} size={20} />
-                                </Button>
-                              </View>                          
-                            </View>
-                          </Body>
-                        </ListItem>
-                      ))}
-                    </List>
-                  </ScrollView>
-
-                  <View style={{flexDirection: 'row', marginTop: 50, marginBottom: 10, marginLeft: 10, marginRight: 10}}>
-                    <View style={{flex: 1}} />
-                    <View style={{width: 170, marginRight: 10}}>
-                      <Button full onPress={() => this.showExtraModal(false)} style={{backgroundColor: '#6c757d'}}><Text> CLOSE </Text></Button>
-                    </View>
-                  </View>
-                </View>            
-              </View>
-            </Modal>
-
             <View style={{
               flex: 8, 
               flexDirection: 'row',
@@ -935,10 +756,23 @@ class Order extends React.Component {
                                 </View>
                               </TouchableOpacity>
                             )
-                          })                        
+                          })
                           break;
 
                         case DISPLAY_MODE.CHECKOUT:
+                          return this.cashes.map(cash => {
+                            return (
+                              <TouchableOpacity key={cash._id} activeOpacity={1.0} onPress={() => this.selectCash(cash)}>
+                                <View style={{width: 150, height: 150, marginTop: 10, marginLeft: 10, backgroundColor: '#2FA495'}}>
+                                  <View style={{backgroundColor: 'rgba(221, 226, 229, 0.85)'}}>
+                                    <Text style={{fontSize: 25, marginTop: 3, marginLeft: 3, marginRight: 3}}>
+                                      {(() => { return Helper.formatCurrency(cash.cash); })()}
+                                    </Text>
+                                  </View>
+                                </View>
+                              </TouchableOpacity>
+                            )
+                          })
                           break;
                       }
                     })()}
@@ -978,7 +812,7 @@ class Order extends React.Component {
                     case DISPLAY_MODE.CHECKOUT:
                       return (
                         <View style={{flexDirection: 'row', marginTop: 10, marginLeft: 10, marginRight: 10}}>
-                          <Text style={{fontSize: 25, color: 'rgb(70, 70, 70)'}}>ORDER</Text>
+                          <Text style={{fontSize: 25, color: 'rgb(70, 70, 70)'}}>CHECKOUT</Text>
                         </View>
                       )                    
                       break;
@@ -1030,7 +864,7 @@ class Order extends React.Component {
                                     })()}
                                   </View>
                                   <View style={{width: 50}}>
-                                    <Button full small style={{backgroundColor: '#2177b4'}} onPress={() => {this.onEditNoteItem(item._id)}}>
+                                    <Button full small style={{backgroundColor: '#2177b4'}} onPress={() => {this.noteMenu(item)}}>
                                       <MaterialIcons name='subject' color={'#fff'} size={20} />
                                     </Button>
                                   </View>
@@ -1057,7 +891,7 @@ class Order extends React.Component {
                                 {(() => {
                                   if (item.isEdittingNote) {
                                     return (
-                                      <TextInput defaultValue={item.note} onChangeText={(text) => this.onItemNoteChanged(item._id, text)} multiline = {true} style={{marginTop: 10, fontSize: 20, height: 85, backgroundColor: '#fff', borderColor: '#d2d3d4', borderWidth: 1}}/>          
+                                      <TextInput defaultValue={item.note} onChangeText={(text) => this.onMenuNoteChanged(item, text)} multiline = {true} style={{marginTop: 10, fontSize: 20, height: 85, backgroundColor: '#fff', borderColor: '#d2d3d4', borderWidth: 1}}/>          
                                     )
                                   } else {
                                     return (
@@ -1086,12 +920,12 @@ class Order extends React.Component {
                                 </View>
                                 <View style={{flex: 1, flexDirection: 'row', marginTop: 10}}>
                                   <View style={{width: 50}}>
-                                    <Button full small style={{backgroundColor: '#2177b4'}} onPress={() => {this.onAddExtra(item._id)}}>
+                                    <Button full small style={{backgroundColor: '#2177b4'}} onPress={() => {this.addAddon(item)}}>
                                       <MaterialIcons name='add' color={'#fff'} size={20} />
                                     </Button>
                                   </View>
                                   <View style={{width: 50}}>
-                                    <Button full small style={{backgroundColor: '#6c757d'}} onPress={() => {this.onRemoveExtra(item._id)}}>
+                                    <Button full small style={{backgroundColor: '#6c757d'}} onPress={() => {this.removeAddon(item)}}>
                                       <MaterialIcons name='remove' color={'#fff'} size={20} />
                                     </Button>
                                   </View>
@@ -1144,6 +978,32 @@ class Order extends React.Component {
                         break;
 
                       case DISPLAY_MODE.CHECKOUT:
+                        return (
+                          <View style={{marginTop: 20, marginLeft: 10, marginRight: 10}}>
+                            <View style={{flex: 1, flexDirection: 'row', marginTop: 20}}>
+                              <Text style={{flex: 1}}>CASH</Text>
+                            </View>
+
+                            <View style={{flex: 1, flexDirection: 'row', marginTop: 20}}>
+                              <TextInputMask type={'money'} options={{unit: '$', separator: '.', delimiter: ','}} selectTextOnFocus value={(() => { return Helper.formatCurrency(this.state.order.cash) })()} onChangeText={(text) => this.onCashChanged(text)} style={{fontSize: 25, height: 40, backgroundColor: '#fff', borderColor: '#d2d3d4', borderWidth: 1, textAlign: 'right', flex: 1}}/>          
+                            </View>
+
+                            <View style={{flex: 1, flexDirection: 'row', marginTop: 20}}>
+                              <Text style={{flex: 1}}>CHANGE</Text>
+                              <Text style={{width: 200, textAlign: 'right', fontSize: 25, color: '#EE2738'}}>
+                                {(() => { return Helper.formatCurrency(this.state.order.change) })()}
+                              </Text>
+                            </View>
+
+                            <View style={{flex: 1, flexDirection: 'row', marginTop: 20}}>
+                              <Text style={{flex: 1}}>NOTE</Text>
+                            </View>
+
+                            <View style={{flex: 1, flexDirection: 'row', marginTop: 20}}>
+                              <TextInput defaultValue={this.state.order.note} onChangeText={(text) => this.onNoteChanged(text)} multiline = {true} style={{marginTop: 10, fontSize: 20, height: 85, backgroundColor: '#fff', borderColor: '#d2d3d4', borderWidth: 1, flex: 1}}/>                              
+                            </View>                           
+                          </View>
+                        )
                         break;
                     }
                   })()}
@@ -1179,15 +1039,29 @@ class Order extends React.Component {
                   </View>
                 </View>
 
-                <View style={{flexDirection: 'row', marginTop: 20, marginBottom: 10, marginLeft: 10, marginRight: 10}}>
-                  <View style={{width: 170}}>
-                    <Button full onPress={() => this.onDiscard()} style={{backgroundColor: '#6c757d'}}><Text> DISCARD </Text></Button>
-                  </View>
-                  <View style={{flex: 1}} />
-                  <View style={{width: 170}}>
-                    <Button full onPress={() => this.onOrder()} style={{backgroundColor: '#2177b4'}}><Text> ORDER </Text></Button>
-                  </View>
-                </View>
+                {(() => { 
+                  if (this.state.displayMode === DISPLAY_MODE.CHECKOUT) {
+                    return (
+                      <View style={{flexDirection: 'row', marginTop: 20, marginBottom: 10, marginLeft: 10, marginRight: 10}}>
+                        <View style={{flex: 1}}>
+                          <Button full onPress={() => this.save()} style={{backgroundColor: '#2FA495'}}><Text> SAVE </Text></Button>
+                        </View>
+                      </View>
+                    )
+                  } else {
+                    return (
+                      <View style={{flexDirection: 'row', marginTop: 20, marginBottom: 10, marginLeft: 10, marginRight: 10}}>
+                        <View style={{width: 170}}>
+                          <Button full onPress={() => this.discard()} style={{backgroundColor: '#6c757d'}}><Text> DISCARD </Text></Button>
+                        </View>
+                        <View style={{flex: 1}} />
+                        <View style={{width: 170}}>
+                          <Button full onPress={() => this.checkout()} style={{backgroundColor: '#2177b4'}}><Text> ORDER </Text></Button>
+                        </View>
+                      </View>
+                    )
+                  }
+                })()}
               </View>
             </View>
 
@@ -1208,7 +1082,7 @@ class Order extends React.Component {
                       <View style={{width: 60, height: 60, marginTop: 10, marginLeft: 10, marginRight: 20}}>
                         {(() => {
                           return (
-                            <Button full large onPress={() => this.onBackCategory()} style={{backgroundColor: '#2177b4'}}>
+                            <Button full large onPress={() => this.backCategory()} style={{backgroundColor: '#2177b4'}}>
                               <MaterialIcons name='arrow-upward' color={'#fff'} size={20} />              
                             </Button>
                           )
@@ -1221,11 +1095,11 @@ class Order extends React.Component {
                               {(() => {
                                 if (this.selectedCategory && this.selectedCategory._id === category._id) {
                                   return (
-                                    <Button full large success onPress={() => this.onSelectCategory(category)} style={{backgroundColor: '#EE2738'}}><Text style={{fontSize: 18}}> {category.name} </Text></Button>
+                                    <Button full large success onPress={() => this.selectCategory(category)} style={{backgroundColor: '#EE2738'}}><Text style={{fontSize: 18}}> {category.name} </Text></Button>
                                   )
                                 } else {
                                   return (
-                                    <Button full large success onPress={() => this.onSelectCategory(category)} style={{backgroundColor: '#2FA495'}}><Text style={{fontSize: 18}}> {category.name} </Text></Button>
+                                    <Button full large success onPress={() => this.selectCategory(category)} style={{backgroundColor: '#2FA495'}}><Text style={{fontSize: 18}}> {category.name} </Text></Button>
                                   )
                                 }
                               })()}
