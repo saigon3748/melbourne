@@ -215,8 +215,6 @@ class Order extends React.Component {
         discounts: []
       }
     })
-
-    this.showConfirmModal(false);
   }
 
   discard() {
@@ -682,7 +680,7 @@ class Order extends React.Component {
                           return this.state.filteredMenus.map(menu => {
                             return (
                               <TouchableOpacity key={menu._id} activeOpacity={1.0} onPress={() => this.addMenu(menu)}>
-                                <View style={{width: 150, height: 150, marginTop: 10, marginLeft: 10, backgroundColor: '#2FA495'}}>
+                                <View style={{width: 150, height: 150, marginTop: 10, marginLeft: 10, backgroundColor: '#D1CABD'}}>
                                   {(() => { 
                                     if (menu.imageUrl) {
                                       return (
@@ -722,7 +720,7 @@ class Order extends React.Component {
                           return this.addons.map(addon => {
                             return (
                               <TouchableOpacity key={addon._id} activeOpacity={1.0} onPress={() => this.addAddon(addon)}>
-                                <View style={{width: 150, height: 150, marginTop: 10, marginLeft: 10, backgroundColor: '#2FA495'}}>
+                                <View style={{width: 150, height: 150, marginTop: 10, marginLeft: 10, backgroundColor: '#D1CABD'}}>
                                   <View style={{backgroundColor: 'rgba(221, 226, 229, 0.85)'}}>
                                     <Text style={{marginTop: 3, marginLeft: 3, marginRight: 3}}>
                                       {addon.name}
@@ -741,7 +739,7 @@ class Order extends React.Component {
                           return this.discounts.map(discount => {
                             return (
                               <TouchableOpacity key={discount._id} activeOpacity={1.0} onPress={() => this.addDiscount(discount)}>
-                                <View style={{width: 150, height: 150, marginTop: 10, marginLeft: 10, backgroundColor: '#2FA495'}}>
+                                <View style={{width: 150, height: 150, marginTop: 10, marginLeft: 10, backgroundColor: '#D1CABD'}}>
                                   <View style={{backgroundColor: 'rgba(221, 226, 229, 0.85)'}}>
                                     <Text style={{marginTop: 3, marginLeft: 3, marginRight: 3}}>
                                       {discount.name}
@@ -766,7 +764,7 @@ class Order extends React.Component {
                           return this.cashes.map(cash => {
                             return (
                               <TouchableOpacity key={cash._id} activeOpacity={1.0} onPress={() => this.selectCash(cash)}>
-                                <View style={{width: 150, height: 150, marginTop: 10, marginLeft: 10, backgroundColor: '#2FA495'}}>
+                                <View style={{width: 150, height: 150, marginTop: 10, marginLeft: 10, backgroundColor: '#D1CABD'}}>
                                   <View style={{backgroundColor: 'rgba(221, 226, 229, 0.85)'}}>
                                     <Text style={{fontSize: 25, marginTop: 3, marginLeft: 3, marginRight: 3}}>
                                       {(() => { return Helper.formatCurrency(cash.cash); })()}
@@ -853,13 +851,13 @@ class Order extends React.Component {
                                     {(() => {
                                       if (item.isTakeaway) {
                                         return (
-                                          <Button full small style={{backgroundColor: '#EE2738'}} onPress={() => {this.takeawayMenu(item)}}>
+                                          <Button full small style={{backgroundColor: '#7DB644'}} onPress={() => {this.takeawayMenu(item)}}>
                                             <MaterialIcons name='layers' color={'#fff'} size={20} />
                                           </Button>
                                         )
                                       } else {
                                         return (
-                                          <Button full small style={{backgroundColor: '#2FA495'}} onPress={() => {this.takeawayMenu(item)}}>
+                                          <Button full small style={{backgroundColor: '#2177b4'}} onPress={() => {this.takeawayMenu(item)}}>
                                             <MaterialIcons name='layers' color={'#fff'} size={20} />
                                           </Button>
                                         )
@@ -867,7 +865,7 @@ class Order extends React.Component {
                                     })()}
                                   </View>
                                   <View style={{width: 50}}>
-                                    <Button full small style={{backgroundColor: '#2177b4'}} onPress={() => {this.noteMenu(item)}}>
+                                    <Button full small style={{backgroundColor: '#6c757d'}} onPress={() => {this.noteMenu(item)}}>
                                       <MaterialIcons name='subject' color={'#fff'} size={20} />
                                     </Button>
                                   </View>
@@ -875,13 +873,13 @@ class Order extends React.Component {
                                     {(() => {
                                       if (item.addons && item.addons.length > 0) {
                                         return (
-                                          <Button full small style={{backgroundColor: '#EE2738'}} onPress={() => {this.showAddonScreen(item)}}>
+                                          <Button full small style={{backgroundColor: '#7DB644'}} onPress={() => {this.showAddonScreen(item)}}>
                                             <MaterialIcons name='code' color={'#fff'} size={20} />
                                           </Button>
                                         )
                                       } else {
                                         return (
-                                          <Button full small style={{backgroundColor: '#6c757d'}} onPress={() => {this.showAddonScreen(item)}}>
+                                          <Button full small style={{backgroundColor: '#2177b4'}} onPress={() => {this.showAddonScreen(item)}}>
                                             <MaterialIcons name='code' color={'#fff'} size={20} />
                                           </Button>
                                         )
@@ -889,7 +887,7 @@ class Order extends React.Component {
                                     })()}
                                   </View>
                                   <View style={{flex: 1}}/>
-                                  <Text style={{width: 70, textAlign: 'right', color: '#EE2738'}}>x{item.quantity}</Text>
+                                  <Text style={{width: 70, textAlign: 'right', color: '#DE544E'}}>x{item.quantity}</Text>
                                 </View>
                                 {(() => {
                                   if (item.isEdittingNote) {
@@ -933,7 +931,7 @@ class Order extends React.Component {
                                     </Button>
                                   </View>
                                   <View style={{flex: 1}}/>
-                                  <Text style={{width: 70, textAlign: 'right', color: '#EE2738'}}>x{item.quantity}</Text>
+                                  <Text style={{width: 70, textAlign: 'right', color: '#DE544E'}}>x{item.quantity}</Text>
                                 </View>
                               </View>
                             )}
@@ -972,7 +970,7 @@ class Order extends React.Component {
                                     </Button>
                                   </View>
                                   <View style={{flex: 1}}/>
-                                  <Text style={{width: 70, textAlign: 'right', color: '#EE2738'}}>x{item.quantity}</Text>
+                                  <Text style={{width: 70, textAlign: 'right', color: '#DE544E'}}>x{item.quantity}</Text>
                                 </View>
                               </View>
                             )}
@@ -993,7 +991,7 @@ class Order extends React.Component {
 
                             <View style={{flex: 1, flexDirection: 'row', marginTop: 20}}>
                               <Text style={{flex: 1}}>CHANGE</Text>
-                              <Text style={{width: 200, textAlign: 'right', fontSize: 25, color: '#EE2738'}}>
+                              <Text style={{width: 200, textAlign: 'right', fontSize: 25, color: '#DE544E'}}>
                                 {(() => { return Helper.formatCurrency(this.state.order.change) })()}
                               </Text>
                             </View>
@@ -1036,7 +1034,7 @@ class Order extends React.Component {
                 <View style={{height: 40, marginTop: 10, marginLeft: 10, marginRight: 10}}>
                   <View style={{flex: 1, flexDirection: 'row'}}>
                     <Text style={{flex: 1, fontSize: 30, color: 'rgb(70, 70, 70)'}}>TOTAL</Text>
-                    <Text style={{width: 200, textAlign: 'right', fontSize: 30, color: '#EE2738'}}>
+                    <Text style={{width: 200, textAlign: 'right', fontSize: 30, color: '#DE544E'}}>
                       {(() => { return Helper.formatCurrency(this.state.order.total) })()}
                     </Text>
                   </View>
@@ -1047,7 +1045,7 @@ class Order extends React.Component {
                     return (
                       <View style={{flexDirection: 'row', marginTop: 20, marginBottom: 10, marginLeft: 10, marginRight: 10}}>
                         <View style={{flex: 1}}>
-                          <Button full onPress={() => this.save()} style={{backgroundColor: '#2FA495'}}><Text> SAVE </Text></Button>
+                          <Button full onPress={() => this.save()} style={{backgroundColor: '#DE544E'}}><Text> SAVE </Text></Button>
                         </View>
                       </View>
                     )
@@ -1098,11 +1096,11 @@ class Order extends React.Component {
                               {(() => {
                                 if (this.selectedCategory && this.selectedCategory._id === category._id) {
                                   return (
-                                    <Button full large success onPress={() => this.selectCategory(category)} style={{backgroundColor: '#EE2738'}}><Text style={{fontSize: 18}}> {category.name} </Text></Button>
+                                    <Button full large success onPress={() => this.selectCategory(category)} style={{backgroundColor: '#7DB644'}}><Text style={{fontSize: 18}}> {category.name} </Text></Button>
                                   )
                                 } else {
                                   return (
-                                    <Button full large success onPress={() => this.selectCategory(category)} style={{backgroundColor: '#2FA495'}}><Text style={{fontSize: 18}}> {category.name} </Text></Button>
+                                    <Button full large success onPress={() => this.selectCategory(category)} style={{backgroundColor: '#DE544E'}}><Text style={{fontSize: 18}}> {category.name} </Text></Button>
                                   )
                                 }
                               })()}
