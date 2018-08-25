@@ -838,12 +838,12 @@ class Order extends React.Component {
                                 </View>
                                 <View style={{flex: 1, flexDirection: 'row', marginTop: 10}}>
                                   <View style={{width: 50}}>
-                                    <Button full small style={{backgroundColor: '#2177b4'}} onPress={() => {this.onAddItem(item._id)}}>
+                                    <Button full small style={{backgroundColor: '#2177b4'}} onPress={() => {this.addMenu(item)}}>
                                       <MaterialIcons name='add' color={'#fff'} size={20} />
                                     </Button>
                                   </View>
                                   <View style={{width: 50}}>
-                                    <Button full small style={{backgroundColor: '#6c757d'}} onPress={() => {this.onRemoveItem(item._id)}}>
+                                    <Button full small style={{backgroundColor: '#6c757d'}} onPress={() => {this.removeMenu(item)}}>
                                       <MaterialIcons name='remove' color={'#fff'} size={20} />
                                     </Button>
                                   </View>
@@ -851,7 +851,7 @@ class Order extends React.Component {
                                     {(() => {
                                       if (item.isTakeaway) {
                                         return (
-                                          <Button full small style={{backgroundColor: '#7DB644'}} onPress={() => {this.takeawayMenu(item)}}>
+                                          <Button full small style={{backgroundColor: '#28a745'}} onPress={() => {this.takeawayMenu(item)}}>
                                             <MaterialIcons name='layers' color={'#fff'} size={20} />
                                           </Button>
                                         )
@@ -873,7 +873,7 @@ class Order extends React.Component {
                                     {(() => {
                                       if (item.addons && item.addons.length > 0) {
                                         return (
-                                          <Button full small style={{backgroundColor: '#7DB644'}} onPress={() => {this.showAddonScreen(item)}}>
+                                          <Button full small style={{backgroundColor: '#28a745'}} onPress={() => {this.showAddonScreen(item)}}>
                                             <MaterialIcons name='code' color={'#fff'} size={20} />
                                           </Button>
                                         )
@@ -1045,7 +1045,7 @@ class Order extends React.Component {
                     return (
                       <View style={{flexDirection: 'row', marginTop: 20, marginBottom: 10, marginLeft: 10, marginRight: 10}}>
                         <View style={{flex: 1}}>
-                          <Button full onPress={() => this.save()} style={{backgroundColor: '#DE544E'}}><Text> SAVE </Text></Button>
+                          <Button full onPress={() => this.save()} style={{backgroundColor: '#28a745'}}><Text> SAVE </Text></Button>
                         </View>
                       </View>
                     )
@@ -1096,7 +1096,7 @@ class Order extends React.Component {
                               {(() => {
                                 if (this.selectedCategory && this.selectedCategory._id === category._id) {
                                   return (
-                                    <Button full large success onPress={() => this.selectCategory(category)} style={{backgroundColor: '#7DB644'}}><Text style={{fontSize: 18}}> {category.name} </Text></Button>
+                                    <Button full large success onPress={() => this.selectCategory(category)} style={{backgroundColor: '#6c757d'}}><Text style={{fontSize: 18}}> {category.name} </Text></Button>
                                   )
                                 } else {
                                   return (
