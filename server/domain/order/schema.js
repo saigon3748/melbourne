@@ -31,29 +31,28 @@ let schema = mongoose.Schema({
       quantity: { type: Number, required: true, default: 0 },
       price: { type: Number, required: true, default: 0 },
       subtotal: { type: Number, required: true, default: 0 },
-      total: { type: Number, required: true, default: 0 },
+      note: { type: String },
+      isTakeaway: { type: Boolean, default: false },
+      category: mongoose.Schema({
+        _id: { type: mongoose.Schema.Types.ObjectId, ref: 'categories' },
+        name: { type: String, required: true }
+      }, { _id: false }),
       addons: [ 
         mongoose.Schema({
           _id: { type: mongoose.Schema.Types.ObjectId, ref: 'addons' },
           name: { type: String, required: true },
           quantity: { type: Number, required: true, default: 0 },
           price: { type: Number, required: true, default: 0 },
-          subtotal: { type: Number, required: true, default: 0 },
-          total: { type: Number, required: true, default: 0 }
+          subtotal: { type: Number, required: true, default: 0 }
         }, { _id: false })
-      ],      
-      category: mongoose.Schema({
-        _id: { type: mongoose.Schema.Types.ObjectId, ref: 'categories' },
-        name: { type: String, required: true }
-      }, { _id: false }),
-      note: { type: String },
-      isTakeaway: { type: Boolean, default: false }
+      ]
     }, { _id: false })
   ],
   discounts: [
     mongoose.Schema({
       _id: { type: mongoose.Schema.Types.ObjectId, ref: 'discounts' },
       name: { type: String, required: true },
+      quantity: { type: Number, required: true, default: 1 },
       amount: { type: Number, required: true },
       discount: { type: Number, required: true },
       isPercentOff: { type: Boolean, default: false },

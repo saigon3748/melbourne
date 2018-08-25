@@ -34,13 +34,12 @@ class Order extends React.Component {
       isConfirmModalVisible: false,
       isExtraModalVisible: false,
       isEdittingNote: false,
-      selectedOrderItem: { addons: [], discounts: [] },
+      selectedMenu: { addons: [], discounts: [] },
       filteredMenus: [],
       filteredCategories: [],
       order: {
         subtotal: 0.00,
         discount: 0.00,
-        discountAmt: 0.00,
         tax: 0.00,
         total: 0.00,
         cash: 0.00,
@@ -206,13 +205,12 @@ class Order extends React.Component {
     this.setState({
       displayMode: DISPLAY_MODE.MENU,
       isEdittingNote: false,
-      selectedOrderItem: { addons: [], discounts: [] },
+      selectedMenu: { addons: [], discounts: [] },
       filteredMenus: this.filterMenus(),
       filteredCategories: this.filterCategories(),      
       order: {
         subtotal: 0.00,
         discount: 0.00,
-        discountAmt: 0.00,
         tax: 0.00,
         total: 0.00,
         cash: 0.00,
@@ -309,7 +307,7 @@ class Order extends React.Component {
       code: order.ref,
       createdAt: order.createdAt,
       subtotal: order.subtotal,
-      discount: order.discountAmt,
+      discount: order.discount,
       tax: order.tax,
       total: order.total,
       cash: order.cash,
@@ -365,127 +363,10 @@ class Order extends React.Component {
     });    
   }
 
-  onAddItem(id) {
+  takeawayMenu(menu) {
     let order = {...this.state.order};
     let item = _.find(order.items, item => {
-      return item._id === id;
-    });
-
-    if (item) {
-      item.quantity++;
-    } else {
-      item = _.find(this.menus, item => {
-        return item._id === id;
-      });
-      item = {...item, quantity: 1, addons: [], discounts: []};
-      order.items.push(item);
-    }
-
-    order.subtotal = 0.00;
-    order.discount = 0.00;
-    order.discountAmt = 0.00;
-
-    order.items.forEach(item => {
-      let subtotal = _.round(item.price * item.quantity, 2);
-      let discount = 0.00;
-
-      if (item.discount) {
-        if (item.isPercentDiscount) {
-          discount = _.round(subtotal * item.discount / 100, 2);
-        } else {
-          discount = _.round(subtotal - item.discount, 2);
-        }
-      }
-
-      if (item.addons && item.addons.length > 0) {
-        item.addons.forEach(extra => {
-          extra.subtotal = _.round(extra.quantity * extra.price, 2);
-          extra.total = _.round(extra.subtotal - (extra.discount || 0), 2);
-          subtotal += extra.subtotal;
-          discount += extra.discount || 0;
-        });
-      }
-
-      order.subtotal += subtotal;
-      order.discount += discount;
-      order.discountAmt += discount;
-    });
-
-    if (this.tenant.isGSTInclusive) {
-      order.total = _.round(order.subtotal - order.discountAmt, 2);
-      order.tax = _.round(order.total * 0.11, 2);
-    } else {
-      order.tax = _.round((order.subtotal - order.discountAmt) * 0.11, 2);
-      order.total = _.round(order.subtotal - order.discountAmt + order.tax, 2);
-    }
-    order.change = order.cash ? _.round(order.cash - order.total, 2) : 0;
-
-    this.setState({
-      order: order
-    })
-  }
-
-  onRemoveItem(id) {
-    let order = {...this.state.order};
-    let item = _.find(order.items, item => {
-      return item._id === id;
-    });
-
-    item.quantity--;
-    if (item.quantity === 0) {
-      order.items = _.filter(order.items, item => {
-        return item._id != id;
-      });
-    }
-
-    order.subtotal = 0.00;
-    order.discount = 0.00;
-    order.discountAmt = 0.00;
-
-    order.items.forEach(item => {
-      let subtotal = _.round(item.price * item.quantity, 2);
-      let discount = 0.00;
-
-      if (item.discount) {
-        if (item.isPercentDiscount) {
-          discount = _.round(subtotal * item.discount / 100, 2);
-        } else {
-          discount = _.round(subtotal - item.discount, 2);
-        }
-      }
-
-      if (item.addons && item.addons.length > 0) {
-        item.addons.forEach(extra => {
-          extra.subtotal = _.round(extra.quantity * extra.price, 2);
-          extra.total = _.round(extra.subtotal - (extra.discount || 0), 2);
-          subtotal += extra.subtotal;
-          discount += extra.discount || 0;
-        });
-      }
-
-      order.subtotal += subtotal;
-      order.discount += discount;
-      order.discountAmt += discount;
-    });
-
-    if (this.tenant.isGSTInclusive) {
-      order.total = _.round(order.subtotal - order.discountAmt, 2);
-      order.tax = _.round(order.total * 0.11, 2);
-    } else {
-      order.tax = _.round((order.subtotal - order.discountAmt) * 0.11, 2);
-      order.total = _.round(order.subtotal - order.discountAmt + order.tax, 2);
-    }
-    order.change = order.cash ? _.round(order.cash - order.total, 2) : 0;
-
-    this.setState({
-      order: order
-    });
-  }
-
-  onTakeawayItem(id) {
-    let order = {...this.state.order};
-    let item = _.find(order.items, item => {
-      return item._id === id;
+      return item._id === menu._id;
     });
 
     item.isTakeaway = !item.isTakeaway;
@@ -501,10 +382,10 @@ class Order extends React.Component {
     });
   }
 
-  showAddonScreen(orderItem) {
+  showAddonScreen(menu) {
     this.setState({
       displayMode: DISPLAY_MODE.ADDON,
-      selectedOrderItem: orderItem
+      selectedMenu: menu
     });
   }
 
@@ -520,176 +401,221 @@ class Order extends React.Component {
     });
   }
 
-  onAddExtra(id) {
-    let order = {...this.state.order};
-    let item = _.find(order.items, item => {
-      return item._id === this.state.selectedOrderItem._id;
-    });
-    let addon = _.find(item.addons, extra => {
-      return extra._id === id;
-    });
-
-    if (addon) {
-      addon.quantity++;
-    } else {
-      addon = _.find(this.addons, extra => {
-        return extra._id === id;
-      });
-      addon = {...addon, quantity: 1};
-      item.addons.push(addon);
-    }
-
-    order.subtotal = 0.00;
-    order.discount = 0.00;
-    order.discountAmt = 0.00;
+  calculate(order) {
+    let discount = 0;
+    let subtotal = 0;
+    let addonsSubtotal = 0;
+    let mostExpensiveSubtotal = 0;
+    let mostExpensiveAddonsSubtotal = 0;
+    let leastExpensiveSubtotal = 0;
+    let leastExpensiveAddonsSubtotal = 0;
 
     order.items.forEach(item => {
-      let subtotal = _.round(item.price * item.quantity, 2);
-      let discount = 0.00;
+      item.subtotal = _.round(item.quantity * item.price, 2);
+      subtotal += item.subtotal;
 
-      if (item.discount) {
-        if (item.isPercentDiscount) {
-          discount = _.round(subtotal * item.discount / 100, 2);
-        } else {
-          discount = _.round(subtotal - item.discount, 2);
-        }
+      let tempAddonsSubtotal = 0;
+      
+      item.addons.forEach(addon => {
+        addon.subtotal = _.round(addon.quantity * addon.price, 2);
+        addonsSubtotal += addon.subtotal;
+        tempAddonsSubtotal += addon.subtotal;
+      })
+
+      if (item.subtotal > mostExpensiveSubtotal) {
+        mostExpensiveSubtotal = item.subtotal;
       }
 
-      if (item.addons && item.addons.length > 0) {
-        item.addons.forEach(extra => {
-          extra.subtotal = _.round(extra.quantity * extra.price, 2);
-          extra.total = _.round(extra.subtotal - (extra.discount || 0), 2);
-          subtotal += extra.subtotal;
-          discount += extra.discount || 0;
-        });
+      if (item.subtotal + tempAddonsSubtotal > mostExpensiveAddonsSubtotal) {
+        mostExpensiveAddonsSubtotal = item.subtotal + tempAddonsSubtotal;
       }
 
-      order.subtotal += subtotal;
-      order.discount += discount;
-      order.discountAmt += discount;
-    });
+      if (leastExpensiveSubtotal === 0) {
+        leastExpensiveSubtotal = item.subtotal;
+      }
 
-    if (this.tenant.isGSTInclusive) {
-      order.total = _.round(order.subtotal - order.discountAmt, 2);
-      order.tax = _.round(order.total * 0.11, 2);
-    } else {
-      order.tax = _.round((order.subtotal - order.discountAmt) * 0.11, 2);
-      order.total = _.round(order.subtotal - order.discountAmt + order.tax, 2);
-    }
-    order.change = order.cash ? _.round(order.cash - order.total, 2) : 0;
+      if (item.subtotal < leastExpensiveSubtotal) {
+        leastExpensiveSubtotal = item.subtotal;
+      }
 
-    this.setState({
-      order: order,
-      selectedOrderItem: {...item}
+      if (item.subtotal + tempAddonsSubtotal < leastExpensiveAddonsSubtotal) {
+        leastExpensiveAddonsSubtotal = item.subtotal + tempAddonsSubtotal;
+      }
+
+      if (leastExpensiveAddonsSubtotal === 0) {
+        leastExpensiveAddonsSubtotal = item.subtotal + tempAddonsSubtotal;
+      }
     })
-  }
 
-  onRemoveExtra(id) {
-    let order = {...this.state.order};
-    let item = _.find(order.items, item => {
-      return item._id === this.state.selectedOrderItem._id;
-    });
-    let addon = _.find(item.addons, extra => {
-      return extra._id === id;
-    });
-
-    addon.quantity--;
-    if (addon.quantity === 0) {
-      item.addons = _.filter(item.addons, extra => {
-        return extra._id != id;
-      });
-    }
-
-    order.subtotal = 0.00;
-    order.discount = 0.00;
-    order.discountAmt = 0.00;
-
-    order.items.forEach(item => {
-      let subtotal = _.round(item.price * item.quantity, 2);
-      let discount = 0.00;
-
-      if (item.discount) {
-        if (item.isPercentDiscount) {
-          discount = _.round(subtotal * item.discount / 100, 2);
+    order.discounts.forEach(item => {
+      if (!item.isPercentOff) {
+        discount += _round(item.discount * item.quantity, 2);
+      } else {
+        if (item.isAddonsInclusive) {
+          if (item.isLeastExpensive) {
+            discount += _.round(leastExpensiveAddonsSubtotal * item.quantity * item.discount / 100, 2);
+          } else {
+            if (item.isMostExpensive) {
+              discount += _.round(mostExpensiveAddonsSubtotal * item.quantity * item.discount / 100, 2);
+            } else {
+              discount += _.round((subtotal + addonsSubtotal) * item.quantity * item.discount / 100, 2);              
+            }
+          }
         } else {
-          discount = _.round(subtotal - item.discount, 2);
+          if (item.isLeastExpensive) {
+            discount += _.round(leastExpensiveSubtotal * item.quantity * item.discount / 100, 2);
+          } else {
+            if (item.isMostExpensive) {
+              discount += _.round(mostExpensiveSubtotal * item.quantity * item.discount / 100, 2);
+            } else {
+              discount += _.round(subtotal * item.quantity * item.discount / 100, 2);              
+            }
+          }
         }
       }
+    })
 
-      if (item.addons && item.addons.length > 0) {
-        item.addons.forEach(extra => {
-          extra.subtotal = _.round(extra.quantity * extra.price, 2);
-          extra.total = _.round(extra.subtotal - (extra.discount || 0), 2);
-          subtotal += extra.subtotal;
-          discount += extra.discount || 0;
-        });
-      }
+    order.subtotal = _.round(subtotal + addonsSubtotal, 2);
+    order.discount = _.round(discount, 2);
 
-      order.subtotal += subtotal;
-      order.discount += discount;
-      order.discountAmt += discount;
-    });
-
-    if (this.tenant.isGSTInclusive) {
-      order.total = _.round(order.subtotal - order.discountAmt, 2);
-      order.tax = _.round(order.total * 0.11, 2);
+    if (this.tenant.isTaxInclusive) {
+      order.total = order.subtotal - order.discount;
+      order.tax = _.round(order.total * this.tenant.taxRate / 100, 2);
     } else {
-      order.tax = _.round((order.subtotal - order.discountAmt) * 0.11, 2);
-      order.total = _.round(order.subtotal - order.discountAmt + order.tax, 2);
+      order.tax = _.round((order.subtotal - order.discount) * this.tenant.taxRate / 100, 2);
+      order.total = order.subtotal - order.discount + order.tax;      
     }
-    order.change = order.cash ? _.round(order.cash - order.total, 2) : 0;
 
     this.setState({
-      order: order,
-      selectedOrderItem: {...item}
+      order: order
     });
   }
 
   addMenu(menu) {
+    let order = {...this.state.order};
+    let item = _.find(order.items, item => {
+      return item._id === menu._id;
+    })
 
+    if (item) {
+      item.quantity++;
+    } else {
+      order.items.push({
+        ...menu, 
+        quantity: 1, 
+        addons: [], 
+        discounts: []
+      });
+    }
+
+    this.calculate(order);
   }
 
   removeMenu(menu) {
+    let order = {...this.state.order};
+    let item = _.find(order.items, item => {
+      return item._id === menu._id;
+    })
 
+    if (!item) return;
+
+    item.quantity--;
+
+    if (item.quantity === 0) {
+      order.items = _.filter(order.items, item => {
+        return item._id != menu._id;
+      })
+    }
+
+    this.calculate(order);
   }
 
   addAddon(addon) {
-    
+    let order = {...this.state.order};
+    let menu = _.find(order.items, item => {
+      return item._id === this.state.selectedMenu._id;
+    })
+    let item = _.find(menu.addons, item => {
+      return item._id === addon._id;
+    })
+
+    if (item) {
+      item.quantity++;
+    } else {
+      menu.addons.push({
+        ...addon, 
+        quantity: 1
+      });
+    }
+
+    this.setState({
+      selectedMenu: menu
+    });
+
+    this.calculate(order);
   }
 
   removeAddon(addon) {
-    
+    let order = {...this.state.order};
+    let menu = _.find(order.items, item => {
+      return item._id === this.state.selectedMenu._id;
+    })
+    let item = _.find(menu.addons, item => {
+      return item._id === addon._id;
+    })
+
+    if (!item) return;
+
+    item.quantity--;
+
+    if (item.quantity === 0) {
+      menu.addons = _.filter(menu.addons, item => {
+        return item._id != addon._id;
+      })
+    }
+
+    this.setState({
+      selectedMenu: menu
+    });
+
+    this.calculate(order);    
   }
 
   addDiscount(discount) {
+    let order = {...this.state.order};
+    let item = _.find(order.discounts, item => {
+      return item._id === discount._id;
+    })
 
+    if (item) {
+      item.quantity++;
+    } else {
+      order.discounts.push({
+        ...discount, 
+        quantity: 1
+      });
+    }
+
+    this.calculate(order);
   }
 
   removeDiscount(discount) {
+    let order = {...this.state.order};
+    let item = _.find(order.discounts, item => {
+      return item._id === discount._id;
+    })
 
-  }
+    if (!item) return;
 
-  onDiscountChanged(text){
-    try {
-      let discount = Number(text.replace(/[^0-9\.-]+/g,""));
+    item.quantity--;
 
-      let order = {...this.state.order};
-      order.discountAmt = _.round(discount, 2);
-      if (this.tenant.isGSTInclusive) {
-        order.total = _.round(order.subtotal - order.discountAmt, 2);
-        order.tax = _.round(order.total * 0.11, 2);
-      } else {
-        order.tax = _.round((order.subtotal - order.discountAmt) * 0.11, 2);
-        order.total = _.round(order.subtotal - order.discountAmt + order.tax, 2);
-      }
-      order.change = order.cash ? _.round(order.cash - order.total, 2) : 0;
-
-      this.setState({
-        order: order
-      });
-
+    if (item.quantity === 0) {
+      order.discounts = _.filter(order.discounts, item => {
+        return item._id != discount._id;
+      })
     }
-    catch(err) {}
+
+    this.calculate(order);
   }
 
   onCashSelected(cash){
@@ -796,7 +722,7 @@ class Order extends React.Component {
                   <View style={{height: 40, marginTop: 10, marginLeft: 10, marginRight: 10}}>
                     <View style={{flex: 1, flexDirection: 'row'}}>
                       <Text style={{flex: 1}}>DISCOUNT</Text>
-                      <TextInputMask type={'money'} options={{unit: '$', separator: '.', delimiter: ','}} selectTextOnFocus value={(() => { return Helper.formatCurrency(this.state.order.discountAmt) })()} onChangeText={(text) => this.onDiscountChanged(text)} style={{fontSize: 20, height: 35, backgroundColor: '#fff', borderColor: '#d2d3d4', borderWidth: 1, textAlign: 'right', flex: 1}}/>          
+                      <TextInputMask type={'money'} options={{unit: '$', separator: '.', delimiter: ','}} selectTextOnFocus value={(() => { return Helper.formatCurrency(this.state.order.discount) })()} onChangeText={(text) => this.onDiscountChanged(text)} style={{fontSize: 20, height: 35, backgroundColor: '#fff', borderColor: '#d2d3d4', borderWidth: 1, textAlign: 'right', flex: 1}}/>          
                     </View>
                   </View>
 
@@ -871,13 +797,13 @@ class Order extends React.Component {
                 <View style={{flex: 1, flexDirection: 'column', backgroundColor: '#fff'}}>
                   <View style={{height: 40, marginTop: 30, marginLeft: 10, marginRight: 10}}>
                     <View style={{flex: 1, flexDirection: 'row'}}>
-                      <Text style={{flex: 1}}>{this.state.selectedOrderItem.name}</Text>
+                      <Text style={{flex: 1}}>{this.state.selectedMenu.name}</Text>
                     </View>
                   </View>
 
                   <ScrollView style={{flex: 1, flexDirection: 'column', marginLeft: 30, marginRight: 10}}>
                     <List>
-                      {this.state.selectedOrderItem.addons.map(extra => (
+                      {this.state.selectedMenu.addons.map(extra => (
                         <ListItem key={extra._id} style={{height: 50}}>
                           <Body>
                             <View style={{flexDirection: "row"}}>
@@ -929,22 +855,22 @@ class Order extends React.Component {
                     {(() => {
                       switch(this.state.displayMode) {
                         case DISPLAY_MODE.MENU:
-                          return this.state.filteredMenus.map(menuItem => {
+                          return this.state.filteredMenus.map(menu => {
                             return (
-                              <TouchableOpacity key={menuItem._id} activeOpacity={1.0} onPress={() => this.onAddItem(menuItem._id)}>
-                                <View style={{width: 150, height: 150, marginTop: 10, marginLeft: 10, backgroundColor: '#408AF8'}}>
+                              <TouchableOpacity key={menu._id} activeOpacity={1.0} onPress={() => this.addMenu(menu)}>
+                                <View style={{width: 150, height: 150, marginTop: 10, marginLeft: 10, backgroundColor: '#2FA495'}}>
                                   {(() => { 
-                                    if (menuItem.imageUrl) {
+                                    if (menu.imageUrl) {
                                       return (
                                         <ImageBackground
                                           style={{width: 150, height: 150}}
-                                          source={{uri: menuItem.imageUrl}}>
+                                          source={{uri: menu.imageUrl}}>
                                           <View style={{backgroundColor: 'rgba(221, 226, 229, 0.85)'}}>
                                             <Text style={{marginTop: 3, marginLeft: 3, marginRight: 3}}>
-                                              {menuItem.name}
+                                              {menu.name}
                                             </Text>
                                             <Text style={{marginTop: 3, marginLeft: 3, marginRight: 3, marginBottom: 3}}>
-                                              {(() => { return Helper.formatCurrency(menuItem.price) })()}
+                                              {(() => { return Helper.formatCurrency(menu.price) })()}
                                             </Text>
                                           </View>
                                         </ImageBackground>
@@ -953,10 +879,10 @@ class Order extends React.Component {
                                       return (
                                         <View style={{backgroundColor: 'rgba(221, 226, 229, 0.85)'}}>
                                           <Text style={{marginTop: 3, marginLeft: 3, marginRight: 3}}>
-                                            {menuItem.name}
+                                            {menu.name}
                                           </Text>
                                           <Text style={{marginTop: 3, marginLeft: 3, marginRight: 3, marginBottom: 3}}>
-                                            {(() => { return Helper.formatCurrency(menuItem.price) })()}
+                                            {(() => { return Helper.formatCurrency(menu.price) })()}
                                           </Text>
                                         </View>
                                       )
@@ -971,8 +897,8 @@ class Order extends React.Component {
                         case DISPLAY_MODE.ADDON:
                           return this.addons.map(addon => {
                             return (
-                              <TouchableOpacity key={addon._id} activeOpacity={1.0} onPress={() => this.onAddExtra(addon._id)}>
-                                <View style={{width: 150, height: 150, marginTop: 10, marginLeft: 10, backgroundColor: '#3ECF8E'}}>
+                              <TouchableOpacity key={addon._id} activeOpacity={1.0} onPress={() => this.addAddon(addon)}>
+                                <View style={{width: 150, height: 150, marginTop: 10, marginLeft: 10, backgroundColor: '#2FA495'}}>
                                   <View style={{backgroundColor: 'rgba(221, 226, 229, 0.85)'}}>
                                     <Text style={{marginTop: 3, marginLeft: 3, marginRight: 3}}>
                                       {addon.name}
@@ -991,7 +917,7 @@ class Order extends React.Component {
                           return this.discounts.map(discount => {
                             return (
                               <TouchableOpacity key={discount._id} activeOpacity={1.0} onPress={() => this.addDiscount(discount)}>
-                                <View style={{width: 150, height: 150, marginTop: 10, marginLeft: 10, backgroundColor: '#6772E5'}}>
+                                <View style={{width: 150, height: 150, marginTop: 10, marginLeft: 10, backgroundColor: '#2FA495'}}>
                                   <View style={{backgroundColor: 'rgba(221, 226, 229, 0.85)'}}>
                                     <Text style={{marginTop: 3, marginLeft: 3, marginRight: 3}}>
                                       {discount.name}
@@ -1034,7 +960,9 @@ class Order extends React.Component {
                     case DISPLAY_MODE.ADDON:
                       return (
                         <View style={{flexDirection: 'row', marginTop: 10, marginLeft: 10, marginRight: 10}}>
-                          <Text style={{textAlign: 'center', fontSize: 25, color: 'rgb(70, 70, 70)'}}>ADD-ONS</Text>
+                          <Text style={{fontSize: 25, color: 'rgb(70, 70, 70)'}}>ADD-ONS</Text>
+                          <View style={{flex: 1}}/>
+                          <Text>{this.state.selectedMenu.name}</Text>
                         </View>
                       )
                       break;
@@ -1088,13 +1016,13 @@ class Order extends React.Component {
                                     {(() => {
                                       if (item.isTakeaway) {
                                         return (
-                                          <Button full small style={{backgroundColor: '#EE2738'}} onPress={() => {this.onTakeawayItem(item._id)}}>
+                                          <Button full small style={{backgroundColor: '#EE2738'}} onPress={() => {this.takeawayMenu(item)}}>
                                             <MaterialIcons name='layers' color={'#fff'} size={20} />
                                           </Button>
                                         )
                                       } else {
                                         return (
-                                          <Button full small style={{backgroundColor: '#2FA495'}} onPress={() => {this.onTakeawayItem(item._id)}}>
+                                          <Button full small style={{backgroundColor: '#2FA495'}} onPress={() => {this.takeawayMenu(item)}}>
                                             <MaterialIcons name='layers' color={'#fff'} size={20} />
                                           </Button>
                                         )
@@ -1146,7 +1074,7 @@ class Order extends React.Component {
                       case DISPLAY_MODE.ADDON:
                         return (
                           <FlatList style={{marginLeft: 10, marginRight: 10}}
-                            data={this.state.selectedOrderItem.addons}
+                            data={this.state.selectedMenu.addons}
                             keyExtractor={(item) => item._id}
                             renderItem={({item, separators}) => (
                               <View style={{marginTop: 20}}>
@@ -1172,11 +1100,47 @@ class Order extends React.Component {
                                 </View>
                               </View>
                             )}
-                          />                          
+                          />
                         )
                         break;
 
                       case DISPLAY_MODE.DISCOUNT:
+                        return (
+                          <FlatList style={{marginLeft: 10, marginRight: 10}}
+                            data={this.state.order.discounts}
+                            keyExtractor={(item) => item._id}
+                            renderItem={({item, separators}) => (
+                              <View style={{marginTop: 20}}>
+                                <View style={{flex: 1, flexDirection: 'row'}}>
+                                  <Text style={{flex: 1}}>{item.name}</Text>
+                                  <Text style={{width: 70, textAlign: 'right'}}>
+                                    {(() => { 
+                                      if (item.isPercentOff) {
+                                        return `${item.discount}%`;
+                                      } else {
+                                        return Helper.formatCurrency(item.discount);
+                                      } 
+                                    })()}
+                                  </Text>
+                                </View>
+                                <View style={{flex: 1, flexDirection: 'row', marginTop: 10}}>
+                                  <View style={{width: 50}}>
+                                    <Button full small style={{backgroundColor: '#2177b4'}} onPress={() => {this.addDiscount(item)}}>
+                                      <MaterialIcons name='add' color={'#fff'} size={20} />
+                                    </Button>
+                                  </View>
+                                  <View style={{width: 50}}>
+                                    <Button full small style={{backgroundColor: '#6c757d'}} onPress={() => {this.removeDiscount(item)}}>
+                                      <MaterialIcons name='remove' color={'#fff'} size={20} />
+                                    </Button>
+                                  </View>
+                                  <View style={{flex: 1}}/>
+                                  <Text style={{width: 70, textAlign: 'right', color: '#EE2738'}}>x{item.quantity}</Text>
+                                </View>
+                              </View>
+                            )}
+                          />
+                        )                      
                         break;
 
                       case DISPLAY_MODE.CHECKOUT:
@@ -1195,7 +1159,7 @@ class Order extends React.Component {
                   <View style={{flex: 1, flexDirection: 'row'}}>
                     <Text style={{flex: 1}}>DISCOUNT</Text>
                     <Text style={{width: 200, textAlign: 'right'}}>
-                      {(() => { return Helper.formatCurrency(this.state.order.discountAmt) })()}
+                      {(() => { return Helper.formatCurrency(this.state.order.discount) })()}
                     </Text>
                   </View>
                   <View style={{flex: 1, flexDirection: 'row'}}>
@@ -1280,11 +1244,6 @@ class Order extends React.Component {
                         <Button full large onPress={() => this.showMenuScreen()} style={{backgroundColor: '#2177b4'}}>
                           <Text style={{fontSize: 20}}> MENU </Text>
                         </Button>
-                      </View>
-                      <View style={{flex: 1, flexDirection: 'row'}}>
-                        <Text style={{flex: 1, fontSize: 20, marginTop: 27, marginLeft: 30}}>
-                          Select add-ons for {this.state.selectedOrderItem.name}
-                        </Text>
                       </View>
                     </View>
                   )

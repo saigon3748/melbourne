@@ -43,7 +43,7 @@
     <thead class="thead-light">
       <tr>
         <th>Name</th>
-        <th>Category</th>
+        <!-- <th>Category</th> -->
         <th>Discount</th>
         <th>Addons</th>
         <th>Most Exp.</th>
@@ -55,7 +55,7 @@
     <tbody>
       <tr ng-repeat="discount in $ctrl.discounts"> 
         <td>{{discount.name}}</td>
-        <td>{{discount.category.name}}</td>         
+        <!-- <td>{{discount.category.name}}</td> --> 
         <td>{{$ctrl.getDiscount(discount)}}</td>
         <td>
           <div ng-if="discount.isAddonsInclusive">

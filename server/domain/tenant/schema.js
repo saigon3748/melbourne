@@ -15,6 +15,7 @@ let schema = mongoose.Schema({
     }, { _id: false })
   },
   utc: { type: Number, default: 0 },
+  taxRate: { type: Number, default: 0 },
   isTaxInclusive: { type: Boolean, default: true },
   isArchived: { type: Boolean, default: false }
 })
