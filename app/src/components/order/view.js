@@ -476,6 +476,9 @@ class Order extends React.Component {
       order.total = order.subtotal - order.discount + order.tax;      
     }
 
+    order.cash = order.cash || 0;
+    order.change = order.total - order.cash;
+
     this.setState({
       order: order
     });
