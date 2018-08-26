@@ -52,76 +52,44 @@ module.exports = class Service extends BaseService {
         data.ref = data.code.slice(-4);
       }
 
-      let doCalculate = () => {
-        data.subtotal = 0;
-        data.discount = 0;
-
-        data.items.forEach(item => {
-          item.subtotal = _.round(item.quantity * item.unitPrice, 2);
-          item.total = _.round(item.subtotal - (item.discount || 0), 2);
-
-          if (item.extra && item.extra.length > 0) {
-            item.extra.forEach(extra => {
-              extra.subtotal = _.round(extra.quantity * extra.unitPrice, 2);
-              extra.total = _.round(extra.subtotal - (extra.discount || 0), 2);
-              data.subtotal += extra.subtotal;
-              data.discount += extra.discount || 0;
-            });
-          }
-
-          data.subtotal += item.subtotal;
-          data.discount += item.discount;
-        });
-
-        data.isInclusiveGST = tenant.settings.isInclusiveGST;
-        if (data.isInclusiveGST) {
-          data.total = _.round(data.subtotal - data.discountAmt || data.discount, 2);
-          data.tax = _.round(data.total * 0.11, 2);
-        } else {
-          data.tax = _.round((data.subtotal - data.discountAmt || data.discount) * 0.11, 2);
-          data.total = _.round(data.subtotal - (data.discountAmt || data.discount) + data.tax, 2);
-        }
-      }
-
       let doSave = () => {
-        console.log(JSON.stringify(data))
+        data = this._calculate(data);
         return super.create(data)
           .then(result => {
             order = result;
           })   
       }
 
-      let doCreateKitchen = () => {
-        let doCreateKitchenItem = (item) => {
+      let doCook = () => {
+        let doCookItem = (item) => {
           return new CookService(this._ctx)
             .create({
               tenant: order.tenant,
               orderId: order._id,
               orderCode: order.code,
               orderRef: order.ref,
-              itemId: item._id,
-              name: item.name,
+              menuId: item._id,
+              menuName: item.name,
               quantity: item.quantity,
               category: item.category,
-              extra: item.extra,
+              addons: item.addons,
               note: item.note,
               isTakeaway: item.isTakeaway
             })
         }
 
-        return Promise.each(order.items, doCreateKitchenItem);
+        return Promise.each(order.items, doCookItem);
       }
 
       let doReturn = () => {
-        return order;
+        return this.findById(order._id);
       }
 
       return pipeline([
         doGetTenant,
         doGenerateCode,
-        doCalculate,
         doSave,
-        doCreateKitchen,
+        doCook,
         doReturn
       ])
     }
@@ -133,4 +101,103 @@ module.exports = class Service extends BaseService {
     let timestamp = new Date().getTime().toString().slice(-4);
     return `${code}${moment().format("YYMMDD")}${timestamp}`
   }
+
+
+  _calculate(data) {
+    let order = {...data};
+
+    let discount = 0;
+    let subtotal = 0;
+    let addonsSubtotal = 0;
+    let mostExpensiveSubtotal = 0;
+    let mostExpensiveAddonsSubtotal = 0;
+    let leastExpensiveSubtotal = 0;
+    let leastExpensiveAddonsSubtotal = 0;
+
+    order.items.forEach(item => {
+      item.subtotal = _.round(item.quantity * item.price, 2);
+      subtotal += item.subtotal;
+
+      let tempAddonsSubtotal = 0;
+      
+      item.addons.forEach(addon => {
+        addon.subtotal = _.round(addon.quantity * addon.price, 2);
+        addonsSubtotal += addon.subtotal;
+        tempAddonsSubtotal += addon.subtotal;
+      })
+
+      if (item.subtotal > mostExpensiveSubtotal) {
+        mostExpensiveSubtotal = item.subtotal;
+      }
+
+      if (item.subtotal + tempAddonsSubtotal > mostExpensiveAddonsSubtotal) {
+        mostExpensiveAddonsSubtotal = item.subtotal + tempAddonsSubtotal;
+      }
+
+      if (leastExpensiveSubtotal === 0) {
+        leastExpensiveSubtotal = item.subtotal;
+      }
+
+      if (item.subtotal < leastExpensiveSubtotal) {
+        leastExpensiveSubtotal = item.subtotal;
+      }
+
+      if (item.subtotal + tempAddonsSubtotal < leastExpensiveAddonsSubtotal) {
+        leastExpensiveAddonsSubtotal = item.subtotal + tempAddonsSubtotal;
+      }
+
+      if (leastExpensiveAddonsSubtotal === 0) {
+        leastExpensiveAddonsSubtotal = item.subtotal + tempAddonsSubtotal;
+      }
+    })
+
+    order.discounts.forEach(item => {
+      if (!item.isPercentOff) {
+        item.amount = _.round(item.quantity * item.discount, 2);
+      } else {
+        if (item.isAddonsInclusive) {
+          if (item.isLeastExpensive) {
+            item.amount = _.round(leastExpensiveAddonsSubtotal * item.quantity * item.discount / 100, 2);
+          } else {
+            if (item.isMostExpensive) {
+              item.amount = _.round(mostExpensiveAddonsSubtotal * item.quantity * item.discount / 100, 2);
+            } else {
+              item.amount = _.round((subtotal + addonsSubtotal) * item.quantity * item.discount / 100, 2);
+            }
+          }
+        } else {
+          if (item.isLeastExpensive) {
+            item.amount = _.round(leastExpensiveAddonsSubtotal * item.quantity * item.discount / 100, 2);
+          } else {
+            if (item.isMostExpensive) {
+              item.amount = _.round(mostExpensiveAddonsSubtotal * item.quantity * item.discount / 100, 2);
+            } else {
+              item.amount = _.round(subtotal * item.quantity * item.discount / 100, 2);            
+            }
+          }
+        }
+      }
+
+      discount += item.amount;
+    })
+
+    order.subtotal = _.round(subtotal + addonsSubtotal, 2);
+    order.discount = _.round(discount, 2);
+
+    if (order.isTaxInclusive) {
+      order.total = order.subtotal - order.discount;
+      order.tax = _.round(order.total * order.taxRate / 100, 2);
+    } else {
+      order.tax = _.round((order.subtotal - order.discount) * order.taxRate / 100, 2);
+      order.total = order.subtotal - order.discount + order.tax;      
+    }
+
+    order.cash = order.cash || 0;
+    order.change = order.change || 0;
+    if (order.cash > 0) {
+      order.change = order.cash - order.total;
+    }
+
+    return order;
+  }  
 }

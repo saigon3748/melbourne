@@ -44,8 +44,8 @@ function getReceiptPrint(setting, order) {
   let timestamp = `DATE  ${date} ${time}`;
   let code = `#${order.code}`;
   let data = { 
-    name: setting.name,
-    printer: setting.receiptPrinter,
+    name: setting.title,
+    printer: setting.macAddress,
     header1: setting.header1,
     header2: setting.header2,
     header3: setting.header3,
@@ -68,48 +68,50 @@ function getReceiptPrint(setting, order) {
   }
 
   order.items.forEach(item => {
-    let quantity = "";
-    if (item.quantity < 10) quantity = `0${item.quantity}`
-    else quantity = `${item.quantity}`
+    data.items.push(padLine(`${item.name} x ${item.quantity}`, formatCurrency(item.subtotal)));
 
-    let temp = `${quantity} ${item.name}`;
-    temp = padLine(temp, formatCurrency(item.subtotal));
+    if (item.note) {
+      data.items.push(padLine(`- ${item.note}`, " "));
+    }
 
-    data.items.push(temp);
+    if (item.addons) {
+      item.addons.forEach(addon => {
+        data.items.push(padLine(`- ${addon.name} x ${addon.quantity}`, formatCurrency(addon.subtotal)));
+      })
+    }    
   })
 
   return data;
 }
 
-function getKitchenPrint(setting, order) {
+function getCookingPrint(macAddress, order) {
   let date = moment(order.createdAt).format('L');
   let time = moment(order.createdAt).format('HH:mm');
   let timestamp = `DATE  ${date} ${time}`;
   let code = `#${order.code}`;
   let data = { 
     name: "ORDER",
-    printer: setting.receiptPrinter,
+    printer: macAddress,
     order: padLine(timestamp, code),
     items: [] 
   };
 
   order.items.forEach(item => {
-    let quantity = "";
-    if (item.quantity < 10) quantity = `0${item.quantity}`
-    else quantity = `${item.quantity}`
-
-    let temp = padLine(item.name, quantity);
-    data.items.push(temp);
+    data.items.push(padLine(`${item.name} x ${item.quantity}`, " "));
 
     if (item.isTakeaway) {
-      temp = padLine("-", "takeaway");
-      data.items.push(temp);      
+      data.items.push(padLine("- Takeaway", " "));      
     }
 
     if (item.note) {
-      temp = padLine("-", item.note);
-      data.items.push(temp);
-    }    
+      data.items.push(padLine(`- ${item.note}`, " "));
+    }
+
+    if (item.addons) {
+      item.addons.forEach(addon => {
+        data.items.push(padLine(`- ${addon.name} x ${addon.quantity}`, " "));
+      })
+    }
   })
 
   return data;
@@ -118,5 +120,5 @@ function getKitchenPrint(setting, order) {
 export default {
   formatCurrency,
   getReceiptPrint,
-  getKitchenPrint
+  getCookingPrint
 }

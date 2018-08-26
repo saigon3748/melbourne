@@ -22,6 +22,7 @@ let schema = mongoose.Schema({
   change: { type: Number },
   note: { type: String },
   place: { type: String },
+  taxRate: { type: Number, required: true, default: 0 },
   isTaxInclusive: { type: Boolean, default: true },
   isArchived: { type: Boolean, default: false },  
   items: [

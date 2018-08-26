@@ -244,27 +244,9 @@ class Order extends React.Component {
     }
 
     OrderApi.create(this.state.order)
-      .then(result => {
-        if (!this.tenant.settings) {
-          this.reset();
-          return;
-        }
-
-        if (this.tenant.settings.confirmAndPrint) {
-          this.print(result);
-          this.reset();
-          return;
-        }
-
-        Alert.alert(
-          `#${result.ref}`, 
-          'Do you want to print?',
-          [ { text: 'Cancel', onPress: () => this.reset() }, 
-            { text: 'OK', onPress: () => {
-              this.print(result);
-              this.reset();
-            }} ]
-        );
+      .then(order => {
+        this.print(order);
+        this.reset();
       })
       .catch(err => {
         alert(err)
@@ -272,30 +254,7 @@ class Order extends React.Component {
   }
 
   print(order) {
-    if (!this.tenant || !this.tenant.settings) {
-      alert('No setting found')
-      return;
-    }
-
-    if (!this.tenant.settings.receiptTemplate 
-      || !this.tenant.settings.receiptPrinter 
-      || this.tenant.settings.receiptPrinter.trim() === "") {
-      alert('No setting found for receipt printer')
-      return;
-    }
-
-    let setting = {
-      name: this.tenant.settings.receiptTemplate.receiptName,
-      receiptPrinter: this.tenant.settings.receiptPrinter,
-      header1: this.tenant.settings.receiptTemplate.header1,
-      header2: this.tenant.settings.receiptTemplate.header2,
-      header3: this.tenant.settings.receiptTemplate.header3,
-      header4: this.tenant.settings.receiptTemplate.header4,
-      header5: this.tenant.settings.receiptTemplate.header5,
-      footer1: this.tenant.settings.receiptTemplate.footer1,
-      footer2: this.tenant.settings.receiptTemplate.footer2,
-      footer3: this.tenant.settings.receiptTemplate.footer3
-    }
+    if (!this.printers || this.printers.length === 0) return;
 
     let data = {
       code: order.ref,
@@ -309,15 +268,33 @@ class Order extends React.Component {
       items: order.items
     };
 
-    let receipt = Helper.getReceiptPrint(setting, data);
-    NativeModules.RNPrinter.print(receipt)
-
-    if (this.tenant.settings.kitchenPrinter && this.tenant.settings.kitchenPrinter.trim() != "") {
+    this.printers.forEach((printer, index) => {
       setTimeout(() => {
-        let kitchen = Helper.getKitchenPrint(setting, data);
-        NativeModules.RNPrinter.print(kitchen)
-      }, 2000)
-    }
+        if (!printer.isOrderAndPrint) return;
+
+        if (printer.isCookingReceipt) {
+          let receipt = Helper.getCookingPrint(printer.macAddress, data);
+          NativeModules.RNPrinter.print(receipt);
+          return;
+        }
+
+        let setting = {
+          title: printer.title,
+          macAddress: printer.macAddress,
+          header1: printer.header1,
+          header2: printer.header2,
+          header3: printer.header3,
+          header4: printer.header4,
+          header5: printer.header5,
+          footer1: printer.footer1,
+          footer2: printer.footer2,
+          footer3: printer.footer3
+        }
+
+        let receipt = Helper.getReceiptPrint(setting, data);
+        NativeModules.RNPrinter.print(receipt); 
+      }, 3000 * index);   
+    }) 
   }
 
   noteMenu(menu) {
@@ -398,6 +375,9 @@ class Order extends React.Component {
     let leastExpensiveSubtotal = 0;
     let leastExpensiveAddonsSubtotal = 0;
 
+    order.taxRate = this.tenant.taxRate;
+    order.isTaxInclusive = this.tenant.isTaxInclusive;
+
     order.items.forEach(item => {
       item.subtotal = _.round(item.quantity * item.price, 2);
       subtotal += item.subtotal;
@@ -437,40 +417,42 @@ class Order extends React.Component {
 
     order.discounts.forEach(item => {
       if (!item.isPercentOff) {
-        discount += _round(item.discount * item.quantity, 2);
+        item.amount = _.round(item.quantity * item.discount, 2);
       } else {
         if (item.isAddonsInclusive) {
           if (item.isLeastExpensive) {
-            discount += _.round(leastExpensiveAddonsSubtotal * item.quantity * item.discount / 100, 2);
+            item.amount = _.round(leastExpensiveAddonsSubtotal * item.quantity * item.discount / 100, 2);
           } else {
             if (item.isMostExpensive) {
-              discount += _.round(mostExpensiveAddonsSubtotal * item.quantity * item.discount / 100, 2);
+              item.amount = _.round(mostExpensiveAddonsSubtotal * item.quantity * item.discount / 100, 2);
             } else {
-              discount += _.round((subtotal + addonsSubtotal) * item.quantity * item.discount / 100, 2);              
+              item.amount = _.round((subtotal + addonsSubtotal) * item.quantity * item.discount / 100, 2);
             }
           }
         } else {
           if (item.isLeastExpensive) {
-            discount += _.round(leastExpensiveSubtotal * item.quantity * item.discount / 100, 2);
+            item.amount = _.round(leastExpensiveAddonsSubtotal * item.quantity * item.discount / 100, 2);
           } else {
             if (item.isMostExpensive) {
-              discount += _.round(mostExpensiveSubtotal * item.quantity * item.discount / 100, 2);
+              item.amount = _.round(mostExpensiveAddonsSubtotal * item.quantity * item.discount / 100, 2);
             } else {
-              discount += _.round(subtotal * item.quantity * item.discount / 100, 2);              
+              item.amount = _.round(subtotal * item.quantity * item.discount / 100, 2);            
             }
           }
         }
       }
+
+      discount += item.amount;
     })
 
     order.subtotal = _.round(subtotal + addonsSubtotal, 2);
     order.discount = _.round(discount, 2);
 
-    if (this.tenant.isTaxInclusive) {
+    if (order.isTaxInclusive) {
       order.total = order.subtotal - order.discount;
-      order.tax = _.round(order.total * this.tenant.taxRate / 100, 2);
+      order.tax = _.round(order.total * order.taxRate / 100, 2);
     } else {
-      order.tax = _.round((order.subtotal - order.discount) * this.tenant.taxRate / 100, 2);
+      order.tax = _.round((order.subtotal - order.discount) * order.taxRate / 100, 2);
       order.total = order.subtotal - order.discount + order.tax;      
     }
 
@@ -616,8 +598,13 @@ class Order extends React.Component {
   selectCash(cash){
     try {
       let order = {...this.state.order};
-      order.cash = _.round(cash.cash, 2);
-      order.change = _.round(order.cash - order.total, 2);
+      if (cash.cash === 0) {
+        order.cash = 0;
+        order.change = 0;
+      } else {
+        order.cash += _.round(cash.cash, 2);
+        order.change = _.round(order.cash - order.total, 2);
+      }
 
       this.setState({
         order: order
