@@ -320,11 +320,11 @@ class Order extends React.Component {
     }
   }
 
-  noteMenu(id) {
+  noteMenu(menu) {
     let order = {...this.state.order};
 
     order.items.forEach(item => {
-      if (item._id === id) {
+      if (item._id === menu._id) {
         item.isEdittingNote = !item.isEdittingNote;
       } else {
         item.isEdittingNote = false;
@@ -475,7 +475,10 @@ class Order extends React.Component {
     }
 
     order.cash = order.cash || 0;
-    order.change = order.total - order.cash;
+    order.change = order.change || 0;
+    if (order.cash > 0) {
+      order.change = order.cash - order.total;
+    }
 
     this.setState({
       order: order
@@ -888,7 +891,7 @@ class Order extends React.Component {
                                     })()}
                                   </View>
                                   <View style={{flex: 1}}/>
-                                  <Text style={{width: 70, textAlign: 'right', color: '#DE544E'}}>x{item.quantity}</Text>
+                                  <Text style={{width: 70, textAlign: 'right', color: '#DE544E', fontSize: 22}}>x{item.quantity}</Text>
                                 </View>
                                 {(() => {
                                   if (item.isEdittingNote) {
@@ -932,7 +935,7 @@ class Order extends React.Component {
                                     </Button>
                                   </View>
                                   <View style={{flex: 1}}/>
-                                  <Text style={{width: 70, textAlign: 'right', color: '#DE544E'}}>x{item.quantity}</Text>
+                                  <Text style={{width: 70, textAlign: 'right', color: '#DE544E', fontSize: 22}}>x{item.quantity}</Text>
                                 </View>
                               </View>
                             )}
@@ -971,7 +974,7 @@ class Order extends React.Component {
                                     </Button>
                                   </View>
                                   <View style={{flex: 1}}/>
-                                  <Text style={{width: 70, textAlign: 'right', color: '#DE544E'}}>x{item.quantity}</Text>
+                                  <Text style={{width: 70, textAlign: 'right', color: '#DE544E', fontSize: 22}}>x{item.quantity}</Text>
                                 </View>
                               </View>
                             )}
@@ -993,7 +996,13 @@ class Order extends React.Component {
                             <View style={{flex: 1, flexDirection: 'row', marginTop: 20}}>
                               <Text style={{flex: 1}}>CHANGE</Text>
                               <Text style={{width: 200, textAlign: 'right', fontSize: 25, color: '#DE544E'}}>
-                                {(() => { return Helper.formatCurrency(this.state.order.change) })()}
+                                {(() => { 
+                                  if (this.state.order.change >= 0) {
+                                    return Helper.formatCurrency(this.state.order.change) 
+                                  } else {
+                                    return "(" + Helper.formatCurrency(-1 * this.state.order.change) + ")"
+                                  }
+                                })()}
                               </Text>
                             </View>
 
