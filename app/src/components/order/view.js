@@ -495,7 +495,8 @@ class Order extends React.Component {
         ...menu, 
         quantity: 1, 
         addons: [], 
-        discounts: []
+        discounts: [],
+        isTakeaway: this.tenant.isTakeaway
       });
     }
 
@@ -852,13 +853,13 @@ class Order extends React.Component {
                                       if (item.isTakeaway) {
                                         return (
                                           <Button full small style={{backgroundColor: '#2177b4'}} onPress={() => {this.takeawayMenu(item)}}>
-                                            <MaterialIcons name='local-dining' color={'#fff'} size={20} />
+                                            <MaterialIcons name='layers' color={'#fff'} size={20} />
                                           </Button>
                                         )
                                       } else {
                                         return (
                                           <Button full small style={{backgroundColor: '#2177b4'}} onPress={() => {this.takeawayMenu(item)}}>
-                                            <MaterialIcons name='layers' color={'#fff'} size={20} />
+                                            <MaterialIcons name='local-dining' color={'#fff'} size={20} />
                                           </Button>
                                         )
                                       }

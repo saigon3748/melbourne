@@ -30,7 +30,8 @@ export default [
       let data = {
         name: this.account.name,
         taxRate: this.account.taxRate,
-        isTaxInclusive: this.account.isTaxInclusive
+        isTaxInclusive: this.account.isTaxInclusive,
+        isTakeaway: this.account.isTakeaway
       }
 
       return this.TenantApi.update(this.account._id, data)
