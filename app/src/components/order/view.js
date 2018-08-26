@@ -851,8 +851,8 @@ class Order extends React.Component {
                                     {(() => {
                                       if (item.isTakeaway) {
                                         return (
-                                          <Button full small style={{backgroundColor: '#28a745'}} onPress={() => {this.takeawayMenu(item)}}>
-                                            <MaterialIcons name='layers' color={'#fff'} size={20} />
+                                          <Button full small style={{backgroundColor: '#2177b4'}} onPress={() => {this.takeawayMenu(item)}}>
+                                            <MaterialIcons name='local-dining' color={'#fff'} size={20} />
                                           </Button>
                                         )
                                       } else {
@@ -873,8 +873,8 @@ class Order extends React.Component {
                                     {(() => {
                                       if (item.addons && item.addons.length > 0) {
                                         return (
-                                          <Button full small style={{backgroundColor: '#28a745'}} onPress={() => {this.showAddonScreen(item)}}>
-                                            <MaterialIcons name='code' color={'#fff'} size={20} />
+                                          <Button full small style={{backgroundColor: '#2177b4'}} onPress={() => {this.showAddonScreen(item)}}>
+                                            <MaterialIcons name='star' color={'#fff'} size={20} />
                                           </Button>
                                         )
                                       } else {
@@ -1089,14 +1089,14 @@ class Order extends React.Component {
                           )
                         })()}
                       </View>
-                      <View style={{flex: 1}}>
+                      <View style={{flex: 1, marginRight: 10}}>
                         <ScrollView horizontal={true} style={{flex: 1, flexDirection: 'row'}}>
                           {this.state.filteredCategories.map(category => (
                             <View key={category._id} style={{width: 150, height: 60, marginTop: 10, marginRight: 10}}>
                               {(() => {
                                 if (this.selectedCategory && this.selectedCategory._id === category._id) {
                                   return (
-                                    <Button full large success onPress={() => this.selectCategory(category)} style={{backgroundColor: '#6c757d'}}><Text style={{fontSize: 18}}> {category.name} </Text></Button>
+                                    <Button full large success onPress={() => this.selectCategory(category)} style={{backgroundColor: '#2177b4'}}><Text style={{fontSize: 18}}> {category.name} </Text></Button>
                                   )
                                 } else {
                                   return (
