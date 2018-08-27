@@ -140,7 +140,7 @@ class Printers extends React.Component {
 
   onCookingReceiptChanged(value) {
     let selectedPrinter = {...this.state.selectedPrinter};
-    selectedPrinter.isCookingReceipt = value;
+    selectedPrinter.isCooking= value;
 
     this.setState({
       selectedPrinter: selectedPrinter
@@ -265,21 +265,16 @@ class Printers extends React.Component {
               <View style={{flex: 1, marginBottom: 10}}>
                 <ScrollView style={{flex: 1, flexDirection: 'column', marginLeft: 30, marginRight: 10}}>
                   <List>
-                    {this.state.printers.map(item => (
-                      <ListItem key={item._id} style={{height: 50}}>
+                    {this.state.printers.map(printer => (
+                      <ListItem key={printer._id} style={{height: 50}}>
                         <Body>
                           <View style={{flexDirection: "row"}}>
-                            <Text style={{width: 200}}>{item.name}</Text>
-                            <Text style={{width: 200}}>{item.macAddress}</Text>
+                            <Text style={{width: 200}}>{printer.name}</Text>
+                            <Text style={{width: 200}}>{printer.macAddress}</Text>
                             <View style={{flex: 1}}/>
                             <View style={{width: 100, alignItems: 'center'}}>
                               <View style={{width: 80, alignItems: 'center'}}>
-                                <Button full small style={{backgroundColor: '#2177b4'}} onPress={() => {this.print(order)}}><Text> Print </Text></Button>                      
-                              </View>
-                            </View>
-                            <View style={{width: 100, alignItems: 'center'}}>
-                              <View style={{width: 80, alignItems: 'center'}}>
-                                <Button full small style={{backgroundColor: '#DE544E'}} onPress={() => {this.delete(order)}}><Text> Delete </Text></Button>                      
+                                <Button full small style={{backgroundColor: '#2177b4'}} onPress={() => {this.selectPrinter(printer)}}><Text> Edit </Text></Button>                      
                               </View>
                             </View>
                           </View>
@@ -310,7 +305,7 @@ class Printers extends React.Component {
               flexDirection: 'column',
               justifyContent: 'space-between',
               backgroundColor: '#FFF',
-              height: screenHeight - 120
+              height: screenHeight - 50
             }}>
               <ScrollView style={{flex: 1, flexDirection: 'column', marginLeft: 30, marginRight: 10}}>            
                 <View style={{ marginLeft: 50, marginTop: 50, marginBottom: 50 }}>
@@ -374,7 +369,7 @@ class Printers extends React.Component {
                   </View>
                   <View style={{ flexDirection: 'row', marginTop: 20 }}>
                     <View style={{width: 200}}>
-                      <Text>Receipt Title</Text>
+                      <Text>Title</Text>
                     </View>
                     <View style={{width: 500}}>
                       <TextInput defaultValue={this.state.selectedPrinter.title} onChangeText={(text) => this.onTitleChanged(text)} style={{height: 35, borderColor: '#d2d3d4', borderWidth: 1}}/>          
@@ -383,7 +378,7 @@ class Printers extends React.Component {
                   </View>
                   <View style={{ flexDirection: 'row', marginTop: 20 }}>
                     <View style={{width: 200}}>
-                      <Text>Receipt Header 1</Text>
+                      <Text>Header 1</Text>
                     </View>
                     <View style={{width: 500}}>
                       <TextInput defaultValue={this.state.selectedPrinter.header1} onChangeText={(text) => this.onHeader1Changed(text)} style={{height: 35, borderColor: '#d2d3d4', borderWidth: 1}}/>          
@@ -392,7 +387,7 @@ class Printers extends React.Component {
                   </View>
                   <View style={{ flexDirection: 'row', marginTop: 20 }}>
                     <View style={{width: 200}}>
-                      <Text>Receipt Header 2</Text>
+                      <Text>Header 2</Text>
                     </View>
                     <View style={{width: 500}}>
                       <TextInput defaultValue={this.state.selectedPrinter.header2} onChangeText={(text) => this.onHeader2Changed(text)} style={{height: 35, borderColor: '#d2d3d4', borderWidth: 1}}/>          
@@ -401,7 +396,7 @@ class Printers extends React.Component {
                   </View>
                   <View style={{ flexDirection: 'row', marginTop: 20 }}>
                     <View style={{width: 200}}>
-                      <Text>Receipt Header 3</Text>
+                      <Text>Header 3</Text>
                     </View>
                     <View style={{width: 500}}>
                       <TextInput defaultValue={this.state.selectedPrinter.header3} onChangeText={(text) => this.onHeader3Changed(text)} style={{height: 35, borderColor: '#d2d3d4', borderWidth: 1}}/>          
@@ -410,7 +405,7 @@ class Printers extends React.Component {
                   </View>
                   <View style={{ flexDirection: 'row', marginTop: 20 }}>
                     <View style={{width: 200}}>
-                      <Text>Receipt Header 4</Text>
+                      <Text>Header 4</Text>
                     </View>
                     <View style={{width: 500}}>
                       <TextInput defaultValue={this.state.selectedPrinter.header4} onChangeText={(text) => this.onHeader4Changed(text)} style={{height: 35, borderColor: '#d2d3d4', borderWidth: 1}}/>          
@@ -419,7 +414,7 @@ class Printers extends React.Component {
                   </View>
                   <View style={{ flexDirection: 'row', marginTop: 20 }}>
                     <View style={{width: 200}}>
-                      <Text>Receipt Header 5</Text>
+                      <Text>Header 5</Text>
                     </View>
                     <View style={{width: 500}}>
                       <TextInput defaultValue={this.state.selectedPrinter.header5} onChangeText={(text) => this.onHeader5Changed(text)} style={{height: 35, borderColor: '#d2d3d4', borderWidth: 1}}/>          
@@ -428,7 +423,7 @@ class Printers extends React.Component {
                   </View>
                   <View style={{ flexDirection: 'row', marginTop: 20 }}>
                     <View style={{width: 200}}>
-                      <Text>Receipt Footer 1</Text>
+                      <Text>Footer 1</Text>
                     </View>
                     <View style={{width: 500}}>
                       <TextInput defaultValue={this.state.selectedPrinter.footer1} onChangeText={(text) => this.onFooter1Changed(text)} style={{height: 35, borderColor: '#d2d3d4', borderWidth: 1}}/>          
@@ -437,7 +432,7 @@ class Printers extends React.Component {
                   </View>
                   <View style={{ flexDirection: 'row', marginTop: 20 }}>
                     <View style={{width: 200}}>
-                      <Text>Receipt Footer 2</Text>
+                      <Text>Footer 2</Text>
                     </View>
                     <View style={{width: 500}}>
                       <TextInput defaultValue={this.state.selectedPrinter.footer2} onChangeText={(text) => this.onFooter2Changed(text)} style={{height: 35, borderColor: '#d2d3d4', borderWidth: 1}}/>          
@@ -446,7 +441,7 @@ class Printers extends React.Component {
                   </View>
                   <View style={{ flexDirection: 'row', marginTop: 20 }}>
                     <View style={{width: 200}}>
-                      <Text>Receipt Footer 3</Text>
+                      <Text>Footer 3</Text>
                     </View>
                     <View style={{width: 500}}>
                       <TextInput defaultValue={this.state.selectedPrinter.footer3} onChangeText={(text) => this.onFooter3Changed(text)} style={{height: 35, borderColor: '#d2d3d4', borderWidth: 1}}/>          
@@ -455,19 +450,19 @@ class Printers extends React.Component {
                   </View>
                 </View>
               </ScrollView> 
-            </View>
 
-            <View style={{height: 65, flexDirection: 'row', backgroundColor: '#f2f3f4'}}>
-              <View style={{flex: 1}}></View>
-              <View style={{width: 180}}>
-                <Button full style={{marginTop: 10, backgroundColor: '#6c757d'}} onPress={() => this.onCancel()}><Text> CANCEL </Text></Button>
-              </View>
-              <View style={{width: 50}}></View>
-              <View style={{width: 180}}>
-                <Button full style={{marginTop: 10, backgroundColor: '#2177b4'}} onPress={() => this.onSave()}><Text> SAVE </Text></Button>
-              </View>
-              <View style={{flex: 1}}></View>
-            </View> 
+              <View style={{height: 65, flexDirection: 'row', backgroundColor: '#f2f3f4'}}>
+                <View style={{flex: 1}}></View>
+                <View style={{width: 180}}>
+                  <Button full style={{marginTop: 10, backgroundColor: '#6c757d'}} onPress={() => this.onCancel()}><Text> CANCEL </Text></Button>
+                </View>
+                <View style={{width: 50}}></View>
+                <View style={{width: 180}}>
+                  <Button full style={{marginTop: 10, backgroundColor: '#2177b4'}} onPress={() => this.onSave()}><Text> SAVE </Text></Button>
+                </View>
+                <View style={{flex: 1}}></View>
+              </View>              
+            </View>
           </Content>
         </Container>
       )
