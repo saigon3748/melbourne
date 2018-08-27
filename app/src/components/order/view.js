@@ -1068,7 +1068,7 @@ class Order extends React.Component {
                     return (
                       <View style={{flexDirection: 'row', marginTop: 20, marginBottom: 10, marginLeft: 10, marginRight: 10}}>
                         <View style={{flex: 1}}>
-                          <Button full onPress={() => this.save()} style={{backgroundColor: '#28a745'}}><Text> SAVE </Text></Button>
+                          <Button full onPress={() => this.save()} style={{backgroundColor: '#DE544E'}}><Text> SAVE </Text></Button>
                         </View>
                       </View>
                     )

@@ -19,6 +19,11 @@ export default (dispatch) => {
         type: "ORDER"
       })
     },
+    gotoReport: () => {
+      dispatch({
+        type: "REPORT"
+      })
+    },
     gotoCooks: () => {
       dispatch({
         type: "COOKS"

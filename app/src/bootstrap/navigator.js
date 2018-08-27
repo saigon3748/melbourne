@@ -7,6 +7,7 @@ import Topbar from '../components/topbar';
 import Sidebar from '../components/sidebar';
 import Dashboard from '../components/dashboard';
 import Order from '../components/order';
+import Report from '../components/report';
 import Cooks from '../components/cooks';
 import Printers from '../components/printers';
 
@@ -15,6 +16,7 @@ export default StackNavigator({
   APP: { screen: StackNavigator({
     MAIN: { screen: DrawerNavigator({
         ORDER: { screen: Order },
+        REPORT: { screen: Report },
         DASHBOARD: { screen: Dashboard },
         COOKS: { screen: Cooks },
         PRINTERS: { screen: Printers }

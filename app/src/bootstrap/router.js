@@ -33,6 +33,12 @@ const router = (state = initialState, action) => {
         state
       );
       break;
+    case "REPORT":
+      nextState = Navigator.router.getStateForAction(
+        NavigationActions.navigate({ routeName: 'REPORT', params: { payload: action.payload } }),
+        state
+      );
+      break;
     case "COOKS":
       nextState = Navigator.router.getStateForAction(
         NavigationActions.navigate({ routeName: 'COOKS', params: { payload: action.payload } }),

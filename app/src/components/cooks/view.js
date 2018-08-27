@@ -13,16 +13,30 @@ class Cooks extends React.Component {
     this.intervalId;
     this.state = {
       isSignedIn: false,
-      orders: []
+      cooks: []
     }
   }
 
   componentWillMount() {
     AsyncStorage.getItem('payload', (err, payload) => {
       if (!payload) return;
+      this.payload = JSON.parse(payload);
+
       this.setState({
         isSignedIn: true
-      });     
+      });   
+
+      TenantApi.getById(this.payload.tenant._id)
+        .then(result => {
+          this.tenant = result;
+
+          CookApi.getToday()
+            .then(result => {
+              this.setState({
+                cooks: result
+              });
+            })
+        })
     });
   }
 
@@ -30,7 +44,7 @@ class Cooks extends React.Component {
     CookApi.getToday()
       .then(result => {
         this.setState({
-          orders: result
+          cooks: result
         });
       })
 
@@ -38,7 +52,7 @@ class Cooks extends React.Component {
       CookApi.getToday()
         .then(result => {
           this.setState({
-            orders: result
+            cooks: result
           });
         })
     }, 1000 * 60 * 5)
@@ -46,36 +60,36 @@ class Cooks extends React.Component {
 
   componentWillUnmount() {
     if (this.intervalId) {
-      clearInterval(this.intervalId)
+      clearInterval(this.intervalId);
     }
   }
 
-  onRefresh() {
+  refresh() {
     CookApi.getToday()
       .then(result => {
         this.setState({
-          orders: result
+          cooks: result
         });
       })    
   }
 
-  onCookedAll() {
+  cookAll() {
     Alert.alert(
       'Alert', 
       'Do you want to mark completed all?',
       [ { text: 'Cancel' }, 
         { text: 'OK', onPress: () => {
-          let ids = this.state.orders.map(item => item._id);
-          CookApi.markCooked(ids)
+          let ids = this.state.cooks.map(item => item._id);
+          CookApi.cook(ids)
             .then(result => {
               this.setState({
-                orders: []
+                cooks: []
               });
 
               CookApi.getToday()
                 .then(result => {
                   this.setState({
-                    orders: result
+                    cooks: result
                   });
                 })
             })
@@ -83,9 +97,9 @@ class Cooks extends React.Component {
     );
   }
 
-  onCooked(id) {
-    let orders = [...this.state.orders];
-    let order = _.find(orders, item => {
+  cook(id) {
+    let cooks = [...this.state.cooks];
+    let order = _.find(cooks, item => {
       return item._id === id;
     });
 
@@ -94,34 +108,34 @@ class Cooks extends React.Component {
     }
 
     this.setState({
-      orders: orders
+      cooks: cooks
     });
 
     setTimeout(() => {
-      let order = _.find(this.state.orders, item => {
+      let order = _.find(this.state.cooks, item => {
         return item._id === id;
       });
 
       if (!order.isCooked) return;
 
-      CookApi.markCooked([id])
+      CookApi.cook([id])
         .then(result => {
-          let orders = _.filter(this.state.orders, item => {
+          let cooks = _.filter(this.state.cooks, item => {
             return item._id != id;
           });
 
           this.setState({
-            orders: orders
+            cooks: cooks
           });
         })
     }, 1000 * 5)
   }
 
-  onUncooked(id) {
-    CookApi.markUncooked([id])
+  uncook(id) {
+    CookApi.uncook([id])
       .then(result => {
-        let orders = [...this.state.orders];
-        let order = _.find(orders, item => {
+        let cooks = [...this.state.cooks];
+        let order = _.find(cooks, item => {
           return item._id === id;
         });
 
@@ -130,20 +144,39 @@ class Cooks extends React.Component {
         }
 
         this.setState({
-          orders: orders
+          cooks: cooks
         });
       })
   }
 
   getNote(item) {
-    let note = item.note || ''
-    if (item.extra && item.extra.length > 0) {
-      item.extra.forEach(extra => {
-        note += ` - x${extra.quantity} ${extra.name}`
-      })
+    let note = "";
+
+    if (this.tenant && this.tenant.isTakeaway && !item.isTakeaway) {
+      note = `Dine in.`;
+      if (item.note) {
+        note = `Dine in. ${item.note}`;
+      }
+    }
+
+    if (this.tenant && !this.tenant.isTakeaway && item.isTakeaway) {
+      note = `Takeaway.`;
+      if (item.note) {
+        note = `Takeaway. ${item.note}`;
+      }
     }
 
     return note;
+  }
+
+  getAddons(item) {
+    let addons = "";
+
+    item.addons.forEach(addon => {
+      addons += `${addon.quantity} x ${addon.name}. `;
+    })
+
+    return addons;
   }
 
   render() {
@@ -165,51 +198,37 @@ class Cooks extends React.Component {
                   <MaterialIcons name='assignment' color={'#6c757d'} size={20} />            
                 </Left>
                 <Body>
-                  <Text>Today's Cooks</Text>
+                  <Text>Cooks</Text>
                 </Body>
                 <Right>
                 </Right>
               </ListItem>
             </List>
 
-            <ScrollView style={{flex: 1, flexDirection: 'column', marginLeft: 30, marginRight: 10}}>
+            <ScrollView style={{flex: 1, flexDirection: 'column', marginLeft: 30, marginRight: 10, marginBottom: 10}}>
               <List>
-                {this.state.orders.map(item => (
+                {this.state.cooks.map(item => (
                   <ListItem key={item._id} style={{height: 50}}>
                     <Body>
                       <View style={{flexDirection: "row"}}>
                         <Text style={{width: 50}}>#{item.orderRef}</Text>
                         <Text style={{width: 50, textAlign: 'right'}}>{item.quantity}</Text>
-                        <View style={{width: 50}}>
-                          {(() => {
-                            if (item.isTakeaway) {
-                              return (
-                                <Button full small style={{backgroundColor: '#EE2738'}}>
-                                  <MaterialIcons name='directions-walk' color={'#fff'} size={20} />
-                                </Button>
-                              )
-                            } else {
-                              return (
-                                <View/>
-                              )
-                            }
-                          })()}
-                        </View>
-                        <Text style={{width: 200}}>{item.name}</Text>
+                        <Text style={{width: 200}}>{item.menuName}</Text>
+                        <Text style={{width: 200}}>{this.getAddons(item)}</Text>
                         <Text style={{flex: 1}}>{this.getNote(item)}</Text>
                         <Text style={{width: 50}}>
-                          {(() => { return moment(item.createdAt).format("HH:mm") })()}
+                          {(() => { return moment(item.localCreatedAt).format("HH:mm") })()}
                         </Text>
                         <View style={{width: 100, alignItems: 'center'}}>
                           <View style={{width: 80, alignItems: 'center'}}>
                             {(() => {
                               if (item.isCooked) {
                                 return (
-                                  <Button full small style={{backgroundColor: '#2177b4'}} onPress={() => {this.onUncooked(item._id)}}><Text> UNDO </Text></Button>                      
+                                  <Button full small style={{backgroundColor: '#2177b4'}} onPress={() => {this.uncook(item._id)}}><Text> UNDO </Text></Button>                      
                                 )
                               } else {
                                 return (
-                                  <Button full small style={{backgroundColor: '#2FA495'}} onPress={() => {this.onCoooked(item._id)}}><Text> DONE </Text></Button>                      
+                                  <Button full small style={{backgroundColor: '#DE544E'}} onPress={() => {this.cook(item._id)}}><Text> DONE </Text></Button>                      
                                 )
                               }
                             })()}
@@ -225,11 +244,11 @@ class Cooks extends React.Component {
             <View style={{height: 65, flexDirection: 'row', backgroundColor: '#f2f3f4'}}>
               <View style={{flex: 1}}></View>
               <View style={{width: 180}}>
-                <Button full style={{marginTop: 10, backgroundColor: '#6c757d'}} onPress={() => this.onRefresh()}><Text> REFRESH </Text></Button>
+                <Button full style={{marginTop: 10, backgroundColor: '#6c757d'}} onPress={() => this.refresh()}><Text> REFRESH </Text></Button>
               </View>
               <View style={{width: 50}}></View>
               <View style={{width: 180}}>
-                <Button full style={{marginTop: 10, backgroundColor: '#2177b4'}} onPress={() => this.onCookedAll()}><Text> COMPLETE ALL </Text></Button>
+                <Button full style={{marginTop: 10, backgroundColor: '#2177b4'}} onPress={() => this.cookAll()}><Text> COMPLETE ALL </Text></Button>
               </View>
               <View style={{flex: 1}}></View>
             </View>

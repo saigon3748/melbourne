@@ -16,7 +16,7 @@ module.exports = class Service extends BaseService {
       createdAt: {
         $lte: new Date()
       },
-      isCompleted: {
+      isCoooked: {
         $ne: true
       }      
     };
@@ -24,23 +24,23 @@ module.exports = class Service extends BaseService {
     return this.find(query);
   }
 
-  markCompleted(ids) {
-    let doMarkItemCompleted = (id) => {
+  cook(ids) {
+    let doMarkCooked = (id) => {
       return this.updateById(id, {
-        isCompleted: true
+        isCoooked: true
       })
     }
 
-    return Promise.each(ids, doMarkItemCompleted);
+    return Promise.each(ids, doMarkCooked);
   }
 
-  markUncompleted(ids) {
-    let doMarkItemUncompleted = (id) => {
+  uncook(ids) {
+    let doMarkUncooked = (id) => {
       return this.updateById(id, {
-        isCompleted: false
+        isCoooked: false
       })
     }
 
-    return Promise.each(ids, doMarkItemUncompleted);
+    return Promise.each(ids, doMarkUncooked);
   }
 }

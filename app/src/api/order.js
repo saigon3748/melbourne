@@ -46,7 +46,7 @@ const create = (data) => {
   });
 }
 
-const markDeleted = (id) => {
+const deleteById = (id) => {
   return new Promise((resolve, reject) => {
     AsyncStorage.getItem('token', (err, token) => {
       fetch(Config.API + `/orders/deleteById/${id}`, {
@@ -68,5 +68,5 @@ const markDeleted = (id) => {
 export default {
   getToday,
   create,
-  markDeleted
+  deleteById
 }

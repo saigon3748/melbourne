@@ -55,7 +55,7 @@ class Printers extends React.Component {
       });
   }
 
-  onPrinterSelected(printer) {
+  selectPrinter(printer) {
     let selectedPrinter = {...printer}
 
     this.setState({
@@ -244,51 +244,60 @@ class Printers extends React.Component {
       return (
         <Container style={{backgroundColor: '#fff'}}>
           <Content>        
-              <View style={{
-                flex: 1,
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                backgroundColor: '#FFF',
-                height: screenHeight - 50
-              }}>
-                <List style={{marginTop: 40}}>
-                  <ListItem icon>
-                    <Left>
-                      <MaterialIcons name='print' color={'#6c757d'} size={20} />            
-                    </Left>
-                    <Body>
-                      <Text>Printers</Text>
-                    </Body>
-                    <Right>
-                      <TouchableOpacity style={{marginRight: 8}} onPress={() => this.onPrinterSelected({})}>
-                        <MaterialIcons name='add' color={'#6c757d'} size={20} />            
-                      </TouchableOpacity>
-                    </Right>
-                  </ListItem>
-                </List>
+            <View style={{
+              flex: 1,
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              backgroundColor: '#FFF',
+              height: screenHeight - 50
+            }}>
+              <List style={{marginTop: 40}}>
+                <ListItem icon>
+                  <Left>
+                    <MaterialIcons name='print' color={'#6c757d'} size={20} />            
+                  </Left>
+                  <Body>
+                    <Text>Printers</Text>
+                  </Body>
+                </ListItem>
+              </List>
 
-                <View style={{flex: 1, marginBottom: 10}}>
-                  <ScrollView style={{flex: 1, flexDirection: 'column', marginLeft: 30, marginRight: 10}}>
-                    <List>
-                      {this.state.printers.map(item => (
-                        <ListItem key={item._id} style={{height: 50}}>
-                          <Body>
-                            <View style={{flexDirection: "row"}}>
-                              <Text style={{width: 200}}>{item.name}</Text>
-                              <Text style={{width: 200}}>{item.macAddress}</Text>
+              <View style={{flex: 1, marginBottom: 10}}>
+                <ScrollView style={{flex: 1, flexDirection: 'column', marginLeft: 30, marginRight: 10}}>
+                  <List>
+                    {this.state.printers.map(item => (
+                      <ListItem key={item._id} style={{height: 50}}>
+                        <Body>
+                          <View style={{flexDirection: "row"}}>
+                            <Text style={{width: 200}}>{item.name}</Text>
+                            <Text style={{width: 200}}>{item.macAddress}</Text>
+                            <View style={{flex: 1}}/>
+                            <View style={{width: 100, alignItems: 'center'}}>
+                              <View style={{width: 80, alignItems: 'center'}}>
+                                <Button full small style={{backgroundColor: '#2177b4'}} onPress={() => {this.print(order)}}><Text> Print </Text></Button>                      
+                              </View>
                             </View>
-                          </Body>
-                          <Right>
-                            <TouchableOpacity activeOpacity={1.0} onPress={() => this.onPrinterSelected(item)}>
-                              <Icon name="arrow-forward"/>
-                            </TouchableOpacity>
-                          </Right>
-                        </ListItem>
-                      ))}
-                    </List>
-                  </ScrollView>
+                            <View style={{width: 100, alignItems: 'center'}}>
+                              <View style={{width: 80, alignItems: 'center'}}>
+                                <Button full small style={{backgroundColor: '#DE544E'}} onPress={() => {this.delete(order)}}><Text> Delete </Text></Button>                      
+                              </View>
+                            </View>
+                          </View>
+                        </Body>
+                      </ListItem>
+                    ))}
+                  </List>
+                </ScrollView>
+              </View>
+
+              <View style={{height: 65, flexDirection: 'row', backgroundColor: '#f2f3f4'}}>
+                <View style={{flex: 1}}></View>
+                <View style={{width: 180}}>
+                  <Button full style={{marginTop: 10, backgroundColor: '#2177b4'}} onPress={() => this.selectPrinter({})}><Text> ADD PRINTER </Text></Button>
                 </View>
-              </View>   
+                <View style={{flex: 1}}></View>
+              </View>
+            </View>   
           </Content>
         </Container>
       )

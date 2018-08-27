@@ -23,10 +23,10 @@ const getToday = () => {
   });
 }
 
-const markCooked = (ids) => {
+const cook = (ids) => {
   return new Promise((resolve, reject) => {
     AsyncStorage.getItem('token', (err, token) => {
-      fetch(Config.API + '/cooks/cooked', {
+      fetch(Config.API + '/cooks/cook', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -43,10 +43,10 @@ const markCooked = (ids) => {
   });
 }
 
-const markUncooked = (ids) => {
+const uncook = (ids) => {
   return new Promise((resolve, reject) => {
     AsyncStorage.getItem('token', (err, token) => {
-      fetch(Config.API + '/cooks/uncooked', {
+      fetch(Config.API + '/cooks/uncook', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -65,6 +65,6 @@ const markUncooked = (ids) => {
 
 export default {
   getToday,
-  markCooked,
-  markUncooked
+  cook,
+  uncook
 }

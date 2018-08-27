@@ -13,11 +13,11 @@ module.exports = class Controller extends BaseController {
     return this._service.getToday();
   }
 
-  markCompleted() {
-    return this._service.markCompleted(this._ctx.req.body);    
+  cook() {
+    return this._service.cook(this._ctx.req.body);    
   }
 
-  markUncompleted() {
-    return this._service.markUncompleted(this._ctx.req.body);    
+  uncook() {
+    return this._service.uncook(this._ctx.req.body);    
   }
 }
