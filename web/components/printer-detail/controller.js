@@ -54,11 +54,12 @@ export default [
     }
 
     cancel() {
-      this.DialogService.confirm("Do you want to discard change?")
-        .then(confirmed => {
-          if (!confirmed) return;
-          this.$state.go(this.posgram.config.states.PRINTER_LIST);
-        })
+      this.$state.go(this.posgram.config.states.PRINTER_LIST);
+      // this.DialogService.confirm("Do you want to discard change?")
+      //   .then(confirmed => {
+      //     if (!confirmed) return;
+      //     this.$state.go(this.posgram.config.states.PRINTER_LIST);
+      //   })
     }
   }
 ]
