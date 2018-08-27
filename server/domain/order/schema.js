@@ -68,7 +68,7 @@ let schema = mongoose.Schema({
   ]
 })
 
-schema.index({"code": "text", "note": "text", "items.name": "text", "items.note": "text", "items.category.name": "text", "discounts.name": "text"})
+schema.index({"code": "text", "ref": "text", "note": "text", "items.name": "text", "items.note": "text", "items.category.name": "text", "discounts.name": "text"})
 
 schema.plugin(audit);
 schema.plugin(paginate);

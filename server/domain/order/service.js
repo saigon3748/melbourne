@@ -74,7 +74,8 @@ module.exports = class Service extends BaseService {
               category: item.category,
               addons: item.addons,
               note: item.note,
-              isTakeaway: item.isTakeaway
+              isTakeaway: item.isTakeaway,
+              localCreatedAt: item.localCreatedAt
             })
         }
 

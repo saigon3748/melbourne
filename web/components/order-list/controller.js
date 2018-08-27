@@ -27,7 +27,7 @@ export default [
       let query = this.searchText ? `text=${this.searchText}` : null;
       this.OrderApi.find(query, this.pagination)
         .then(result => {
-          this.menus = result.docs || [];
+          this.orders = result.docs || [];
           this.pagination = _.extend(this.pagination, _.pick(result, ['total', 'limit', 'page', 'pages']));
         })
     }

@@ -47,7 +47,7 @@ class Printers extends React.Component {
   }
 
   componentDidMount() {
-    PrinterApi.getAll()
+    PrinterApi.get()
       .then(result => {
         this.setState({
           printers: result
@@ -81,7 +81,7 @@ class Printers extends React.Component {
             selectedPrinter: null
           })    
 
-          PrinterApi.getAll()
+          PrinterApi.get()
             .then(result => {
               this.setState({
                 printers: result
@@ -98,7 +98,7 @@ class Printers extends React.Component {
             selectedPrinter: null
           })    
 
-          PrinterApi.getAll()
+          PrinterApi.get()
             .then(result => {
               this.setState({
                 printers: result
@@ -260,7 +260,7 @@ class Printers extends React.Component {
                       <Text>Printers</Text>
                     </Body>
                     <Right>
-                      <TouchableOpacity activeOpacity={1.0} onPress={() => this.onPrinterSelected({})}>
+                      <TouchableOpacity style={{marginRight: 8}} onPress={() => this.onPrinterSelected({})}>
                         <MaterialIcons name='add' color={'#6c757d'} size={20} />            
                       </TouchableOpacity>
                     </Right>
@@ -280,7 +280,7 @@ class Printers extends React.Component {
                           </Body>
                           <Right>
                             <TouchableOpacity activeOpacity={1.0} onPress={() => this.onPrinterSelected(item)}>
-                              <Icon name="arrow-forward" />
+                              <Icon name="arrow-forward"/>
                             </TouchableOpacity>
                           </Right>
                         </ListItem>

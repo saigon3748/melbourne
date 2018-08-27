@@ -243,7 +243,12 @@ class Order extends React.Component {
       return;
     }
 
-    OrderApi.create(this.state.order)
+    let data = {
+      ...this.state.order,
+      localCreatedAt: Date.now()
+    }
+
+    OrderApi.create(data)
       .then(order => {
         this.print(order);
         this.reset();
@@ -712,14 +717,35 @@ class Order extends React.Component {
                             return (
                               <TouchableOpacity key={addon._id} activeOpacity={1.0} onPress={() => this.addAddon(addon)}>
                                 <View style={{width: 150, height: 150, marginTop: 10, marginLeft: 10, backgroundColor: '#D1CABD'}}>
-                                  <View style={{backgroundColor: 'rgba(221, 226, 229, 0.85)'}}>
-                                    <Text style={{marginTop: 3, marginLeft: 3, marginRight: 3}}>
-                                      {addon.name}
-                                    </Text>
-                                    <Text style={{marginTop: 3, marginLeft: 3, marginRight: 3, marginBottom: 3}}>
-                                      {(() => { return Helper.formatCurrency(addon.price) })()}
-                                    </Text>
-                                  </View>
+                                  {(() => { 
+                                    if (addon.imageUrl) {
+                                      return (
+                                        <ImageBackground
+                                          style={{width: 150, height: 150}}
+                                          source={{uri: addon.imageUrl}}>
+                                          <View style={{backgroundColor: 'rgba(221, 226, 229, 0.85)'}}>
+                                            <Text style={{marginTop: 3, marginLeft: 3, marginRight: 3}}>
+                                              {addon.name}
+                                            </Text>
+                                            <Text style={{marginTop: 3, marginLeft: 3, marginRight: 3, marginBottom: 3}}>
+                                              {(() => { return Helper.formatCurrency(addon.price) })()}
+                                            </Text>
+                                          </View>
+                                        </ImageBackground>
+                                      )
+                                    } else {
+                                      return (
+                                        <View style={{backgroundColor: 'rgba(221, 226, 229, 0.85)'}}>
+                                          <Text style={{marginTop: 3, marginLeft: 3, marginRight: 3}}>
+                                            {addon.name}
+                                          </Text>
+                                          <Text style={{marginTop: 3, marginLeft: 3, marginRight: 3, marginBottom: 3}}>
+                                            {(() => { return Helper.formatCurrency(addon.price) })()}
+                                          </Text>
+                                        </View>
+                                      )
+                                    }
+                                  })()}
                                 </View>
                               </TouchableOpacity>
                             )
@@ -804,7 +830,7 @@ class Order extends React.Component {
                     case DISPLAY_MODE.CHECKOUT:
                       return (
                         <View style={{flexDirection: 'row', marginTop: 10, marginLeft: 10, marginRight: 10}}>
-                          <Text style={{fontSize: 25, color: 'rgb(70, 70, 70)'}}>CHECKOUT</Text>
+                          <Text style={{fontSize: 25, color: 'rgb(70, 70, 70)'}}>ORDER</Text>
                         </View>
                       )                    
                       break;
