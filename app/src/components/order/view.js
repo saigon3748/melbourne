@@ -1075,11 +1075,11 @@ class Order extends React.Component {
                   } else {
                     return (
                       <View style={{flexDirection: 'row', marginTop: 20, marginBottom: 10, marginLeft: 10, marginRight: 10}}>
-                        <View style={{width: 170}}>
+                        <View style={{flex: 1}}>
                           <Button full onPress={() => this.discard()} style={{backgroundColor: '#6c757d'}}><Text> DISCARD </Text></Button>
                         </View>
-                        <View style={{flex: 1}} />
-                        <View style={{width: 170}}>
+                        <View style={{width: 10}}/>
+                        <View style={{flex: 1}}>
                           <Button full onPress={() => this.checkout()} style={{backgroundColor: '#2177b4'}}><Text> ORDER </Text></Button>
                         </View>
                       </View>
