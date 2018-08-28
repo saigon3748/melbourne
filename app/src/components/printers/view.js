@@ -55,7 +55,7 @@ class Printers extends React.Component {
       });
   }
 
-  selectPrinter(printer) {
+  edit(printer) {
     let selectedPrinter = {...printer}
 
     this.setState({
@@ -63,13 +63,13 @@ class Printers extends React.Component {
     });
   }
 
-  onCancel() {
+  cancel() {
     this.setState({
       selectedPrinter: null
     });    
   }
 
-  onSave() {
+  save() {
     if (!this.state.selectedPrinter) return;
 
     let selectedPrinter = {...this.state.selectedPrinter}
@@ -109,6 +109,27 @@ class Printers extends React.Component {
           alert(err)
         })      
     }
+  }
+
+  delete(printer) {
+    Alert.alert(
+      printer.name, 
+      'Do you want to delete?',
+      [ { text: 'Cancel' }, 
+        { text: 'OK', onPress: () => {
+          PrinterApi.deleteById(printer._id)
+            .then(result => {
+              let printers = {...this.state.printers};
+              printers = _.filter(printers, item => {
+                return item._id != printer._id;
+              });
+
+              this.setState({
+                printers: printers
+              });                  
+            })
+        }} ]
+    );    
   }
 
   onPrinterNameChanged(text) {
@@ -274,7 +295,12 @@ class Printers extends React.Component {
                             <View style={{flex: 1}}/>
                             <View style={{width: 100, alignItems: 'center'}}>
                               <View style={{width: 80, alignItems: 'center'}}>
-                                <Button full small style={{backgroundColor: '#2177b4'}} onPress={() => {this.selectPrinter(printer)}}><Text> Edit </Text></Button>                      
+                                <Button full small style={{backgroundColor: '#2177b4'}} onPress={() => {this.edit(printer)}}><Text> Edit </Text></Button>                      
+                              </View>
+                            </View>
+                            <View style={{width: 100, alignItems: 'center'}}>
+                              <View style={{width: 80, alignItems: 'center'}}>
+                                <Button full small style={{backgroundColor: '#DE544E'}} onPress={() => {this.delete(printer)}}><Text> Delete </Text></Button>                      
                               </View>
                             </View>
                           </View>
@@ -286,11 +312,11 @@ class Printers extends React.Component {
               </View>
 
               <View style={{height: 65, flexDirection: 'row', backgroundColor: '#f2f3f4'}}>
-                <View style={{flex: 1}}></View>
-                <View style={{width: 180}}>
-                  <Button full style={{marginTop: 10, backgroundColor: '#2177b4'}} onPress={() => this.selectPrinter({})}><Text> ADD PRINTER </Text></Button>
+                <View style={{width: 10}}></View>
+                <View style={{flex: 1}}>
+                  <Button full style={{marginTop: 10, backgroundColor: '#2177b4'}} onPress={() => this.edit({})}><Text> ADD PRINTER </Text></Button>
                 </View>
-                <View style={{flex: 1}}></View>
+                <View style={{width: 10}}></View>
               </View>
             </View>   
           </Content>
@@ -452,15 +478,15 @@ class Printers extends React.Component {
               </ScrollView> 
 
               <View style={{height: 65, flexDirection: 'row', backgroundColor: '#f2f3f4'}}>
-                <View style={{flex: 1}}></View>
-                <View style={{width: 180}}>
-                  <Button full style={{marginTop: 10, backgroundColor: '#6c757d'}} onPress={() => this.onCancel()}><Text> CANCEL </Text></Button>
+                <View style={{width: 10}}></View>
+                <View style={{flex: 1}}>
+                  <Button full style={{marginTop: 10, backgroundColor: '#6c757d'}} onPress={() => this.cancel()}><Text> CANCEL </Text></Button>
                 </View>
-                <View style={{width: 50}}></View>
-                <View style={{width: 180}}>
-                  <Button full style={{marginTop: 10, backgroundColor: '#2177b4'}} onPress={() => this.onSave()}><Text> SAVE </Text></Button>
+                <View style={{width: 10}}></View>
+                <View style={{flex: 1}}>
+                  <Button full style={{marginTop: 10, backgroundColor: '#2177b4'}} onPress={() => this.save()}><Text> SAVE </Text></Button>
                 </View>
-                <View style={{flex: 1}}></View>
+                <View style={{width: 10}}></View>
               </View>              
             </View>
           </Content>

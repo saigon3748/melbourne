@@ -86,7 +86,7 @@ class Report extends React.Component {
     })
 
     if (order.note) {
-      items += order.note;
+      items += " - " + order.note;
     }
 
     return items;

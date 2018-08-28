@@ -242,15 +242,15 @@ class Cooks extends React.Component {
             </ScrollView>
 
             <View style={{height: 65, flexDirection: 'row', backgroundColor: '#f2f3f4'}}>
-              <View style={{flex: 1}}></View>
-              <View style={{width: 180}}>
+              <View style={{width: 10}}></View>
+              <View style={{flex: 1}}>
                 <Button full style={{marginTop: 10, backgroundColor: '#6c757d'}} onPress={() => this.refresh()}><Text> REFRESH </Text></Button>
               </View>
-              <View style={{width: 50}}></View>
-              <View style={{width: 180}}>
+              <View style={{width: 10}}></View>
+              <View style={{flex: 1}}>
                 <Button full style={{marginTop: 10, backgroundColor: '#2177b4'}} onPress={() => this.cookAll()}><Text> COMPLETE ALL </Text></Button>
               </View>
-              <View style={{flex: 1}}></View>
+              <View style={{width: 10}}></View>
             </View>
           </View>      
         </Content>

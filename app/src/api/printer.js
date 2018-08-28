@@ -68,8 +68,28 @@ const updateById = (id, data) => {
   });
 }
 
+const deleteById = (id) => {
+  return new Promise((resolve, reject) => {
+    AsyncStorage.getItem('token', (err, token) => {
+      fetch(Config.API + `/printers/deleteById/${id}`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': 'JWT ' + token
+        }
+      })
+      .then(result => resolve(result))
+      .catch(error => {
+        reject('Deleted printer failed');
+      });
+    });
+  });
+}
+
 export default {
   get,
   create,
-  updateById
+  updateById,
+  deleteById
 }
