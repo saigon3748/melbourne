@@ -44,7 +44,6 @@
         <th>First Name</th>
         <th>Last Name</th>
         <th>Role</th>
-        <th>Status</th>
         <th></th>
       </tr>
     </thead>
@@ -54,7 +53,6 @@
         <td>{{user.firstName}}</td> 
         <td>{{user.lastName}}</td> 
         <td>{{$ctrl.getRole(user)}}</td>
-        <td>{{$ctrl.getStatus(user)}}</td>
         <td>
           <button class="btn btn-sm btn-outline-secondary" ng-click="$ctrl.view(user)">View</button>
         </td>

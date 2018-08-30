@@ -61,13 +61,23 @@ export default [
         })
     }
 
+    delete() {
+      this.DialogService.confirm("Do you want to delete?")
+        .then(confirmed => {
+          if (!confirmed) return;
+          this.CategoryApi.markDeleted(this.category._id)
+            .then(category => {
+              toastr.success('Deleted succeeded');
+              this.$state.go(this.posgram.config.states.CATEGORY_LIST);
+            })
+            .catch(err => {
+              toastr.error(err.error);
+            })
+        })
+    }
+
     cancel() {
       this.$state.go(this.posgram.config.states.CATEGORY_LIST);
-      // this.DialogService.confirm("Do you want to discard change?")
-      //   .then(confirmed => {
-      //     if (!confirmed) return;
-      //     this.$state.go(this.posgram.config.states.CATEGORY_LIST);
-      //   })
     }
   }
 ]

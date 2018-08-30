@@ -24,7 +24,11 @@ export default [
     }
 
     search() {
-      let query = this.searchText ? `text=${this.searchText}` : null;
+      let query = "isDeleted=false&isArchived=false";
+      if (this.searchText && this.searchText.length > 0) {
+        query = `${query}&text=${this.searchText}`;  
+      }
+
       this.OrderApi.find(query, this.pagination)
         .then(result => {
           this.orders = result.docs || [];
@@ -33,8 +37,42 @@ export default [
     }
 
     download() {
-      let query = this.searchText ? `text=${this.searchText}` : null;
+      let query = "isDeleted=false&isArchived=false";
+      if (this.searchText && this.searchText.length > 0) {
+        query = `${query}&text=${this.searchText}`;  
+      }
+
       this.OrderApi.download(query)
+    }
+
+    archive(order) {
+      this.DialogService.confirm("Do you want to archive?")
+        .then(confirmed => {
+          if (!confirmed) return;
+          this.OrderApi.markArchived(order._id)
+            .then(order => {
+              toastr.success('Archived succeeded');
+              this.search();
+            })
+            .catch(err => {
+              toastr.error(err.error);
+            })
+        })
+    }
+
+    delete(order) {
+      this.DialogService.confirm("Do you want to delete?")
+        .then(confirmed => {
+          if (!confirmed) return;
+          this.OrderApi.markDeleted(order._id)
+            .then(order => {
+              toastr.success('Deleted succeeded');
+              this.search();
+            })
+            .catch(err => {
+              toastr.error(err.error);
+            })
+        })
     }
 
     create() {

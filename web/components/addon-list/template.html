@@ -44,7 +44,6 @@
         <th>Price</th>
         <th>Category</th>
         <th>Image</th>
-        <th>Status</th>
         <th></th>
       </tr>
     </thead>
@@ -56,7 +55,6 @@
         <td>
           <img ng-if="addon.imageUrl" ng-src="{{addon.imageUrl}}" style="height: 30px; width: 30px; display: block;"/>
         </td>         
-        <td>{{$ctrl.getStatus(addon)}}</td>
         <td>
           <button class="btn btn-sm btn-outline-secondary" ng-click="$ctrl.view(addon)">View</button>
         </td>

@@ -24,7 +24,11 @@ export default [
     }
 
     search() {
-      let query = this.searchText ? `text=${this.searchText}` : null;
+      let query = "isDeleted=false";
+      if (this.searchText && this.searchText.length > 0) {
+        query = `${query}&text=${this.searchText}`;  
+      }
+
       this.MenuApi.find(query, this.pagination)
         .then(result => {
           this.menus = result.docs || [];
@@ -33,7 +37,11 @@ export default [
     }
 
     download() {
-      let query = this.searchText ? `text=${this.searchText}` : null;
+      let query = "isDeleted=false";
+      if (this.searchText && this.searchText.length > 0) {
+        query = `${query}&text=${this.searchText}`;  
+      }
+
       this.MenuApi.download(query)
     }
 
@@ -43,10 +51,6 @@ export default [
 
     view(menu) {
       this.$state.go(this.posgram.config.states.MENU_DETAIL, {id: menu._id});      
-    }
-
-    getStatus(menu) {
-      return menu.isArchived ? "Archived" : null;
     }
     
     paging(page) {

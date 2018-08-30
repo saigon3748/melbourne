@@ -82,6 +82,20 @@ export default class BaseApi {
     });
   }
 
+  markDeleted(id) {
+    let url = `${this.endpoint}/delete/${id}`;
+
+    return this.$q((resolve, reject) => {
+      this.$http.post(url)
+        .then(res => {
+          resolve(res.data);
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
+  }
+
   download(query, options) {
     let token = window.localStorage.getItem('token');
     let url = `${this.endpoint}/download?jwt=${token}`;

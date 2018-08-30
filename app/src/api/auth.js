@@ -23,7 +23,7 @@ const login = (username, password) => {
       });
     })
     .catch(error => {
-      reject('Incorrect login ID or password');
+      reject('Incorrect username or password');
     });    
   });
 }

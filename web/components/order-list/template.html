@@ -53,7 +53,8 @@
         <td>{{order.createdAt | date:'short'}}</td>
         <td>
           <button class="btn btn-sm btn-outline-secondary" ng-click="$ctrl.view(order)">View</button>
-          <button class="btn btn-sm btn-outline-secondary" ng-click="$ctrl.archive(order)">Archive</button>
+          <button class="btn btn-sm btn-outline-info" ng-click="$ctrl.archive(order)">Archive</button>
+          <button class="btn btn-sm btn-outline-danger" ng-click="$ctrl.delete(order)">Delete</button>
         </td>
       </tr>
     </tbody>

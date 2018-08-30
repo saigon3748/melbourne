@@ -28,7 +28,7 @@ export default [
     }
 
     save() {
-      this.OrderApi.update(this.order._id ,this.order)
+      this.OrderApi.update(this.order._id, this.order)
         .then(order => {
           toastr.success('Updated succeeded');
         })
@@ -37,13 +37,38 @@ export default [
         })
     }
 
+    archive() {
+      this.DialogService.confirm("Do you want to archive?")
+        .then(confirmed => {
+          if (!confirmed) return;
+          this.OrderApi.markArchived(this.order._id)
+            .then(order => {
+              toastr.success('Archived succeeded');
+              this.$state.go(this.posgram.config.states.ORDER_LIST);
+            })
+            .catch(err => {
+              toastr.error(err.error);
+            })
+        })
+    }
+
+    delete() {
+      this.DialogService.confirm("Do you want to delete?")
+        .then(confirmed => {
+          if (!confirmed) return;
+          this.OrderApi.markDeleted(this.order._id)
+            .then(order => {
+              toastr.success('Deleted succeeded');
+              this.$state.go(this.posgram.config.states.ORDER_LIST);
+            })
+            .catch(err => {
+              toastr.error(err.error);
+            })
+        })
+    }
+
     cancel() {
       this.$state.go(this.posgram.config.states.ORDER_LIST);
-      // this.DialogService.confirm("Do you want to discard change?")
-      //   .then(confirmed => {
-      //     if (!confirmed) return;
-      //     this.$state.go(this.posgram.config.states.ORDER_LIST);
-      //   })
     }
   }
 ]

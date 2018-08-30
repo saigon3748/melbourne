@@ -5,5 +5,19 @@ export default ['$http', '$q', 'posgram',
     constructor($http, $q, posgram) {
       super($http, $q, posgram, 'orders');
     }
+
+    markArchived(id) {
+      let url = `${this.endpoint}/archive/${id}`;
+
+      return this.$q((resolve, reject) => {
+        this.$http.post(url)
+          .then(res => {
+            resolve(res.data);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    }    
   }
 ]

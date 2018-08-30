@@ -6,25 +6,21 @@ module.exports = function(schema) {
     createdAt: { type: Date, default: Date.now },
     createdBy: mongoose.Schema({
       _id: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
-      username: { type: String },
-      name: { type: String }
+      username: { type: String }
     }),
 
     localUpdatedAt: { type: Date },
     updatedAt: { type: Date },
     updatedBy: mongoose.Schema({
       _id: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
-      username: { type: String },
-      name: { type: String }
+      username: { type: String }
     }),
 
     isDeleted: { type: Boolean, default: false },
-    localDeletedAt: { type: Date },
     deletedAt: { type: Date },
     deletedBy: mongoose.Schema({
       _id: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
-      username: { type: String },
-      name: { type: String }
+      username: { type: String }
     })
   });
 };

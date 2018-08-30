@@ -23,8 +23,7 @@ let schema = mongoose.Schema({
   note: { type: String },
   place: { type: String },
   taxRate: { type: Number, required: true, default: 0 },
-  isTaxInclusive: { type: Boolean, default: true },
-  isArchived: { type: Boolean, default: false },  
+  isTaxInclusive: { type: Boolean, default: true },    
   items: [
     mongoose.Schema({
       _id: { type: mongoose.Schema.Types.ObjectId, ref: 'menus' },
@@ -65,7 +64,14 @@ let schema = mongoose.Schema({
         name: { type: String, required: false }
       }, { _id: false }),
     }, { _id: false })
-  ]
+  ],
+  isArchived: { type: Boolean, default: false },
+  archivedAt: { type: Date },
+  archivedBy: mongoose.Schema({
+    _id: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
+    username: { type: String },
+    name: { type: String }
+  })  
 })
 
 schema.index({"code": "text", "ref": "text", "note": "text", "items.name": "text", "items.note": "text", "items.category.name": "text", "discounts.name": "text"})

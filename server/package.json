@@ -6,8 +6,8 @@
   "license": "ISC",
   "main": "index.js",
   "scripts": {
-    "dev": "pm2-dev process.yml",
-    "start": "pm2 progress.yml"
+    "dev": "pm2-dev start process.yml",
+    "start": "pm2 start progress.yml"
   },
   "dependencies": {
     "amqplib": "0.4.2",

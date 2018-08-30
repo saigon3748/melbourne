@@ -24,3 +24,7 @@ module.exports = express.Router()
   .delete('/:id', 
     middleware.authenticate, 
     middleware.intercept(controller, 'deleteById'))
+
+  .post('/delete/:id', 
+    middleware.authenticate, 
+    middleware.intercept(controller, 'markDeleted'))

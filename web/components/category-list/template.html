@@ -43,7 +43,6 @@
         <th>Name</th>
         <th>Display Index</th>
         <th>Parent Category</th>
-        <th>Status</th>
         <th></th>
       </tr>
     </thead>
@@ -52,7 +51,6 @@
         <td>{{category.name}}</td>
         <td>{{category.displayIndex}}</td> 
         <td>{{category.parent.name}}</td> 
-        <td>{{$ctrl.getStatus(category)}}</td>
         <td>
           <button class="btn btn-sm btn-outline-secondary" ng-click="$ctrl.view(category)">View</button>
         </td>

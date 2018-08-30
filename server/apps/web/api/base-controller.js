@@ -28,4 +28,8 @@ module.exports = class BaseController {
   deleteById() {
     return this._service.deleteById(this._ctx.req.params.id);
   }
+
+  markDeleted() {
+    return this._service.markDeleted(this._ctx.req.params.id);
+  }
 }

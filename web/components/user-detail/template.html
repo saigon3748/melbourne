@@ -4,10 +4,14 @@
   </div>
   <div class="col-6">
     <div class="btn-group float-right">
-      <button ng-click="$ctrl.changePassword()" class="btn btn-sm btn-outline-secondary">
+      <button ng-if="$ctrl.user._id" ng-click="$ctrl.changePassword()" class="btn btn-sm btn-outline-secondary">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit"><path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"></path><polygon points="18 2 22 6 12 16 8 16 8 12 18 2"></polygon></svg>
         Change Password
       </button>
+      <button ng-if="$ctrl.user._id" ng-click="$ctrl.delete()" class="btn btn-sm btn-outline-secondary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+        Delete
+      </button>         
     </div>
   </div>
   <div class="col-1">
@@ -64,19 +68,8 @@
     </div>
   </div>
   <div class="form-group row">
-    <div class="col-sm-2">Status</div>
-    <div class="col-sm-10">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="status" ng-model="$ctrl.user.isArchived">
-        <label class="form-check-label" for="status">
-          Archived
-        </label>
-      </div>
-    </div>
-  </div>
-  <div class="form-group row">
     <div class="col-sm-12">
-      <button ng-click="$ctrl.save()" type="submit" class="btn btn-primary float-right">Save</button>
+      <button ng-click="$ctrl.save()" type="button" class="btn btn-primary float-right">Save</button>
       <span class="float-right">&nbsp;&nbsp;</span>
       <button ng-click="$ctrl.cancel()" class="btn btn-secondary float-right" type="button">Cancel</button>
     </div>

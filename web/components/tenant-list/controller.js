@@ -24,7 +24,11 @@ export default [
     }
 
     search() {
-      let query = this.searchText ? `text=${this.searchText}` : null;
+      let query = "isDeleted=false";
+      if (this.searchText && this.searchText.length > 0) {
+        query = `${query}&text=${this.searchText}`;  
+      }
+
       this.TenantApi.find(query, this.pagination)
         .then(result => {
           this.tenants = result.docs || [];

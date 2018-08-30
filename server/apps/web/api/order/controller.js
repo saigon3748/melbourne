@@ -12,4 +12,8 @@ module.exports = class Controller extends BaseController {
   getToday() {
     return this._service.getToday();
   }
+
+  markArchived() {
+    return this._service.markArchived(this._ctx.req.params.id);
+  }  
 }

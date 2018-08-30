@@ -29,4 +29,12 @@ module.exports = express.Router()
 
   .post('/deleteById/:id', 
     middleware.authenticate, 
-    middleware.intercept(controller, 'deleteById'))
+    middleware.intercept(controller, 'markDeleted'))
+
+  .post('/delete/:id', 
+    middleware.authenticate, 
+    middleware.intercept(controller, 'markDeleted'))
+
+  .post('/archive/:id', 
+    middleware.authenticate, 
+    middleware.intercept(controller, 'markArchived'))

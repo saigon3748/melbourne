@@ -24,7 +24,11 @@ export default [
     }
 
     search() {
-      let query = this.searchText ? `text=${this.searchText}` : null;
+      let query = "isDeleted=false";
+      if (this.searchText && this.searchText.length > 0) {
+        query = `${query}&text=${this.searchText}`;  
+      }
+
       this.AddonApi.find(query, this.pagination)
         .then(result => {
           this.addons = result.docs || [];
@@ -33,7 +37,11 @@ export default [
     }
 
     download() {
-      let query = this.searchText ? `text=${this.searchText}` : null;
+      let query = "isDeleted=false";
+      if (this.searchText && this.searchText.length > 0) {
+        query = `${query}&text=${this.searchText}`;  
+      }
+
       this.AddonApi.download(query)
     }
 
@@ -43,10 +51,6 @@ export default [
 
     view(addon) {
       this.$state.go(this.posgram.config.states.ADDON_DETAIL, {id: addon._id});      
-    }
-
-    getStatus(addon) {
-      return addon.isArchived ? "Archived" : null;
     }
     
     paging(page) {

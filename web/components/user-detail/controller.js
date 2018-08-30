@@ -65,13 +65,23 @@ export default [
         })
     }
 
+    delete() {
+      this.DialogService.confirm("Do you want to delete?")
+        .then(confirmed => {
+          if (!confirmed) return;
+          this.UserApi.markDeleted(this.user._id)
+            .then(user => {
+              toastr.success('Deleted succeeded');
+              this.$state.go(this.posgram.config.states.USER_LIST);
+            })
+            .catch(err => {
+              toastr.error(err.error);
+            })
+        })
+    }
+
     cancel() {
       this.$state.go(this.posgram.config.states.USER_LIST);
-      // this.DialogService.confirm("Do you want to discard change?")
-      //   .then(confirmed => {
-      //     if (!confirmed) return;
-      //     this.$state.go(this.posgram.config.states.USER_LIST);
-      //   })
     }
   }
 ]

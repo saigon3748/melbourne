@@ -63,8 +63,7 @@ module.exports = class BaseService {
       createdAt: new Date(),
       createdBy: {
         _id: this._ctx.user._id,
-        username: this._ctx.user.username,
-        name: this._ctx.user.name
+        username: this._ctx.user.username
       }
     })
 
@@ -87,8 +86,7 @@ module.exports = class BaseService {
       updatedAt: new Date(),
       updatedBy: {
         _id: this._ctx.user._id,
-        username: this._ctx.user.username,
-        name: this._ctx.user.name
+        username: this._ctx.user.username
       }
     })
 
@@ -110,8 +108,7 @@ module.exports = class BaseService {
       updatedAt: new Date(),
       updatedBy: {
         _id: this._ctx.user._id,
-        username: this._ctx.user.username,
-        name: this._ctx.user.name
+        username: this._ctx.user.username
       }
     })
 
@@ -150,8 +147,7 @@ module.exports = class BaseService {
       deletedAt: new Date(),
       deletedBy: {
         _id: this._ctx.user._id,
-        username: this._ctx.user.username,
-        name: this._ctx.user.name
+        username: this._ctx.user.username
       }
     }
 

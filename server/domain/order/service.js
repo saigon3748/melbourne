@@ -98,6 +98,29 @@ module.exports = class Service extends BaseService {
     return promiseRetry(doCreate, {retries: 3})
   }  
 
+  markArchived(id) {
+    if (!id) throw new Error('Missing id');
+
+    let query = { _id: id };
+    query = this._filterTenant(query);
+
+    let data = {
+      isArchived: true,
+      archivedAt: new Date(),
+      archivedBy: {
+        _id: this._ctx.user._id,
+        username: this._ctx.user.username
+      }
+    }
+
+    return new Promise((resolve, reject) => {
+      this._repo.update(query, data, (err) => {
+        if (err) throw Boom.badImplementation(err.message, err);
+        resolve();
+      });
+    });
+  }
+  
   _generateCode(code) {
     let timestamp = new Date().getTime().toString().slice(-4);
     return `${code}${moment().format("YYMMDD")}${timestamp}`
