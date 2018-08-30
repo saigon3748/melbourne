@@ -6,14 +6,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const menu = (navigation) => {
   return (
-    <Button transparent style={{padding: 10}} onPress={() => {
-        if (navigation.state.index === 0) {
-          navigation.navigate('DrawerOpen')
-        } else {
-          navigation.navigate('DrawerClose')
-        }
-      }
-    }>
+    <Button transparent style={{padding: 10}} onPress={navigation.toggleDrawer}>
       <MaterialIcons name='menu' size={20} color={"#F5F8F9"} />
     </Button>
   )

@@ -1,23 +1,22 @@
 import React from 'react'
 import { Text, Animated, Easing } from 'react-native'
-import { StackNavigator, DrawerNavigator } from 'react-navigation'
+import { createStackNavigator, createDrawerNavigator } from 'react-navigation'
 
-import Login from '../components/login';
 import Topbar from '../components/topbar';
 import Sidebar from '../components/sidebar';
+import Login from '../components/login';
 import Dashboard from '../components/dashboard';
 import Order from '../components/order';
 import Report from '../components/report';
 import Cooks from '../components/cooks';
 import Printers from '../components/printers';
 
-export default StackNavigator({
+export default createStackNavigator({
   LOGIN: { screen: Login },
-  APP: { screen: StackNavigator({
-    MAIN: { screen: DrawerNavigator({
+  APP: { screen: createStackNavigator({
+    MAIN: { screen: createDrawerNavigator({
         ORDER: { screen: Order },
         REPORT: { screen: Report },
-        DASHBOARD: { screen: Dashboard },
         COOKS: { screen: Cooks },
         PRINTERS: { screen: Printers }
       }, {

@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -37,6 +36,7 @@
 		2DF0FFEE2056DD460020B375 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3EA31DF850E9000B6D8A /* libReact.a */; };
 		353845F173434C55B9513791 /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F90D5C37B6454E98A75E5119 /* FontAwesome5_Brands.ttf */; };
 		38F8371499B84F02AA3F72A0 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ACCA29B1EE724FAD9663417A /* Octicons.ttf */; };
+		3D6B4F6121365F8B009397A3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D6B4F6021365F8B009397A3 /* LaunchScreen.storyboard */; };
 		3DAD47172122912900C8E9B9 /* libepos2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD47152122912900C8E9B9 /* libepos2.a */; };
 		3DAD47182122912900C8E9B9 /* libeposeasyselect.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD47162122912900C8E9B9 /* libeposeasyselect.a */; };
 		3DAD474C2122CAE500C8E9B9 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD474A2122C8A700C8E9B9 /* ExternalAccessory.framework */; };
@@ -376,6 +376,7 @@
 		2333DFE2FA3B49F789A7E9A9 /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* retailr-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "retailr-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* retailr-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "retailr-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D6B4F6021365F8B009397A3 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3DAD47152122912900C8E9B9 /* libepos2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libepos2.a; path = libs/libepos2.a; sourceTree = "<group>"; };
 		3DAD47162122912900C8E9B9 /* libeposeasyselect.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libeposeasyselect.a; path = libs/libeposeasyselect.a; sourceTree = "<group>"; };
 		3DAD474A2122C8A700C8E9B9 /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
@@ -560,6 +561,7 @@
 				3DAD47842122D38500C8E9B9 /* AppIcon.appiconset */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				3D6B4F6021365F8B009397A3 /* LaunchScreen.storyboard */,
 			);
 			name = retailr;
 			sourceTree = "<group>";
@@ -1198,6 +1200,7 @@
 				AB06F46FF30945CBAD5F1910 /* Zocial.ttf in Resources */,
 				353845F173434C55B9513791 /* FontAwesome5_Brands.ttf in Resources */,
 				236C1DADF9A34EC4AC1E3A00 /* FontAwesome5_Regular.ttf in Resources */,
+				3D6B4F6121365F8B009397A3 /* LaunchScreen.storyboard in Resources */,
 				8719152E23B44774AC0FCAFF /* FontAwesome5_Solid.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
