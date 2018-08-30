@@ -70,5 +70,17 @@ export default [
     cancel() {
       this.$state.go(this.posgram.config.states.ORDER_LIST);
     }
+
+    getAddons(item) {
+      let addons = "";
+
+      if (item.addons && item.addons.length > 0) {
+        item.addons.forEach(addon => {
+          addons += `${addon.quantity} x ${addon.name}. `;
+        })
+      }
+
+      return addons;
+    }
   }
 ]

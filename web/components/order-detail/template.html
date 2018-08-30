@@ -60,6 +60,7 @@
           <th>Quantity</th>
           <th>Price</th>
           <th>Subtotal</th>
+          <th>Addons</th>
           <th>Note</th>
         </tr>
       </thead>
@@ -70,6 +71,7 @@
           <td>{{item.quantity}}</td>
           <td>{{item.price | currency}}</td>
           <td>{{item.subtotal | currency}}</td>
+          <td>{{$ctrl.getAddons(item)}}</td>
           <td></td>
         </tr>
       </tbody>
