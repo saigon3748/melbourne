@@ -656,7 +656,8 @@ class Order extends React.Component {
             flexDirection: 'column',
             justifyContent: 'space-between',
             backgroundColor: '#fff',
-            height: screenHeight - 50
+            marginTop: 10,
+            height: screenHeight - 75
           }}>
             <View style={{
               flex: 8, 
@@ -676,7 +677,7 @@ class Order extends React.Component {
                         return this.state.filteredMenus.map(menu => {
                           return (
                             <TouchableOpacity key={menu._id} activeOpacity={1.0} onPress={() => this.addMenu(menu)}>
-                              <View style={{width: 150, height: 150, marginTop: 10, marginLeft: 10, backgroundColor: '#D1CABD'}}>
+                              <View style={{width: 150, height: 150, marginBottom: 10, marginLeft: 10, backgroundColor: '#D1CABD'}}>
                                 {(() => { 
                                   if (menu.imageUrl) {
                                     return (
@@ -716,7 +717,7 @@ class Order extends React.Component {
                         return this.addons.map(addon => {
                           return (
                             <TouchableOpacity key={addon._id} activeOpacity={1.0} onPress={() => this.addAddon(addon)}>
-                              <View style={{width: 150, height: 150, marginTop: 10, marginLeft: 10, backgroundColor: '#D1CABD'}}>
+                              <View style={{width: 150, height: 150, marginBottom: 10, marginLeft: 10, backgroundColor: '#D1CABD'}}>
                                 {(() => { 
                                   if (addon.imageUrl) {
                                     return (
@@ -756,7 +757,7 @@ class Order extends React.Component {
                         return this.discounts.map(discount => {
                           return (
                             <TouchableOpacity key={discount._id} activeOpacity={1.0} onPress={() => this.addDiscount(discount)}>
-                              <View style={{width: 150, height: 150, marginTop: 10, marginLeft: 10, backgroundColor: '#D1CABD'}}>
+                              <View style={{width: 150, height: 150, marginBottom: 10, marginLeft: 10, backgroundColor: '#D1CABD'}}>
                                 <View style={{backgroundColor: 'rgba(221, 226, 229, 0.85)'}}>
                                   <Text style={{marginTop: 3, marginLeft: 3, marginRight: 3}}>
                                     {discount.name}
@@ -781,7 +782,7 @@ class Order extends React.Component {
                         return this.cashes.map(cash => {
                           return (
                             <TouchableOpacity key={cash._id} activeOpacity={1.0} onPress={() => this.selectCash(cash)}>
-                              <View style={{width: 150, height: 150, marginTop: 10, marginLeft: 10, backgroundColor: '#D1CABD'}}>
+                              <View style={{width: 150, height: 150, marginBottom: 10, marginLeft: 10, backgroundColor: '#D1CABD'}}>
                                 <View style={{backgroundColor: 'rgba(221, 226, 229, 0.85)'}}>
                                   <Text style={{fontSize: 25, marginTop: 3, marginLeft: 3, marginRight: 3}}>
                                     {(() => { return Helper.formatCurrency(cash.cash); })()}
@@ -797,7 +798,7 @@ class Order extends React.Component {
                 </View>
               </ScrollView>
               
-              <View style={{width: 373, flexDirection: 'column', backgroundColor: '#f2f3f4', marginTop: 10, marginBottom: 10, marginLeft: 10}}>
+              <View style={{width: 373, flexDirection: 'column', backgroundColor: '#f2f3f4', marginBottom: 10, marginLeft: 10}}>
                 {(() => {
                   switch(this.state.displayMode) {
                     case DISPLAY_MODE.MENU:

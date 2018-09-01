@@ -270,7 +270,7 @@ class Printers extends React.Component {
               flexDirection: 'column',
               justifyContent: 'space-between',
               backgroundColor: '#FFF',
-              height: screenHeight - 50
+              height: screenHeight - 65
             }}>
               <List style={{marginTop: 40}}>
                 <ListItem icon>
@@ -331,7 +331,7 @@ class Printers extends React.Component {
               flexDirection: 'column',
               justifyContent: 'space-between',
               backgroundColor: '#FFF',
-              height: screenHeight - 50
+              height: screenHeight - 65
             }}>
               <ScrollView style={{flex: 1, flexDirection: 'column', marginLeft: 30, marginRight: 10}}>            
                 <View style={{ marginLeft: 50, marginTop: 50, marginBottom: 50 }}>

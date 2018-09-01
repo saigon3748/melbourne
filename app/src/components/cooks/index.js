@@ -190,7 +190,7 @@ class Cooks extends React.Component {
             flexDirection: 'column',
             justifyContent: 'space-between',
             backgroundColor: '#fff',
-            height: screenHeight - 50
+            height: screenHeight - 65
           }}>
             <List style={{marginTop: 40}}>
               <ListItem icon>
