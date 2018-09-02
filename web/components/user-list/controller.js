@@ -45,6 +45,21 @@ export default [
       this.UserApi.download(query)
     }
 
+    delete(user) {
+      this.DialogService.confirm("Do you want to delete?")
+        .then(confirmed => {
+          if (!confirmed) return;
+          this.UserApi.delete(user._id)
+            .then(user => {
+              toastr.success('Deleted succeeded');
+              this.search();
+            })
+            .catch(err => {
+              toastr.error(err.error);
+            })
+        })
+    }
+
     create(user) {
       this.$state.go(this.posgram.config.states.USER_DETAIL);      
     }

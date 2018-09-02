@@ -52,7 +52,22 @@ export default [
     view(menu) {
       this.$state.go(this.posgram.config.states.MENU_DETAIL, {id: menu._id});      
     }
-    
+        
+    delete(menu) {
+      this.DialogService.confirm("Do you want to delete?")
+        .then(confirmed => {
+          if (!confirmed) return;
+          this.MenuApi.delete(menu._id)
+            .then(menu => {
+              toastr.success('Deleted succeeded');
+              this.search();
+            })
+            .catch(err => {
+              toastr.error(err.error);
+            })
+        })
+    }
+
     paging(page) {
       this.pagination.page = page;
       this.search();

@@ -40,7 +40,7 @@
       <tr ng-repeat="cash in $ctrl.cashes"> 
         <td>{{cash.cash | currency}}</td>
         <td>
-          <button class="btn btn-sm btn-outline-secondary" ng-click="$ctrl.delete(cash)">Delete</button>
+          <button class="btn btn-sm btn-outline-danger" ng-click="$ctrl.delete(cash)">Delete</button>
         </td>
       </tr>
     </tbody>

@@ -87,21 +87,6 @@ export default [
       });
     }
 
-    delete() {
-      this.DialogService.confirm("Do you want to delete?")
-        .then(confirmed => {
-          if (!confirmed) return;
-          this.AddonApi.markDeleted(this.addon._id)
-            .then(addon => {
-              toastr.success('Deleted succeeded');
-              this.$state.go(this.posgram.config.states.ADDON_LIST);
-            })
-            .catch(err => {
-              toastr.error(err.error);
-            })
-        })
-    }
-
     cancel() {
       this.$state.go(this.posgram.config.states.ADDON_LIST);
     }

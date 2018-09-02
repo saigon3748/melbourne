@@ -20,17 +20,10 @@
 </div>
 
 <div class="row mb-4">
-  <div class="col-sm-3">
-    <select class="form-control" ng-model="$ctrl.searchStatus">
-      <option value="">- Select status -</option>
-      <option value="Active" selected>Active</option>
-      <option value="Deleted">Deleted</option>
-    </select>
-  </div>
   <div class="col-sm-6">
     <input ng-model="$ctrl.searchText" type="text" class="form-control" placeholder="Search for...">
   </div>
-  <div class="col-sm-3">
+  <div class="col-sm-6">
     <button ng-click="$ctrl.search()" class="btn btn-primary" type="button">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
       Search
@@ -60,6 +53,7 @@
         <td>{{category.parent.name}}</td> 
         <td>
           <button class="btn btn-sm btn-outline-secondary" ng-click="$ctrl.view(category)">View</button>
+          <button class="btn btn-sm btn-outline-danger" ng-click="$ctrl.delete(category)">Delete</button>
         </td>
       </tr>
     </tbody>

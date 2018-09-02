@@ -61,22 +61,7 @@ export default [
           toastr.error(err.error);
         })
     }
-
-    delete() {
-      this.DialogService.confirm("Do you want to delete?")
-        .then(confirmed => {
-          if (!confirmed) return;
-          this.DiscountApi.markDeleted(this.discount._id)
-            .then(discount => {
-              toastr.success('Deleted succeeded');
-              this.$state.go(this.posgram.config.states.DISCOUNT_LIST);
-            })
-            .catch(err => {
-              toastr.error(err.error);
-            })
-        })
-    }
-
+    
     cancel() {
       this.$state.go(this.posgram.config.states.DISCOUNT_LIST);
     }

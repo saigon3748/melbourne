@@ -53,8 +53,19 @@ export default [
       this.$state.go(this.posgram.config.states.DISCOUNT_DETAIL, {id: category._id});      
     }
 
-    getStatus(user) {
-      return user.isArchived ? "Archived" : null;
+    delete(discount) {
+      this.DialogService.confirm("Do you want to delete?")
+        .then(confirmed => {
+          if (!confirmed) return;
+          this.DiscountApi.delete(discount._id)
+            .then(discount => {
+              toastr.success('Deleted succeeded');
+              this.search();
+            })
+            .catch(err => {
+              toastr.error(err.error);
+            })
+        })
     }
 
     getDiscount(discount) {

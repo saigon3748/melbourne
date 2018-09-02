@@ -53,6 +53,21 @@ export default [
       this.$state.go(this.posgram.config.states.CATEGORY_DETAIL, {id: category._id});      
     }
 
+    delete(category) {
+      this.DialogService.confirm("Do you want to delete?")
+        .then(confirmed => {
+          if (!confirmed) return;
+          this.CategoryApi.delete(category._id)
+            .then(category => {
+              toastr.success('Deleted succeeded');
+              this.search();
+            })
+            .catch(err => {
+              toastr.error(err.error);
+            })
+        })
+    }
+
     paging(page) {
       this.pagination.page = page;
       this.search();

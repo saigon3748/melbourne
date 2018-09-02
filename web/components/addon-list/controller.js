@@ -53,6 +53,21 @@ export default [
       this.$state.go(this.posgram.config.states.ADDON_DETAIL, {id: addon._id});      
     }
     
+    delete(addon) {
+      this.DialogService.confirm("Do you want to delete?")
+        .then(confirmed => {
+          if (!confirmed) return;
+          this.AddonApi.delete(addon._id)
+            .then(addon => {
+              toastr.success('Deleted succeeded');
+              this.search();
+            })
+            .catch(err => {
+              toastr.error(err.error);
+            })
+        })
+    }
+    
     paging(page) {
       this.pagination.page = page;
       this.search();
