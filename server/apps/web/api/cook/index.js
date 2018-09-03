@@ -15,13 +15,17 @@ module.exports = express.Router()
     middleware.authenticate, 
     middleware.intercept(controller, 'updateById'))
 
-  .post('/cook', 
+  .post('/complete', 
     middleware.authenticate, 
-    middleware.intercept(controller, 'cook'))
+    middleware.intercept(controller, 'completeAll'))
 
-  .post('/uncook', 
+  .post('/complete/:id', 
     middleware.authenticate, 
-    middleware.intercept(controller, 'uncook'))
+    middleware.intercept(controller, 'complete'))
+
+  .post('/undo/:id', 
+    middleware.authenticate, 
+    middleware.intercept(controller, 'undo'))
 
   .delete('/:id', 
     middleware.authenticate, 

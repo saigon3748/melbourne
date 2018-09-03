@@ -49,8 +49,8 @@ class Sidebar extends React.Component {
     this.props.navigation.navigate('ORDER');
   }
 
-  showReport() {
-    this.props.navigation.navigate('REPORT');
+  showTransactions() {
+    this.props.navigation.navigate('TRANSACTIONS');
   }
 
   showCooks() {
@@ -90,8 +90,8 @@ class Sidebar extends React.Component {
               <MaterialIcons name='assessment' color={'#6c757d'} size={20} />
             </Left>
             <Body>
-              <TouchableOpacity onPress={() => { this.showReport(); }}>
-                <Text>Report</Text>
+              <TouchableOpacity onPress={() => { this.showTransactions(); }}>
+                <Text>Transactions</Text>
               </TouchableOpacity>
             </Body>
             <Right>

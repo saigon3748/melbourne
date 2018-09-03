@@ -23,41 +23,58 @@ const getToday = () => {
   });
 }
 
-const cook = (ids) => {
+const completeAll = () => {
   return new Promise((resolve, reject) => {
     AsyncStorage.getItem('token', (err, token) => {
-      fetch(Config.API + '/cooks/cook', {
+      fetch(Config.API + `/cooks/complete`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
           'Authorization': 'JWT ' + token
-        },
-        body: JSON.stringify(ids)
+        }
       })
       .then(response => resolve(response))
       .catch(error => {
-        reject('Marked cooked failed');
+        reject('Marked all completed failed');
       });
     });
   });
 }
 
-const uncook = (ids) => {
+const complete = (id) => {
   return new Promise((resolve, reject) => {
     AsyncStorage.getItem('token', (err, token) => {
-      fetch(Config.API + '/cooks/uncook', {
+      fetch(Config.API + `/cooks/complete/${id}`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
           'Authorization': 'JWT ' + token
-        },
-        body: JSON.stringify(ids)
+        }
       })
       .then(response => resolve(response))
       .catch(error => {
-        reject('Marked uncooked failed');
+        reject('Marked completed failed');
+      });
+    });
+  });
+}
+
+const undo = (id) => {
+  return new Promise((resolve, reject) => {
+    AsyncStorage.getItem('token', (err, token) => {
+      fetch(Config.API + `/cooks/undo/${id}`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': 'JWT ' + token
+        }
+      })
+      .then(response => resolve(response))
+      .catch(error => {
+        reject('Marked incompleted failed');
       });
     });
   });
@@ -65,6 +82,7 @@ const uncook = (ids) => {
 
 export default {
   getToday,
-  cook,
-  uncook
+  completeAll,
+  complete,
+  undo
 }

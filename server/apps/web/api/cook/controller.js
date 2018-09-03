@@ -13,11 +13,15 @@ module.exports = class Controller extends BaseController {
     return this._service.getToday();
   }
 
-  cook() {
-    return this._service.cook(this._ctx.req.body);    
+  completeAll() {
+    return this._service.completeAll();
   }
 
-  uncook() {
-    return this._service.uncook(this._ctx.req.body);    
+  complete() {
+    return this._service.complete(this._ctx.req.params.id);
+  }
+
+  undo() {
+    return this._service.undo(this._ctx.req.params.id);
   }
 }

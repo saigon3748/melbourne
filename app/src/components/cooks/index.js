@@ -73,14 +73,13 @@ class Cooks extends React.Component {
       })    
   }
 
-  cookAll() {
+  completeAll() {
     Alert.alert(
-      'Alert', 
+      'Confirmation', 
       'Do you want to mark completed all?',
       [ { text: 'Cancel' }, 
         { text: 'OK', onPress: () => {
-          let ids = this.state.cooks.map(item => item._id);
-          CookApi.cook(ids)
+          CookApi.completeAll()
             .then(result => {
               this.setState({
                 cooks: []
@@ -97,7 +96,7 @@ class Cooks extends React.Component {
     );
   }
 
-  cook(id) {
+  complete(id) {
     let cooks = [...this.state.cooks];
     let order = _.find(cooks, item => {
       return item._id === id;
@@ -116,9 +115,10 @@ class Cooks extends React.Component {
         return item._id === id;
       });
 
+      if (!order) return;
       if (!order.isCooked) return;
 
-      CookApi.cook([id])
+      CookApi.complete(id)
         .then(result => {
           let cooks = _.filter(this.state.cooks, item => {
             return item._id != id;
@@ -131,8 +131,8 @@ class Cooks extends React.Component {
     }, 1000 * 5)
   }
 
-  uncook(id) {
-    CookApi.uncook([id])
+  undo(id) {
+    CookApi.undo(id)
       .then(result => {
         let cooks = [...this.state.cooks];
         let order = _.find(cooks, item => {
@@ -149,34 +149,22 @@ class Cooks extends React.Component {
       })
   }
 
-  getNote(item) {
-    let note = "";
+  getItem(item) {
+    let text = "";
 
-    if (this.tenant && this.tenant.isTakeaway && !item.isTakeaway) {
-      note = `Dine in.`;
-      if (item.note) {
-        note = `Dine in. ${item.note}`;
-      }
+    text += `${item.quantity} x ${item.menuName}`;
+
+    if (item.addons && item.addons.length > 0) {
+      text += " ( ";
+      item.addons.forEach(addon => {
+        text += `${addon.quantity} x ${addon.name}  `;
+      })
+      text += ") ";
+    } else {
+      text += "  ";
     }
 
-    if (this.tenant && !this.tenant.isTakeaway && item.isTakeaway) {
-      note = `Takeaway.`;
-      if (item.note) {
-        note = `Takeaway. ${item.note}`;
-      }
-    }
-
-    return note;
-  }
-
-  getAddons(item) {
-    let addons = "";
-
-    item.addons.forEach(addon => {
-      addons += `${addon.quantity} x ${addon.name}. `;
-    })
-
-    return addons;
+    return text;
   }
 
   render() {
@@ -212,23 +200,20 @@ class Cooks extends React.Component {
                     <Body>
                       <View style={{flexDirection: "row"}}>
                         <Text style={{width: 50}}>#{item.orderRef}</Text>
-                        <Text style={{width: 50, textAlign: 'right'}}>{item.quantity}</Text>
-                        <Text style={{width: 200}}>{item.menuName}</Text>
-                        <Text style={{width: 200}}>{this.getAddons(item)}</Text>
-                        <Text style={{flex: 1}}>{this.getNote(item)}</Text>
+                        <Text style={{flex: 1}}>{this.getItem(item)}</Text>
                         <Text style={{width: 50}}>
                           {(() => { return moment(item.localCreatedAt).format("HH:mm") })()}
                         </Text>
-                        <View style={{width: 100, alignItems: 'center'}}>
-                          <View style={{width: 80, alignItems: 'center'}}>
+                        <View style={{width: 130, alignItems: 'center'}}>
+                          <View style={{width: 110, alignItems: 'center'}}>
                             {(() => {
                               if (item.isCooked) {
                                 return (
-                                  <Button full small style={{backgroundColor: '#2177b4'}} onPress={() => {this.uncook(item._id)}}><Text> UNDO </Text></Button>                      
+                                  <Button full small style={{backgroundColor: '#2177b4'}} onPress={() => {this.undo(item._id)}}><Text> UNDO </Text></Button>                      
                                 )
                               } else {
                                 return (
-                                  <Button full small style={{backgroundColor: '#DE544E'}} onPress={() => {this.cook(item._id)}}><Text> DONE </Text></Button>                      
+                                  <Button full small style={{backgroundColor: '#DE544E'}} onPress={() => {this.complete(item._id)}}><Text> COMPLETE </Text></Button>                      
                                 )
                               }
                             })()}
@@ -248,7 +233,7 @@ class Cooks extends React.Component {
               </View>
               <View style={{width: 10}}></View>
               <View style={{flex: 1}}>
-                <Button full style={{marginTop: 10, backgroundColor: '#2177b4'}} onPress={() => this.cookAll()}><Text> COMPLETE ALL </Text></Button>
+                <Button full style={{marginTop: 10, backgroundColor: '#2177b4'}} onPress={() => this.completeAll()}><Text> COMPLETE ALL </Text></Button>
               </View>
               <View style={{width: 10}}></View>
             </View>

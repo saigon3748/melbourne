@@ -7,7 +7,7 @@ import Sidebar from '../components/sidebar';
 import Login from '../components/login';
 import Dashboard from '../components/dashboard';
 import Order from '../components/order';
-import Report from '../components/report';
+import Transactions from '../components/transactions';
 import Cooks from '../components/cooks';
 import Printers from '../components/printers';
 
@@ -16,7 +16,7 @@ export default createStackNavigator({
   APP: { screen: createStackNavigator({
     MAIN: { screen: createDrawerNavigator({
         ORDER: { screen: Order },
-        REPORT: { screen: Report },
+        TRANSACTIONS: { screen: Transactions },
         COOKS: { screen: Cooks },
         PRINTERS: { screen: Printers }
       }, {

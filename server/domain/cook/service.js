@@ -13,34 +13,24 @@ module.exports = class Service extends BaseService {
 
   getToday() {
     let query = {
+      isCooked: false,
       createdAt: {
         $lte: new Date()
-      },
-      isCoooked: {
-        $ne: true
-      }      
+      }
     };
 
     return this.find(query);
   }
 
-  cook(ids) {
-    let doMarkCooked = (id) => {
-      return this.updateById(id, {
-        isCoooked: true
-      })
-    }
-
-    return Promise.each(ids, doMarkCooked);
+  completeAll() {
+    return this.update({}, { isCooked: true });
   }
 
-  uncook(ids) {
-    let doMarkUncooked = (id) => {
-      return this.updateById(id, {
-        isCoooked: false
-      })
-    }
+  complete(id) {
+    return this.updateById(id, { isCooked: true });
+  }
 
-    return Promise.each(ids, doMarkUncooked);
+  undo(id) {
+    return this.updateById(id, { isCooked: false });
   }
 }

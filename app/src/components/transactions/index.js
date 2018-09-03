@@ -7,7 +7,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { MenuApi, OrderApi, TenantApi, PrinterApi } from '../../api';
 import { Helper } from '../../utils';
 
-class Report extends React.Component {
+class Transactions extends React.Component {
   constructor(props) {
     super(props);
     this.intervalId;
@@ -49,8 +49,8 @@ class Report extends React.Component {
 
   delete(order) {
     Alert.alert(
-      `#${order.ref}`, 
-      'Do you want to delete?',
+      "Confirmation",
+      `Do you want to delete #${order.ref}?`,
       [ { text: 'Cancel' }, 
         { text: 'OK', onPress: () => {
           OrderApi.deleteById(order._id)
@@ -161,7 +161,7 @@ class Report extends React.Component {
                   <MaterialIcons name='assessment' color={'#6c757d'} size={20} />            
                 </Left>
                 <Body>
-                  <Text>Report</Text>
+                  <Text>Transactions</Text>
                 </Body>
                 <Right>
                 </Right>
@@ -205,7 +205,7 @@ class Report extends React.Component {
   }
 }
 
-Report.propTypes = {
+Transactions.propTypes = {
 };
 
-export default Report;
+export default Transactions;
