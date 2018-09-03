@@ -24,6 +24,7 @@ let schema = mongoose.Schema({
   place: { type: String },
   taxRate: { type: Number, required: true, default: 0 },
   isTaxInclusive: { type: Boolean, default: true },    
+  isEFTPOS: { type: Boolean, default: false },    
   items: [
     mongoose.Schema({
       _id: { type: mongoose.Schema.Types.ObjectId, ref: 'menus' },

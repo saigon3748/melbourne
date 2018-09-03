@@ -13,6 +13,7 @@ class Transactions extends React.Component {
     this.intervalId;
     this.state = {
       isSignedIn: false,
+      selectedOrder: null,
       orders: []
     }
   }
@@ -69,27 +70,65 @@ class Transactions extends React.Component {
   }
 
   getItems(order) {
-    let items = "";
+    let text = "";
 
     order.items.forEach(item => {
-      items += `${item.quantity} x ${item.name}`;
+      text += `${item.quantity} x ${item.name}`;
 
       if (item.addons && item.addons.length > 0) {
-        items += " ( ";
+        text += " ( ";
         item.addons.forEach(addon => {
-          items += `${addon.quantity} x ${addon.name}  `;
+          text += `${addon.quantity} x ${addon.name}  `;
         })
-        items += ") ";
+        text += ") ";
       } else {
-        items += "  ";
+        text += "  ";
       }
     })
 
     if (order.note) {
-      items += " - " + order.note;
+      text += " - " + order.note;
     }
 
-    return items;
+    return text;
+  }
+
+  getItem(item) {
+    let text = "";
+
+    text += `${item.quantity} x ${item.name}`;
+
+    if (item.addons && item.addons.length > 0) {
+      text += " ( ";
+      item.addons.forEach(addon => {
+        text += `${addon.quantity} x ${addon.name}  `;
+      })
+      text += ") ";
+    } else {
+      text += "  ";
+    }
+
+    if (item.note) {
+      text += " - " + item.note;
+    }
+
+    return text;
+  }
+
+  getDiscount(discount) {
+    return `${discount.quantity} x ${discount.name}`;
+  }
+
+  view(order) {
+    this.setState({
+      selectedOrder: order
+    });  
+  }
+
+  cancel() {
+    this.setState({
+      selectedOrder: null
+    });  
   }
 
   print(order) {
@@ -146,62 +185,145 @@ class Transactions extends React.Component {
   render() {
     const {height: screenHeight} = Dimensions.get('window');
 
-    return (
-      <Container style={{backgroundColor: '#fff'}}>
-        <Content>
-          <View style={{
-            flex: 1,
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            backgroundColor: '#fff'
-          }}>
-            <List style={{marginTop: 40}}>
-              <ListItem icon>
-                <Left>
-                  <MaterialIcons name='assessment' color={'#6c757d'} size={20} />            
-                </Left>
-                <Body>
-                  <Text>Transactions</Text>
-                </Body>
-                <Right>
-                </Right>
-              </ListItem>
-            </List>
-
-            <ScrollView style={{flex: 1, flexDirection: 'column', marginLeft: 30, marginRight: 10}}>
-              <List>
-                {this.state.orders.map(order => (
-                  <ListItem key={order._id} style={{height: 50}}>
-                    <Body>
-                      <View style={{flexDirection: "row"}}>
-                        <Text style={{width: 50}}>#{order.ref}</Text>
-                        <Text style={{width: 70, textAlign: 'right'}}>
-                          {(() => { return Helper.formatCurrency(order.total) })()}
-                        </Text>
-                        <Text style={{flex: 1}}>{this.getItems(order)}</Text>
-                        <Text style={{width: 50}}>
-                          {(() => { return moment(order.localCreatedAt).format("HH:mm") })()}
-                        </Text>
-                        <View style={{width: 100, alignItems: 'center'}}>
-                          <View style={{width: 80, alignItems: 'center'}}>
-                            <Button full small style={{backgroundColor: '#2177b4'}} onPress={() => {this.print(order)}}><Text> Print </Text></Button>                      
-                          </View>
-                        </View>
-                        <View style={{width: 100, alignItems: 'center'}}>
-                          <View style={{width: 80, alignItems: 'center'}}>
-                            <Button full small style={{backgroundColor: '#DE544E'}} onPress={() => {this.delete(order)}}><Text> Delete </Text></Button>                      
-                          </View>
-                        </View>
-                      </View>
-                    </Body>
-                  </ListItem>
-                ))}
+    if (!this.state.selectedOrder) {
+      return (
+        <Container style={{backgroundColor: '#fff'}}>
+          <Content>
+            <View style={{
+              flex: 1,
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              backgroundColor: '#fff'
+            }}>
+              <List style={{marginTop: 40}}>
+                <ListItem icon>
+                  <Left>
+                    <MaterialIcons name='assessment' color={'#6c757d'} size={20} />            
+                  </Left>
+                  <Body>
+                    <Text>Transactions</Text>
+                  </Body>
+                  <Right>
+                  </Right>
+                </ListItem>
               </List>
-            </ScrollView>
-          </View>      
-        </Content>
-      </Container>            
-    );
+
+              <ScrollView style={{flex: 1, flexDirection: 'column', marginLeft: 30, marginRight: 10}}>
+                <List>
+                  {this.state.orders.map(order => (
+                    <ListItem key={order._id} style={{height: 50}}>
+                      <Body>
+                        <View style={{flexDirection: "row"}}>
+                          <Text style={{width: 50}}>#{order.ref}</Text>
+                          <Text style={{width: 70, textAlign: 'right'}}>
+                            {(() => { return Helper.formatCurrency(order.total) })()}
+                          </Text>
+                          <Text style={{flex: 1}}>{this.getItems(order)}</Text>
+                          <Text style={{width: 50}}>
+                            {(() => { return moment(order.localCreatedAt).format("HH:mm") })()}
+                          </Text>
+                          <View style={{width: 100, alignItems: 'center'}}>
+                            <View style={{width: 80, alignItems: 'center'}}>
+                              <Button full small style={{backgroundColor: '#2177b4'}} onPress={() => {this.view(order)}}><Text> View </Text></Button>                      
+                            </View>
+                          </View>
+                        </View>
+                      </Body>
+                    </ListItem>
+                  ))}
+                </List>
+              </ScrollView>
+            </View>      
+          </Content>
+        </Container>            
+      );
+    } else {
+      return (
+        <Container style={{backgroundColor: '#fff'}}>
+          <Content>      
+            <View style={{
+              flex: 1,
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              backgroundColor: '#FFF',
+              height: screenHeight - 65
+            }}>
+              <List style={{marginTop: 40}}>
+                <ListItem icon>
+                  <Left>
+                    <MaterialIcons name='assessment' color={'#6c757d'} size={20} />            
+                  </Left>
+                  <Body>
+                    <Text>Transaction Detail</Text>
+                  </Body>
+                  <Right>
+                    <Text style={{width: 100, textAlign: 'right', fontSize: 30, color: '#2177b4'}}>
+                      {(() => { 
+                        return `#${this.state.selectedOrder.ref}`;
+                      })()}
+                    </Text>
+                    <Text style={{width: 50}}></Text>
+                    <Text style={{width: 100, textAlign: 'right', fontSize: 30, color: '#DE544E', marginRight: 20}}>
+                      {(() => { 
+                        // return `Transaction #${this.state.selectedOrder.ref}`;
+                        return Helper.formatCurrency(this.state.selectedOrder.total); 
+                      })()}
+                    </Text>
+                  </Right>
+                </ListItem>
+              </List>
+
+              <ScrollView style={{flex: 1, flexDirection: 'column', marginLeft: 30, marginRight: 10}}>            
+                <List>
+                  {this.state.selectedOrder.items.map(item => (
+                    <ListItem key={item._id} style={{height: 50}}>
+                      <Body>
+                        <View style={{flexDirection: "row"}}>
+                          <Text style={{width: 70}}>Item</Text>
+                          <Text style={{flex: 1}}>{this.getItem(item)}</Text>
+                          <Text style={{width: 70, textAlign: 'right'}}>
+                            {(() => { return Helper.formatCurrency(item.subtotal) })()}
+                          </Text>
+                        </View>
+                      </Body>
+                    </ListItem>
+                  ))}
+                  {this.state.selectedOrder.discounts.map(discount => (
+                    <ListItem key={discount._id} style={{height: 50}}>
+                      <Body>
+                        <View style={{flexDirection: "row"}}>
+                          <Text style={{width: 70}}>Discount</Text>
+                          <Text style={{flex: 1}}>{this.getDiscount(discount)}</Text>
+                          <Text style={{width: 70, textAlign: 'right'}}>
+                            {(() => { return "(" + Helper.formatCurrency(discount.amount) + ")" })()}
+                          </Text>
+                        </View>
+                      </Body>
+                    </ListItem>
+                  ))}
+                </List>
+              </ScrollView> 
+
+              <View style={{height: 65, flexDirection: 'row', backgroundColor: '#f2f3f4'}}>
+                <View style={{width: 10}}></View>
+                <View style={{flex: 1}}>
+                  <Button full style={{marginTop: 10, backgroundColor: '#6c757d'}} onPress={() => this.cancel()}><Text> CANCEL </Text></Button>
+                </View>
+                <View style={{width: 10}}></View>
+                <View style={{flex: 1}}>
+                  <Button full style={{marginTop: 10, backgroundColor: '#2177b4'}} onPress={() => this.print(this.state.selectedOrder)}><Text> PRINT </Text></Button>
+                </View>
+                <View style={{width: 10}}></View>
+                <View style={{flex: 1}}>
+                  <Button full style={{marginTop: 10, backgroundColor: '#DE544E'}} onPress={() => this.delete(this.state.selectedOrder)}><Text> DELETE </Text></Button>
+                </View>
+                <View style={{width: 10}}></View>
+              </View>              
+            </View>
+          </Content>
+        </Container>
+      )
+    }
   }
 }
 

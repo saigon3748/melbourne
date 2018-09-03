@@ -20,8 +20,8 @@ class Order extends React.Component {
     super(props);
 
     this.menus = [];
-    this.cashes = [];
     this.addons = [];
+    this.cashes = [];
     this.printers = [];
     this.discounts = [];
     this.categories = [];
@@ -34,6 +34,7 @@ class Order extends React.Component {
       selectedMenu: { addons: [], discounts: [] },
       filteredMenus: [],
       filteredCategories: [],
+      cashes: [],
       order: {
         subtotal: 0.00,
         discount: 0.00,
@@ -83,6 +84,9 @@ class Order extends React.Component {
     CashApi.get()
       .then(result => {
         this.cashes = result;
+        this.setState({
+          cashes: result
+        });
       })
 
     AddonApi.get()
@@ -234,10 +238,17 @@ class Order extends React.Component {
       return;
     }
 
+    let cashes = [...this.cashes];
+    cashes.push({ _id: 0, cash: this.state.order.total });
+
+    this.setState({
+      cashes: cashes
+    });
+
     this.showCheckoutScreen()
   }
 
-  save() {
+  save(isEFTPOS) {
     if (!this.state.order || !this.state.order.items || this.state.order.items.length === 0) {
       alert("Select items to create order");
       return;
@@ -245,6 +256,7 @@ class Order extends React.Component {
 
     let data = {
       ...this.state.order,
+      isEFTPOS: isEFTPOS,
       localCreatedAt: Date.now()
     }
 
@@ -779,7 +791,7 @@ class Order extends React.Component {
                         break;
 
                       case DISPLAY_MODE.CHECKOUT:
-                        return this.cashes.map(cash => {
+                        return this.state.cashes.map(cash => {
                           return (
                             <TouchableOpacity key={cash._id} activeOpacity={1.0} onPress={() => this.selectCash(cash)}>
                               <View style={{width: 150, height: 150, marginBottom: 10, marginLeft: 10, backgroundColor: '#D1CABD'}}>
@@ -1068,7 +1080,11 @@ class Order extends React.Component {
                     return (
                       <View style={{flexDirection: 'row', marginTop: 20, marginBottom: 10, marginLeft: 10, marginRight: 10}}>
                         <View style={{flex: 1}}>
-                          <Button full onPress={() => this.save()} style={{backgroundColor: '#DE544E'}}><Text> SAVE </Text></Button>
+                          <Button full onPress={() => this.save(false)} style={{backgroundColor: '#DE544E'}}><Text> {(() => { return `CHARGE ${Helper.formatCurrency(this.state.order.total)}`; })()} </Text></Button>
+                        </View>
+                        <View style={{width: 10}}/>
+                        <View style={{flex: 1}}>
+                          <Button full onPress={() => this.save(true)} style={{backgroundColor: '#2FA495'}}><Text> EFTPOS </Text></Button>
                         </View>
                       </View>
                     )
