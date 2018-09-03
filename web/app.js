@@ -10,6 +10,7 @@ import dashboard from './components/dashboard';
 import analytics from './components/analytics';
 import archives from './components/archives';
 import trash from './components/trash';
+import cooks from './components/cooks';
 import account from './components/account';
 import tenantList from './components/tenant-list';
 import tenantDetail from './components/tenant-detail';
@@ -43,6 +44,7 @@ import orderApi from './api/order-api';
 import printerApi from './api/printer-api';
 import cashApi from './api/cash-api';
 import placeApi from './api/place-api';
+import cookApi from './api/cook-api';
 
 window.toastr = toastr;
 window._ = _;
@@ -74,6 +76,7 @@ angular
   .component('posUserDetail', userDetail)
   .component('posPrinterList', printerList)
   .component('posPrinterDetail', printerDetail)
+  .component('posCooks', cooks)
   .component('posCashList', cashList)
   .component('posPlaceList', placeList)
   .service('AuthService', authService)
@@ -89,6 +92,7 @@ angular
   .service('OrderApi', orderApi)
   .service('PrinterApi', printerApi)
   .service('CashApi', cashApi)
+  .service('CookApi', cookApi)
   .service('PlaceApi', placeApi)
   .factory("fileReader", function($q, $log) {
     var onLoad = function(reader, deferred, scope) {

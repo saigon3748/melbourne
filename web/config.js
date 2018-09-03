@@ -24,6 +24,7 @@ export default {
     DISCOUNT_DETAIL: 'DiscountDetail',
     PRINTER_LIST: 'PrinterList',
     PRINTER_DETAIL: 'PrinterDetail',
+    COOKS: 'Cooks',
     CASH_LIST: 'CashList',
     PLACE_LIST: 'PlaceList'
   },

@@ -86,6 +86,10 @@ export default [
         url: '/discounts/:id',
         template: '<pos-discount-detail/>'
       })
+      .state(posgram.config.states.COOKS, {
+        url: '/cooks',
+        template: '<pos-cooks/>'
+      })
       .state(posgram.config.states.PRINTER_LIST, {
         url: '/printers',
         template: '<pos-printer-list/>'
